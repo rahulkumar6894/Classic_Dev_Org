@@ -1,0 +1,25 @@
+<apex:page >
+
+<apex:stylesheet value="{!URLFOR($Resource.Lighting_Css, '/Lighting and classic Css/css/lightning.css')}"/>
+<style>
+.classic {
+    color: blue;
+}
+
+.Lighting {
+    color: green;
+}
+</style>
+{!$User.UIThemeDisplayed}
+ <br/>
+ <apex:outputPanel rendered="{!$User.UIThemeDisplayed == 'Theme3' }" styleClass="classic ">
+    <apex:outputText value="This is Salesforce Classic."/>
+  <h1> Hello I am Classsic Page </h1>
+</apex:outputPanel>
+
+
+<apex:outputPanel rendered="{!$User.UIThemeDisplayed == 'Theme4d' }" styleClass="Lighting ">
+    <apex:outputText value="Everything is simpler in Lightning Experience.  "/>
+    <h1> Hello I am Lighting Page </h1>
+</apex:outputPanel>
+</apex:page>

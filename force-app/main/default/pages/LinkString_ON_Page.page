@@ -1,0 +1,6 @@
+<apex:page controller="LinkString_ON_Page_ctrl">
+   {!linlvar}
+  <h1>Congratulations</h1>
+ 
+  <apex:outputText escape="false" value="{!linlvar}"></apex:outputText>
+</apex:page>

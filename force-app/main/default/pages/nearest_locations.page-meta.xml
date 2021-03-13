@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ApexPage xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>42.0</apiVersion>
+    <availableInTouch>false</availableInTouch>
+    <confirmationTokenRequired>false</confirmationTokenRequired>
+    <description>Finding nearest locations on google map within Salesforce
+Locating anything is just part of our daily habit. Salesforce made is very easy by adding Geolocation to Address field types. So I have did one practice to locate nearest restaurants on google map.
+
+Lets Say I have one Company Record and would l like to plot all restaurants that are located in x unit of distance to company on google map.
+
+To achieve this I am going to use two features of salesforce one is Distance formula
+
+DISTANCE(AddressField, GEOLOCATION(latitude,longitude), &apos;mi&apos;)
+
+and another one is apex:map &amp; apex:mapmarker tag</description>
+    <label>nearest_locations</label>
+    <packageVersions>
+        <majorNumber>1</majorNumber>
+        <minorNumber>14</minorNumber>
+        <namespace>sf_chttr_apps</namespace>
+    </packageVersions>
+    <packageVersions>
+        <majorNumber>1</majorNumber>
+        <minorNumber>7</minorNumber>
+        <namespace>sf_com_apps</namespace>
+    </packageVersions>
+</ApexPage>

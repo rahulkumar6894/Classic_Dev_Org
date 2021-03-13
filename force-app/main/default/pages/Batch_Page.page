@@ -1,0 +1,5 @@
+<apex:page controller="batch_ctrl">
+ 
+  <h1>Congratulations !! Batch</h1>
+  
+</apex:page>

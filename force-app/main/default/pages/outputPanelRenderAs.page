@@ -1,0 +1,9 @@
+<apex:page >
+  <!-- Begin Default Content REMOVE THIS -->
+  <h1>Congratulations</h1>
+  This is your new Page
+  <!-- End Default Content REMOVE THIS -->
+   <apex:outputPanel layout="none" rendered="{!IF($CurrentPage.parameters.render = 'pdf',false, true)}">
+    ggggggggggggggggggggg
+  </apex:outputPanel>
+</apex:page>

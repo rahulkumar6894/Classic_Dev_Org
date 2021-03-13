@@ -1,0 +1,10 @@
+<apex:page controller="Box_comman">
+    <apex:form >
+            <apex:commandButton value="Log In To Box" style="background:LightBlue;width:78px;" action="{!Boxlogin}"/><br/>
+            Access Tokens:-{!accessTokens} <br/>
+            Refresh Token:= {!RefreshToken}"<br/>
+            <apex:commandButton value="Hit ON Box" style="background:LightBlue;width:78px;" action="{!BoxHIT}"/><br/>
+            <apex:commandButton value="Get Folder" style="background:LightBlue;width:78px;" action="{!getfolder}"/><br/>
+      
+    </apex:form>
+</apex:page>

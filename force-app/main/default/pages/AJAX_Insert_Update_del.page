@@ -1,0 +1,172 @@
+<apex:page id="page" controller="AJAXGrid">    
+     <head>
+        <apex:includeScript value="{!URLFOR($Resource.ActiveWidgetsRes,'/ActiveWidgets/runtime/lib/aw.js')}" /> 
+        <apex:stylesheet value="{!URLFOR($Resource.ActiveWidgetsRes,'/ActiveWidgets/runtime/styles/aqua/aw.css')}" /> 
+     </head>    
+   
+    <style type="text/css">
+        #myGrid {height: 200px; width: 0%;}
+        #myGrid .aw-alternate-even {background: #efe}
+        #myGrid .aw-alternate-odd {background: #def} 
+        #myGrid .aw-grid-row {border-bottom: 1px solid #ccc}    /* horizontal lines */
+        #myGrid .aw-grid-cell {border-right: 1px solid #ccc}  /* vertical lines for all columns */
+        /* #myGrid .aw-column-0  {border-right: 1px dashed #999} for one column */ 
+    </style>
+    
+    <apex:form id="fm">        
+        <apex:actionFunction name="actionfunction" action="{!actionfn}" oncomplete="showgrid(); return false;"  reRender="op1"/>    
+        <apex:pageBlock id="pb">
+            <!-- Page Block Section for display --> 
+            <apex:pageBlockSection columns="1" id="pbs">
+                <apex:inputtext label="Account Name" id="AccountName"/>
+                <apex:inputtext label="Phone" id="Phone" />
+                <apex:inputtext label="Fax " id="fax" />
+            </apex:pageBlockSection>
+                     
+            <apex:pageBlockButtons id="pbb" location="bottom">
+                <apex:commandButton value="Insert"  onclick="insetfn(); return false;" reRender="page" id="insrt"/>
+                <!-- <apex:commandButton value="Edit"    onclick="Editfn(); return false;" reRender="page" id="edit"/>-->
+                <apex:commandButton value="Delete"  onclick="deletefn(); return false;"  id="del"/> 
+              
+                 <apex:commandButton value="Edit"  onclick="Editfn(); return false;"  /> 
+               
+               
+                  <apex:commandButton value="Update"  onclick="Updatefn(); return false;"  id="upd" /> 
+                
+            </apex:pageBlockButtons> 
+        </apex:pageBlock>
+    </apex:form>
+    
+    <script type="text/javascript">var __sfdcSessionId = '{!GETSESSIONID()}';</script>
+    <script src="../../soap/ajax/40.0/connection.js" type="text/javascript"></script>
+        
+    <apex:outputPanel id="op1">
+        <script type="text/javascript"> 
+        
+            window.onload=showgrid;             
+            var obj = new AW.UI.Grid();
+            obj.setId("myGrid");
+            obj.setStyle("width", "47%");
+            obj.setStyle("height", "350px");            
+            document.write(obj);        
+            var rowsData = new Array();
+            var records1 ;
+             
+            function showgrid()
+            {
+                rowsData = new Array();
+                
+                //obj.clear();
+                var query = "SELECT Id, Name,  Phone,Fax FROM Account order By CreatedDate DESC "; 
+                var myHeaders = ["","ID", "Name", "Phone","Fax "];     
+                var records = sforce.connection.query(query); 
+                records1= records.getArray('records');      
+                        
+                for(var i=0; i < records1.length; i++)
+                {   
+                    if(records1[i].Phone== null )
+                    {
+                        records1[i].Phone= 'No Phone  ';
+                    }
+                    
+                    if(records1[i].Fax == null )
+                    {
+                        records1[i].Fax = 'No Fax here';
+                    }            
+                    var chkbox = '<input type="checkbox" id="' +i+ '" value="' +i+ '" onclick="oncolumnckeckboxclick (this.value,this.id);">';
+                    var rowVal = [chkbox,records1[i].Id,records1[i].Name,records1[i].Phone,records1[i].Fax ];
+                    rowsData.push(rowVal);
+                }  
+                obj.setHeaderText(myHeaders );   
+                obj.setCellText(rowsData);
+                obj.setColumnCount(myHeaders.length); // to set no. of column to display. 
+                obj.setRowCount(rowsData.length);
+                //obj.getRowsTemplate().refresh(); 
+                //obj.getCellTemplate().refresh();  
+                obj.refresh();
+            }
+         
+            var arrId = new Array(); 
+            function oncolumnckeckboxclick (param)
+            {
+                if(document.getElementById(param).checked)
+                {
+                    arrId.push(records1[param].Id);
+                    
+                }
+                if(!document.getElementById(param).checked)
+                {
+                    arrId.splice(arrId.indexOf(records1[param].Id),1);
+                }
+            }
+          
+           
+             
+            function deletefn()
+            {
+               
+              if(arrId.length >=1 ){
+             
+              alert(arrId.length);
+                debugger;
+                var result = sforce.connection.deleteIds(arrId);        
+                showgrid(); 
+                arrId = new Array();         
+            }else{ alert('please check the item ');}
+             
+            } 
+            function insetfn()
+            {   
+             if((document.getElementById("page:fm:pb:pbs:AccountName").value).length != 0 && (document.getElementById("page:fm:pb:pbs:Phone").value).length != 0 && (document.getElementById("page:fm:pb:pbs:fax").value).length != 0 )
+             {
+                debugger;
+                var account = new sforce.SObject("Account");
+                account.Name = document.getElementById("page:fm:pb:pbs:AccountName").value;
+                account.Phone = document.getElementById("page:fm:pb:pbs:Phone").value;
+                account.fax = document.getElementById("page:fm:pb:pbs:fax").value;
+                var result = sforce.connection.create([account]);
+                showgrid();
+                arrId = new Array();
+               
+                }else{ alert('please Enter The value ');}           
+            }
+            function  Editfn()
+            { 
+             if(arrId.length == 1 )
+              {  
+                  
+                  debugger; 
+                  var checkId =arrId[0];
+                  var str = "Select Name,Phone,Fax from Account where id ='"+checkId +"'";
+                  var result = sforce.connection.query(str);
+                  var records = result.getArray("records");
+                  var record = records[0];
+                 
+                  document.getElementById("page:fm:pb:pbs:AccountName").value = record.Name;
+                  document.getElementById("page:fm:pb:pbs:Phone").value = record.Phone;
+                  document.getElementById("page:fm:pb:pbs:fax").value = record.Fax;
+                  
+             }    else{
+                        if(arrId.length >= 1)
+                        {  
+                            alert('you dont have options to check two item for edit');
+                        }else{ alert('please check the item ');} 
+                      }         
+              }
+            
+            function Updatefn()
+            { 
+              if( (document.getElementById("page:fm:pb:pbs:AccountName").value) !=''){        
+                var account = new sforce.SObject("Account");
+                account.id = arrId[0];
+                account.Name = document.getElementById("page:fm:pb:pbs:AccountName").value;
+                account.phone = document.getElementById("page:fm:pb:pbs:Phone").value;
+                account .fax = document.getElementById("page:fm:pb:pbs:fax").value;
+                result = sforce.connection.update([account]);
+                showgrid(); 
+                arrId = new Array();   
+                }else{ alert('enter the value');}
+            }
+        </script >  
+    </apex:outputPanel>      
+</apex:page>

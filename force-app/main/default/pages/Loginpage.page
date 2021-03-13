@@ -1,0 +1,179 @@
+<apex:page sidebar="false" showHeader="false" standardStylesheets="false" cache="false" id="page">
+<html style="min-width: 1024px;" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>FreeBook | FreeBook.com</title>
+
+
+</head>
+
+<body>
+<!--<apex:pageMessages></apex:pageMessages> -->
+<div class="facebook">  <p><a href="https://www.facebook.com/pages/Navatar-Group/84619532179?ref=ts" target="_blank" title="Facebook" ><img src="" border="0" /></a></p>
+</div>
+<div class="twitter">  <p><a href="https://twitter.com/navatargroup" target="_blank" title="Twitter" ><img src="" border="0" /></a></p>
+</div>
+
+<div id="container">
+<table width="1010" border="0" align="center" cellpadding="0" cellspacing="0">
+  <tr>
+    <td width="22" align="left" valign="top">&nbsp;</td>
+    <td width="966" align="left" valign="top"><table width="966" border="0" align="center" cellpadding="0" cellspacing="0">
+      <tr>
+        <td align="left" valign="top">
+          <table width="966" border="0" align="center" cellpadding="0" cellspacing="0" style="font-weight:bold">
+              <tr>
+                <td align="left">
+                   <!--apex image added to show investor image and default navatar investor image...  Fixed in version 1.6.2 -->
+                   <a href="{!$Site.BaseSecureUrl}" title="Navatar Deal Room" style="position:relative;top:25px ">
+                    <apex:image url="" /> </a> <!--Anurag Jain: Removing width="300" height="55" after Rex email on 9Feb2016 -->
+                                        
+                </td>
+            
+                <td align="right" valign="top">
+                  <!--apex outputpanel added to show  and Hide header..  Fixed in version 1.6.2 -->
+                 <apex:outputPanel id="panel1" layout="block">
+                    <table  border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td align="right" valign="top" class="topmenu"><br />
+                            
+                            
+                         </td>
+                      </tr>
+                    </table>
+                </apex:outputPanel>
+                </td>
+                </tr>
+              <tr>
+                <td height="20" colspan="2" align="left" valign="top">                    
+                    
+                </td>
+                </tr>
+              <tr>
+                <td height="21" colspan="2" align="left" valign="top" ><table width="661" border="0" align="center" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td></td>
+                  </tr>
+                </table></td>
+              </tr>
+          </table>
+          
+          </td>
+      </tr>
+      </table></td>
+    <td width="22" align="left" valign="top">&nbsp;</td>
+  </tr>
+  <tr>
+    <td height="7" colspan="3" align="left" valign="top" ><img src="" width="1010" height="10" border="0" /></td>
+    </tr>
+  <tr>
+    <td width="22" align="left" valign="top" ><table width="22" border="0" cellspacing="0" cellpadding="0">
+    
+      
+      </table></td>
+    <td align="left" valign="top"><table width="944" border="0" cellspacing="0" cellpadding="0" >
+      <tr>
+        <td align="left" valign="top"><table width="966" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td width="11" height="9" align="left" valign="top"><img src="" width="11" height="9" border="0" /></td>
+            <td width="944" align="left" valign="top" bgcolor="#bbdbf7"></td>
+            <td width="11" height="9" align="right" valign="top"><img src="" width="11" height="9" border="0" /></td>
+            </tr>
+          </table></td>
+        </tr>
+      <tr>
+        <td align="left" valign="top" bgcolor="#FFFFFF" class="bluebg"><table width="944" border="0" align="center" cellpadding="0" cellspacing="0">
+          <tr>
+            <td align="left" valign="top" bgcolor="#FFFFFF"><table width="500" border="0" align="center" cellpadding="0" cellspacing="0">
+              <tr>
+                <td align="left" valign="top" width="550">
+               
+                <apex:form id="frmid" forceSSL="true">
+                <div style="padding-left:20%">   
+                  <table width="500" border="0" cellspacing="0" cellpadding="0" style="height:380px;" class="text">
+                    <tr>
+                      <td align="left" valign="top"><table width="275" border="0" align="center" cellpadding="0" cellspacing="0" class="text">
+                        <tr>
+                          <td height="70">&nbsp;</td>
+                          </tr>
+                        <tr>
+                          <td height="25" valign="top" ><label class="datalabelDisplayForm">Username</label></td>
+                          </tr>
+                        <tr>
+                          <td> <apex:inputtext size="40"  styleclass="input_txt" style="width:266px;" id="username"/></td>
+                          </tr>
+                        <tr>
+                          <td>&nbsp;</td>
+                          </tr>
+                        <tr>
+                          <td height="25" valign="top"><label class="datalabelDisplayForm">Password</label></td>
+                          </tr>
+                        <tr>
+                          <td><apex:inputSecret size="40"  styleclass="input_txt" style="width:266px;" id="password"/></td>
+                          </tr>
+                        <tr>
+                          <td>&nbsp;</td>
+                          </tr>
+                        <tr>
+                          <td><table width="550" border="0" cellspacing="0" cellpadding="7">
+                            <tr>
+                              <td width="70" align="left" valign="middle"><apex:commandButton action="{!login}" title="Login" value="Login" image=""/></td>
+                              <td width="450" align="left" valign="middle" class="orangetest" style="line-height:normal">
+                              <a href="/apex/ForgotPassword" style="color:#000" title="Forgot your password?" ><u>Forgot your password?</u></a><br />
+                              <a target="_self" style="color:#000" onclick="MM_openBrWindow('/apex/username',''); return false;" href="javascript:void(0);" title="Forgot your username?" >
+                                    <u>Forgot your username?</u>
+                              </a>
+                                </td>
+                              </tr>
+                            </table></td>
+                          </tr>
+                          <tr>
+                          <td>&nbsp;</td><td>&nbsp;</td>
+                          </tr>
+                          <apex:outputPanel id="panel2" layout="block">
+                          <td style="border-top:#ccc 1px solid">
+                            Deal Room access is by invitation only. If you have received an invite <a href="#" onclick="UserRegistration_click();" id="myRegisterationLink" title="click here" style="color: #3399FF !important;"><u>click here</u></a> to register.<br /><br /> 
+                          </td> 
+                          </apex:outputpanel>
+                        <tr>
+                          <td height="25">&nbsp;</td>
+                          </tr>
+                        </table></td>
+                    </tr>
+                    </table>
+                </div>
+                 </apex:form>
+                </td>
+              </tr>
+              <tr>
+                <td>&nbsp;</td>
+              </tr>
+            </table></td>
+          </tr>
+          </table></td>
+        </tr>
+      </table></td>
+    <td width="22" align="left" valign="top" ><table width="22" border="0" cellspacing="0" cellpadding="0">
+      
+      </table></td>
+  </tr>
+  </table>
+ <!--output panel added to display and hide footer  Fixed in version 1.6.2 -->
+  <apex:outputPanel id="panel3" layout="block">
+  <!--footerstart-->
+    <table width="100%" border="0" cellspacing="0" cellpadding="0"   style="bottom: 0;position: fixed;">
+      <tr>
+        <td height="45" align="left" valign="middle" bgcolor="#013a57"><table width="944" border="0" align="center" cellpadding="0" cellspacing="0">
+          <tr>
+            <td width="472" align="left" valign="top" style="width: 960px;margin: 0px auto;text-align: center;padding: 12px 0px;font-size: 12px;color: #FFF;" >© 2016 Navatar Group, Inc. All Rights Reserved.<br /></td>
+            
+          </tr>
+        </table></td>
+      </tr>
+    </table>
+</apex:outputpanel>
+  <!--footerend-->
+</div>
+</body>
+</html>
+</apex:page>

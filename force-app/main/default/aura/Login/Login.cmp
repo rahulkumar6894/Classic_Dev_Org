@@ -1,0 +1,20 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <h2 class="header">Login</h2>
+    <div>
+        <div class="slds-card">
+            <div class="slds-p-around_medium">
+                <lightning:input type="email" id="UserName" name="UserName" value="" label="UserEmail" required="true"  />
+            </div>
+        </div>
+        <div class="slds-card">
+            <div class="slds-p-around_medium">
+                <lightning:input type="password" Id="Password" label="Password" name="" required="true" />
+                
+            </div>
+        </div>
+    </div>
+
+    <button class="slds-button slds-button_brand">Login</button>
+    <button class="slds-button slds-button_brand">SignUP</button>
+    <button class="slds-button slds-button_brand">Registration</button>
+</aura:component>

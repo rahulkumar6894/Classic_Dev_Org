@@ -1,0 +1,54 @@
+<apex:page controller="Classic_To_Lighting_ctrl">
+  <h1>Congratulations</h1>
+  <apex:pageBlock id="pb1">
+      <apex:form >
+          <apex:commandButton onclick="Showvalue(); return false;"  title="Show Value" value="Show"/>
+      </apex:form>
+      <script>
+          function Showvalue()
+          {
+           debugger;
+            var test = '{!Iam}';
+            var browserName,verOffset,ix;
+            if ((verOffset=navigator.userAgent.indexOf("Chrome"))!=-1) 
+               {
+                    browserName = "Chrome";
+               }
+            else if ((verOffset=navigator.userAgent.indexOf("Firefox"))!=-1) 
+                    {
+                        browserName = "Firefox";
+                    }
+           else if ((verOffset=navigator.userAgent.indexOf("Opera"))!=-1) 
+                   {
+                        browserName = "Opera";
+                   }
+           else if ((verOffset=navigator.userAgent.indexOf("Safari"))!=-1)
+                   {
+                        browserName = "Safari";
+                   }
+           else if ((verOffset=navigator.userAgent.indexOf("MSIE"))!=-1)
+                   {
+                        browserName = "Internet Explorer";
+                   }
+           
+           alert(browserName);
+           var today = new Date();
+           var dd = today.getDate();
+           var mm = today.getMonth()+1; //January is 0!
+           var yyyy = today.getFullYear();
+
+           if(dd<10) {
+                dd = '0'+dd
+            } 
+
+           if(mm<10) {
+                mm = '0'+mm
+            } 
+
+           today = mm + '/' + dd + '/' + yyyy;
+           alert(today);
+            
+          }
+      </script>
+  </apex:pageBlock>
+</apex:page>

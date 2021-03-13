@@ -1,0 +1,15 @@
+<apex:page controller="LeaveController22" sidebar="true" showHeader="true" renderAs="pdf" >
+<apex:form >
+   <h1 >Leave Form-2017 </h1>
+<apex:pageBlock >
+  <apex:pageBlockSection >
+    <apex:pageBlockSectionItem >
+    Name:-<apex:outputText value="{!name}"></apex:outputText>
+    
+    </apex:pageBlockSectionItem>
+     <!-- EmpCode:-<apex:inputtext value="{!empcode}"   />-->
+  </apex:pageBlockSection>
+</apex:pageBlock>
+
+</apex:form>
+</apex:page>

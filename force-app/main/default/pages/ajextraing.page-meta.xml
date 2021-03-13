@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ApexPage xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>43.0</apiVersion>
+    <availableInTouch>false</availableInTouch>
+    <confirmationTokenRequired>false</confirmationTokenRequired>
+    <description>Print Preview
+
+API using AJAX Toolkit in VisualForce pages via JavaScript.
+
+Sometimes you can create a Visualforce page that has no controller written in Apex, but still can query and perform DML operations on Salesforce data. One advantage is that you have no viewstate and it performs a bit faster, but you must write the entire code in Javascript.</description>
+    <label>ajextraing</label>
+    <packageVersions>
+        <majorNumber>1</majorNumber>
+        <minorNumber>17</minorNumber>
+        <namespace>sf_chttr_apps</namespace>
+    </packageVersions>
+    <packageVersions>
+        <majorNumber>1</majorNumber>
+        <minorNumber>7</minorNumber>
+        <namespace>sf_com_apps</namespace>
+    </packageVersions>
+</ApexPage>

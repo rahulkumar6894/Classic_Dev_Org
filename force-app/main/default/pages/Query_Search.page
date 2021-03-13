@@ -1,0 +1,47 @@
+<apex:page controller="Query_Search_ctrl" id="page">
+  <apex:form id="frm">
+       <apex:messages />
+      
+      <script>
+        
+       function validatefn(){
+          var text1 = document.getElementById('page:frm:pb1:text1').value;
+          var chooseField= document.getElementById('page:frm:pb1:chooseField').value;
+          var chooseoption= document.getElementById('page:frm:pb1:chooseoption').value;
+          if(text1=='' ) 
+          alert('Please enter the Field');
+         
+      } 
+      </script>
+      <apex:pageBlock id="pb1" title="Contact Search" > 
+            <apex:selectList id="chooseField" value="{!SelectField}" Size="1" disabled="false" >
+            <apex:selectOption itemValue="Name" itemLabel="Name"/>
+            <apex:selectOption itemValue="LastName" itemLabel="LastName"/>
+            <apex:selectOption itemValue="id" itemLabel="Id"/>
+        </apex:selectList>
+            <apex:selectList id="chooseoption" value="{!operater}" size="1">
+            <apex:selectOption itemValue="LIKE" itemLabel="LIKE"/>
+            <apex:selectOption itemValue="Equals" itemLabel="Equals"/>
+            <apex:selectOption itemValue="NotEquals" itemLabel="Not_Equals"/>
+        </apex:selectList>
+        <apex:inputText value="{!text1 }" id="text1"/> <br/>
+        
+        <apex:commandButton action="{!Search}" title="SearchResults"  /> <!-- onclick="validatefn() return false;" -->
+        <apex:pageBlock >
+        <apex:dataTable value="{!Records}" var="rec" >
+      
+
+        <apex:column style="margin-left:-10px;width:200px;">
+                <apex:facet name="header">FirstName</apex:facet>
+                       {!rec.FirstName}
+        </apex:column>
+         <apex:column style="margin-left:-10px;width:200px;">
+                <apex:facet name="header">ID</apex:facet>
+                       {!rec.id}
+        </apex:column>
+        
+        </apex:dataTable>
+        </apex:pageBlock>
+      </apex:pageBlock>
+  </apex:form>
+</apex:page>

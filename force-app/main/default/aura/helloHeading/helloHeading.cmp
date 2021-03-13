@@ -1,0 +1,5 @@
+<aura:component >
+     <aura:attribute name="message" type="String"/>
+     <!--<p>Hello! hello heading {!v.message}</p>-->
+     <p>Hello {!v.messages}</p>
+</aura:component>

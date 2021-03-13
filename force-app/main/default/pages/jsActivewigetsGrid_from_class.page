@@ -1,0 +1,83 @@
+<apex:page controller="jsActivewigetsGrid_ctrl" >
+    <head>   
+        <!-- Static Resource for ActiveWidgets -->
+        <apex:includeScript value="{!URLFOR($Resource.ActiveWidgetsRes,'/ActiveWidgets/runtime/lib/aw.js')}" /> 
+        <apex:stylesheet value="{!URLFOR($Resource.ActiveWidgetsRes,'/ActiveWidgets/runtime/styles/aqua/aw.css')}" />
+    </head>
+    <!-- CSS Style Class -->
+    <style type="text/css">
+        #myGrid { width: 100%; height:300px; border:#e9f2f7 1px solid !important; padding:0 !important;}
+        #myGrid .aw-column-0 { padding-left:10px;text-align:center !important;}
+        #myGrid .aw-column-0 img {position:relative; top:4px;}
+        #myGrid .aw-column-2 { text-align:center !important;}
+        #myGrid .aw-column-2 input { position:relative; top:4px;}
+        #myGrid .aw-column-3 {border-right:none !important; }
+    </style>    
+    <script>
+        var FnlListData;   
+        function findrecordfn()
+        {
+            getrecords();
+        }
+        function ShowData(ids)
+        { 
+            debugger;
+            // var checkbox = document.getElementById('Checkval');                          
+            alert('Id >>'+ids);
+        } 
+        
+        function viewFile_grid1(abc)
+        { 
+                                    
+            alert('Id >>HII');
+        } 
+    </script>
+    <script>
+        debugger;
+        var obj = new AW.UI.Grid(); 
+        obj.setId("myGrid"); // css set for  Grid
+        obj.setStyle("width", "500Px"); // width for Grid
+        obj.setStyle("height", "350px");  // Height  for  Grid  
+        var date = new AW.Formats.Date;
+        date.setTextFormat("dd-mm-yy");
+        date.setDataFormat("ISO8601"); obj.setCellFormat(date, 1) 
+        var myHeaders = ["Action", "Name","values"]; // Header of Grid
+        obj.setHeaderText(myHeaders );  // Set Haader for Grid
+        obj.setColumnCount(myHeaders.length); // to set no. of column to display. 
+        document.write(obj);  // Display the Grid*/       
+        // document.getElementById("maingrid").innerHTML = obj;
+    </script>
+
+  
+ 
+   <apex:outputPanel id="OP1" rendered="true">
+   
+        <span id="maingrid"></span>
+        <script>
+            function gridFn()
+            {
+                debugger;
+                //var FnlListData =["", "<span style='color: #ff0000 !important;font-weight:bold;'>No data to display.</span>", ""];
+                // obj.setCellText(FnlListData );  // rowsData Set In Grid as a CellText
+                //obj.setRowCount(FnlListData.length); // Set Row of Length According to RowData
+                //obj.refresh();
+                
+                var FnlListData = {!emplist}; 
+                if(FnlListData !='')
+                {
+                    obj.setCellText(FnlListData );  // rowsData Set In Grid as a CellText
+                    obj.setRowCount(FnlListData.length);
+               }else{
+                    var FnlListData =["", "<span style='color: #ff0000 !important;font-weight:bold;'>No data to display.</span>", ""];
+                    obj.setCellText(FnlListData );  // rowsData Set In Grid as a CellText
+                    obj.setRowCount(FnlListData.length);
+                }
+                
+                obj.refresh();
+            }
+        </script>
+   </apex:outputPanel><apex:form >
+        <apex:actionFunction name="getrecords" action="{!getrecord}" oncomplete="gridFn();" reRender="OP1"/>
+        <apex:commandButton title="getRecord2" value="GetRecord2" onclick="findrecordfn(); return false;"/>
+  </apex:form>
+</apex:page>

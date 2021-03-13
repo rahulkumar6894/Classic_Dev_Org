@@ -1,0 +1,140 @@
+<apex:page controller="Mywork">
+    <apex:form >
+        <apex:actionFunction id="actionfunction" action="{!LoadingMethod}" name="actionfunction"  reRender="OP1" oncomplete="fnHideImage(); return false;"/>
+        <apex:commandButton Action="{!GetBoxtoken}" id="GetBoxtoken" value="BoxToken" /> <br/>
+        <apex:OutputPanel id="Outpannel">
+            <p style="border:1px;background-color:;" > Click the above button and get Access  Refresh Token</p>
+            <span style="color:red;">  AccessToken :::::-  </span> <apex:outputtext value="{!AccessToken }"/><br/>
+            <span style="color:red;">  RefreshToken :::::- </span>   <apex:outputtext value="{!RefreshToken }"/>
+        </apex:OutputPanel>
+        <apex:pageBlock >
+            <apex:repeat value="{!MapAcc}" var="key">
+                <apex:outputText style="font-weight:bold;float:left;color:Red;" value="{!key}"/>
+                <apex:pageBlockTable value="{!MapAcc[key]}" var="Key2">
+                    <apex:column value="{!Key2.Id}" />
+                    <apex:column value="{!Key2.FirstName}"/>
+                    <apex:column value="{!Key2.LastName}"/>
+                </apex:pageBlockTable>
+            </apex:repeat>
+            <apex:commandButton Onclick="fntestLoading(); return false;" id="LoadingImage" value="LoadImage" />  
+        </apex:pageBlock>
+        <apex:pageBlock id="PB2">
+            <apex:outputpanel style="" id="OP1">
+                <div id ="divid">
+                      Account-Id,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,Account-Name <br/>
+                    <apex:repeat value="{!ListofAccount}" var="key">
+                        {!key.Id} ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,, {!key.Name} <br/>
+                    </apex:repeat> 
+                </div>     
+                <div id="Hidediv" style="display:none;">
+                    <apex:commandButton id="HideBlock" onclick="fnHideImage1(); return false;" value="HideBlock" /> 
+                </div>
+            </apex:outputpanel>
+        </apex:pageBlock>
+        <div id="Image" style="display:none; position: fixed;    top: 0%;left: 0%;vertical-align: middle;height: 100%;width: 100%;background: #fff !important;text-align: center; z-index:99999999; opacity:0.8;">
+            <div  id="" style="position:fixed; top:21%; left:35%; vertical-align:middle; height:auto; width:auto;">
+                <img src="{!URLFOR($Resource.loading)}"/> 
+            </div>
+        </div>  
+    </apex:form>    
+    <Script>
+        function fntestLoading()
+        {
+            debugger;
+            document.getElementById('Image').style.display='block';
+            actionfunction();
+        }
+        function fnHideImage()
+        {
+            debugger;
+            document.getElementById('Image').style.display='none';
+            document.getElementById('Hidediv').style.display='block';
+        }
+        function fnHideImage1()
+        {
+            debugger;
+            document.getElementById('divid').style.display='none';
+            document.getElementById('Hidediv').style.display='none';
+        }
+    </script>
+</apex:page>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <!--<apex:actionstatus id="counterStatus">
+    <apex:facet name="start">
+        <div class="waitingSearchDiv" id="el_loading" style="background-color: #fbfbfb; height:100%;opacity:0.65;width:100%;">
+            <div class="waitingHolder" style="top: 100px; width: 91px;">
+            <img class="waitingImage" src="/img/loading.gif" title="Please Wait..."/>
+            <span class="waitingDescription">Loading...</span>
+            </div>
+        </div>
+    </apex:facet>
+</apex:actionstatus>
+<apex:form id="frm">
+    <apex:commandButton value="Test" status="counterStatus" reRender="frm"/>
+</apex:form>
+
+
+   //Loding Image Code:--
+        <div id="blurred" style="display:none; position:fixed; background-color:white; margin-top:-150px;height:1000px; width:100%; z-index:99999999; opacity:0.9;">
+            <div style="position:fixed; top:35%; left:35%; vertical-align:middle; height:auto; width:auto;">
+              <img src="{!URLFOR($Resource.loading)}"/> 
+            </div>                     
+        </div>
+       <apex:actionStatus id="Status" onstart="document.getElementById('blurred').style.display='block';" onstop="document.getElementById('blurred').style.display='none';"/>
+ -->

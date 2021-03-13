@@ -1,0 +1,83 @@
+<apex:page controller="ExtJs_Ass2" id="pg" >
+    <apex:form id="fm">
+        <apex:includeScript value="{!URLFOR($Resource.ExtJs,'extjs/adapter/ext/ext-base.js')}"/>
+        <apex:includeScript value="{!URLFOR($Resource.ExtJs,'extjs/ext-all.js')}"/>
+        <apex:stylesheet value="{!URLFOR($Resource.ExtJs, 'extjs/resources/css/ext-all.css')}"/>
+        <apex:stylesheet value="{!URLFOR($Resource.ExtJs, 'extjs/treenode.css')}"/>
+        <apex:actionFunction action="{!addNewNode}" name="af" reRender="fm" />
+            <style>
+                .divClass
+                {
+                    display: none;
+         
+                }
+                
+               .testIcons
+            {
+                content:url("{!URLFOR($Resource.ExtJs,'extjs/resources/images/default/tree/drop-no.gif')}");
+                height:15px;
+                width:15px;
+            }​
+                
+                .bestIcons
+               {
+                    content:url("{!URLFOR($Resource.ExtJs1,'extjs/resources/images/default/tree/drop-add.gif')}");
+                    
+                    width: 12px;
+                    height:12px;
+               }​
+          
+            </style>
+            <script>
+                Ext.onReady(function(){
+                    var Tree = Ext.tree;
+                    var tree = new Tree.TreePanel
+                    ({
+                       root:{
+                               "text":'<span onmouseover="showImage();" onmouseout="hideImage();">Country<img src="{!URLFOR($Resource.ExtJs,'extjs/resources/images/default/tree/drop-add.gif')}" id="img" onclick="addNode();" height="15" width="15" style="visibility:hidden;margin-bottom: -4px;"/><img src="{!$Resource.Rename}" onclick="renamefn();"style="visibility:"; height="15" width="12" id="img";/><img src="{!$Resource.minusIcon}" onclick="renamefn();"style="visibility:"; height="15" width="12" id="img";/></span>',
+                               expanded : true,
+                               children:[{!JsonVal}]
+                            },
+                    
+                     });
+                     tree.render('renderTree');
+                 });
+                 
+                 function addNode(){
+                     document.getElementById("myDiv").style.display='inline';
+                    
+                 }
+                 
+                 function cancel(){
+                     document.getElementById("myDiv").style.display='none';
+                    
+                 }
+                 
+                 function save(){
+                    
+                     af();
+                 }
+                 
+                 function showImage(){
+                     document.getElementById("img").style.visibility='visible';
+                 }
+                 
+                 function hideImage(){
+                     document.getElementById("img").style.visibility='hidden';
+                 }
+            </script>
+            <html>
+                <body>
+                    <div id="myDiv" class="divClass"> 
+                      
+                             Name &nbsp; <apex:inputText value="{!val}"/><br/>
+                            <button type="button" id="btnSave" onclick="save();" class="close" style="margin-top: 6px;margin-left: 39px;">Save</button>
+                            <button type="button" id="btnCancel" onclick="cancel();">Cancel</button>
+                       
+                    </div>
+                    <span id="renderTree"></span>
+                    
+                </body>
+            </html>
+    </apex:form>
+</apex:page>

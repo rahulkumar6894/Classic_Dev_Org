@@ -1,0 +1,10 @@
+<apex:page standardController="Account" extensions="viewpage_ctrl" renderAs="pdf">
+<script>
+   alert('Export::'+ '{!btn1}');
+</script>
+
+  <!-- Begin Default Content REMOVE THIS -->
+  <h1>Congratulations!!!!!!!!!!!!!!!!!!   exportPage</h1>'{!btn1}
+  This is your new Page
+  <!-- End Default Content REMOVE THIS -->
+</apex:page>

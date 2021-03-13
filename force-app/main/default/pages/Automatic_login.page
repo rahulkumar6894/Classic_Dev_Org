@@ -1,0 +1,9 @@
+<apex:page controller="Automatic_login">
+  <!-- Begin Default Content REMOVE THIS -->
+  <h1>Congratulations</h1>
+  This is your new Page
+  sCurrentUser 
+   Hello {!sCurrentUser }
+   Hello {!$User.FirstName} {!$User.LastName}
+  <!-- End Default Content REMOVE THIS -->
+</apex:page>

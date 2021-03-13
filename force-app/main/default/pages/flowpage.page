@@ -1,0 +1,66 @@
+<!--<apex:page showHeader="false" sidebar="false">
+    <flow:interview name="hello_world"/>
+</apex:page>-->
+<apex:page standardController="Individual " extensions="flowpage_ctrl" docType="html-5.0"   >
+
+   
+<apex:form >
+    
+    
+  <apex:pageBlock id="pb1">
+     <apex:pageblocksection >
+        <apex:pageBlockSectionItem >
+         <apex:outputLabel value="Birthdate:-" />
+         <apex:input type="date" value="{!Birthdate}"/>
+        </apex:pageBlockSectionItem>
+        
+        <apex:pageBlockSectionItem >
+        <apex:outputLabel value="Don't Process:-" />
+        <apex:inputCheckbox value="{!dont_Process}" />
+        </apex:pageBlockSectionItem>
+        
+        <apex:pageBlockSectionItem >
+        <apex:outputLabel value="Don't Market:-"/>
+         <apex:inputCheckbox value="{!dont_Market}"/>
+        </apex:pageBlockSectionItem>
+        
+        <apex:pageBlockSectionItem >
+        <apex:outputLabel value="Export Individual's Data:-" />
+          <apex:inputCheckbox value="{!export_Individual_Data}"/>
+        </apex:pageBlockSectionItem>
+        
+        <apex:pageBlockSectionItem >
+        <apex:outputLabel value="OK to Store PII Data Elsewhere:-"/>
+          <apex:inputCheckbox value="{!storePIIDataElsewhere}"/>
+        </apex:pageBlockSectionItem>
+        
+         <apex:pageBlockSectionItem >
+        <apex:outputLabel value="Block Geological Tracking:-" />
+          <apex:inputCheckbox value="{!geological_Tracking}" />
+        </apex:pageBlockSectionItem>
+        
+        <apex:pageBlockSectionItem >
+        <apex:outputLabel value="Don't Profile:-"/>
+          <apex:inputCheckbox value="{!dont_Profile}"/>
+        </apex:pageBlockSectionItem>
+             
+        <apex:pageBlockSectionItem >
+        <apex:outputLabel value="Don’t Track:-"/>
+          <apex:inputCheckbox value="{!DontTrack}"/>
+        </apex:pageBlockSectionItem>
+        
+        <apex:pageBlockSectionItem >
+        <apex:outputLabel value="Forget This Individual:-"/>
+          <apex:inputCheckbox value="{!ForgetThisIndividual}"/>
+        </apex:pageBlockSectionItem>
+        
+        
+        </apex:pageblocksection>
+          <apex:pageBlockButtons >
+              <apex:commandButton value="Craete" action="{!updaterecord}" />
+            </apex:pageBlockButtons>
+       
+</apex:pageblock>
+
+</apex:form>  
+</apex:page>

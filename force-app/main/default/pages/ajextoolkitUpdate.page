@@ -1,0 +1,117 @@
+<!---
+ 
+ This page is create when project Contact ordering is working 
+ we want update record for Ajextoolkit and call action function for call web services.
+ -->
+<apex:page controller="ajextoolkitUpdate_ctrl" >
+
+   <script type="text/javascript">var __sfdcSessionId = '{!GETSESSIONID()}';</script>
+    <script src="../../soap/ajax/40.0/connection.js" type="text/javascript"></script>      
+    <script>
+    function myFunction(id,val) 
+    {
+       debugger;
+        
+        // Query firnSetting__c 
+        soql = "SELECT Id,update__c FROM firnSetting__c WHERE ID = '" + id+ "'";
+        result = sforce.connection.query(soql);
+        records = result.getArray("records");
+        
+        alert('>>>>>>>!!!'+records);
+        
+        // Update Lead
+        for (var i=0; i< records.length; i++) 
+        {
+            var record = records[i];
+             record.update__c = "rAHUL";
+        }
+       // result = sforce.connection.update(records);
+       
+      if(val == 'checkval')
+      {
+            // Query firnSetting__c 
+            var id = 'a0C7F000007a3y3';
+            soql = "SELECT Id,update__c FROM firnSetting__c WHERE ID = '" + id+ "'";
+            result = sforce.connection.query(soql);
+            records = result.getArray("records");
+            
+            alert('>>>>>>>!!!'+records);
+            
+            // Update Lead
+            for (var i=0; i< records.length; i++) 
+            {
+            var record = records[i];
+            record.update__c = "rAHUL";
+            }
+            result = sforce.connection.update(records);
+            
+            
+            affunction(val);
+      }
+    }
+    
+    function createRecord()
+    {
+           // create record via ajex
+           var  acc= new sforce.SObject("Account");
+            acc.Name = document.getElementById("j_id0:Form:PB:PBS:PBSI:Name").value;
+            
+            result = sforce.connection.create([acc])[0];
+            if (!result.getBoolean("success")) {
+                console.log('Failed #1: ' + result.toString());
+                alert('Failed #1: ' + result.toString());
+                return;
+            }
+            if (result.getBoolean("success")) {           
+                alert('record Created '+result.id);
+                return;
+            }
+          
+    }
+    // delete Record Via AJEX Toolkit
+     function deleteRecord()
+    { 
+        var arrId = new Array();
+           arrId.push('0017F00001DcGZQ');
+        var result = sforce.connection.deleteIds(arrId);
+        if (result[0].getBoolean("success"))
+         {
+            alert(" record(s) have been deleted.");
+         }else{
+                alert("Failed to delete records.");
+              }
+    }
+    </script>
+    
+    
+    <button onclick="myFunction('a0C7F000007a3xy','checkval')">Update Record via Ajex</button> 
+    
+    <button onclick="deleteRecord()">Delete Record via Ajex</button>
+    
+   
+
+    <apex:form id="Form">
+        
+        <apex:actionFunction name="affunction" action="{!IWantToDebug}" rerender="test">
+            <apex:param name="param1" value="" assignTo="{!message}"/>
+        </apex:actionFunction>
+        
+         <apex:pageBlock title="Insert Account" tabStyle="Account" id="PB">
+            <apex:pageBlockSection title="Account Name" columns="1" id="PBS">
+                <apex:pageBlockSectionItem id="PBSI">
+                    <apex:outputLabel value="Name" />
+                    <apex:inputText title="Name" id="Name" />
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection> 
+            <apex:pageBlockButtons >
+               <button onclick="createRecord()">Create Record via Ajex</button> <br/>
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+        
+        
+       <apex:outputPanel id="test">
+       xcvxlcvd
+       </apex:outputPanel>
+    </apex:form>
+
+</apex:page>

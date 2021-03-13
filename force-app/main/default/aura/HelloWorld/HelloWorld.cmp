@@ -1,0 +1,14 @@
+<aura:component >
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+     <c:helloHeading />
+     <aura:attribute name="message1" type="String" default="hhh"/>
+    
+    
+    <aura:attribute name="messages" type="List"
+        default="['You look nice today.',
+            'Great weather we\'re having.',
+            'How are you?']"/>
+    <p><c:helloHeading message="{!v.messages[0]}"/></p>
+    <p><c:helloHeading message="{!v.messages[1]}"/></p>
+    <p><c:helloHeading message="{!v.messages[2]}"/></p>
+</aura:component>

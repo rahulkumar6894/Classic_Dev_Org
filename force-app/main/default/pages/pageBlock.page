@@ -1,0 +1,25 @@
+<apex:page >
+<apex:pageBlock title="PageBlockTitle" tabStyle="Employee2__c" >
+<!--Block section1-->
+<apex:pageBlockSection title="pageblockSection">
+   Hi ! Rohit 
+</apex:pageBlockSection>
+<!--Block section2-->
+<apex:pageBlockSection title="pageblockSection" >
+Hi !Rahul
+</apex:pageBlockSection>
+<!-- Block section1-->
+<apex:pageBlockSection title="pageblockSection">
+Hi ! Imran Sir
+</apex:pageBlockSection>
+
+Hi EveryOne
+
+</apex:pageBlock>
+<h1>hello Saleforce</h1>
+{! $User.FirstName}
+{! $User.LastName}
+<p> Hi Today date is{!Today()}</p>
+{! IF ( DAY(TODAY()) > 14, 'After the 14th', 'On or before the 14th') }
+
+</apex:page>

@@ -1,0 +1,141 @@
+<apex:page controller="extJsAgain" id="pg" sidebar="false">
+    <apex:form id="fm">
+        <apex:includeScript value="{!URLFOR($Resource.ExtJs1,'extjs/adapter/ext/ext-base.js')}"/>
+        <apex:includeScript value="{!URLFOR($Resource.ExtJs1,'extjs/ext-all.js')}"/>
+        <apex:stylesheet value="{!URLFOR($Resource.ExtJs1, 'extjs/resources/css/ext-all.css')}"/>
+        <apex:stylesheet value="{!URLFOR($Resource.ExtJs1, 'extjs/treenode.css')}"/>
+        <apex:actionFunction action="{!addNewNode}" name="af" reRender="fm" />
+            <style>
+                .divClass{
+                    display: none;
+                    position: fixed; 
+                    z-index: 1;
+                    padding-top: 100px; 
+                    left: 0;
+                    top: 0;
+                    width: 100%; 
+                    height: 100%;
+                    overflow: auto; 
+                    background-color: rgb(0,0,0); 
+                    background-color: rgba(0,0,0,0.4); 
+                }
+                
+                .divClass4{
+                    display: none;
+                    position: fixed; 
+                    z-index: 1;
+                    padding-top: 100px; 
+                    left: 0;
+                    top: 0;
+                    width: 100%; 
+                    height: 100%;
+                    overflow: auto; 
+                    background-color: rgb(0,0,0); 
+                    background-color: rgba(0,0,0,0.4); 
+                }
+                
+                .divClass2 {
+                    background-color: #fefefe;
+                    margin: auto;
+                    padding: 20px;
+                    border: 1px solid #888;
+                    width: 19%;
+                }  
+                
+               
+               .addIcons
+               {
+                  content:url("{!URLFOR($Resource.ExtJs1,'extjs/resources/images/default/tree/drop-add.gif')}");
+               }​ 
+             
+                
+               .delicons
+               {
+                   content:url("{!URLFOR($Resource.ExtJs1,'extjs/resources/images/default/tree/minusIcon.png')}");
+               }​
+               
+              
+            </style>
+            <script>
+            debugger;
+                Ext.onReady(function(){
+                    var Tree = Ext.tree;
+                    var tree = new Tree.TreePanel
+                    ({
+                        root:{
+                               "text":'<span onmouseover="showImage();" onmouseout="hideImage();">Country<img src="{!URLFOR($Resource.ExtJs,'extjs/resources/images/default/tree/drop-add.gif')}" id="img" onclick="addNode();" height="15" width="15" style="visibility:hidden;margin-bottom: -4px;"/></span>',
+                                children:[{!JsonVal}]
+                                
+                                   
+                                   
+                                
+                            },
+                             listeners:{
+                                       click: function(node){
+                                                 
+                                                 alert(node.text);}
+                                                  
+                                                                                                  
+                                           }
+                    
+                     });
+                     
+                     tree.render('renderTree');
+                 });
+                 
+                 function addNode(){
+                     document.getElementById("myDiv").style.display='inline';
+                    
+                 }
+                 
+                 function cancel(){
+                     document.getElementById("myDiv").style.display='none';
+                     document.getElementById("myDiv3").style.display='none';
+                    
+                 }
+                 
+                 function save(){
+                     
+                     af();
+                 }
+                 
+                 function childNode(){
+                 
+                     document.getElementById("myDiv3").style.display='inline';
+                    
+                 }
+                
+                 
+                 function showImage(){
+                     document.getElementById("img").style.visibility='visible';
+                 }
+                 
+                 function hideImage(){
+                     document.getElementById("img").style.visibility='hidden';
+                 }
+            </script>
+            <html>
+                <body>
+                    <div id="myDiv" class="divClass"> 
+                        <div id="myDiv2" class="divClass2">
+                             Name &nbsp; <apex:inputText value="{!val}"/><br/>
+                            <button type="button" id="btnSave" onclick="save();" class="close" style="margin-top: 6px;margin-left: 39px;">Save</button>
+                            <button type="button" id="btnCancel" onclick="cancel();">Cancel</button>
+                        </div>
+                    </div>
+                    <div id="myDiv3" class="divClass4">
+                    <div id="myDiv2" class="divClass2">
+                             ChildName &nbsp; <apex:inputText value="{!valchild}"/><br/>
+                            <button type="button" id="btnSave2" onclick="save();" class="close" style="margin-top: 6px;margin-left: 39px;">Save</button>
+                            <button type="button" id="btnCancel2" onclick="cancel();">Cancel</button>
+                    </div>
+                      </div>
+                   
+                    <span id="renderTree"></span>
+                  
+                  
+                  
+                </body>
+            </html>
+    </apex:form>
+</apex:page>

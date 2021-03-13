@@ -1,0 +1,71 @@
+<apex:page sidebar="false" controller="ObjectController">
+<style>
+        .headerRow .TableTitle {
+            color: #CC0000 !important; 
+            font-size:150% !important;
+            background-color: #F0F8FF !important; 
+        }
+</style>
+    <apex:form >
+        <apex:pageBlock title="Show Object Deatils List">
+           <apex:pageBlockSection columns="4">
+                <apex:selectList value="{!objectName}" size="1" >
+                    <apex:selectOptions value="{!Name}"></apex:selectOptions>    
+                </apex:selectList>
+               <apex:inputText value="{!searchStr}"/>
+               <apex:commandButton value="Search" action="{!SeachMethod}" reRender="acct,error,oppt,cont" status="actStatusId" />
+          </apex:pageBlockSection> <br/><br/>
+          <apex:pageBlockSection >
+          
+            <!--Button for Show Record -->   
+            <apex:commandButton value="Show " action="{!getrecords}" reRender="tableShow" />
+            
+             <!--Button for Create New Record-->   
+             <apex:commandButton value="New" action="{!getNew}"/><br/><br/>
+           </apex:pageBlockSection> 
+           
+      <!--Output Pannel for Show record-->      
+         <apex:outputPanel >     
+                <apex:pageBlockTable value="{!selectedObj}" var="a" id="tableShow">
+                      <apex:column headerClass="TableTitle" >
+                      <apex:outputLink target="_blank"  value="/{!a.id}">{!a['name']}</apex:outputLink>
+                      </apex:column>
+                     
+                      <apex:column value="{!a['ID']}" headerClass="TableTitle" />
+                      <apex:column value="{!a['CreatedByID']}" headerClass="TableTitle"/>
+                      <apex:column value="{!a['LastModifiedByID']}" headerClass="TableTitle"/>
+                </apex:pageBlockTable>
+        </apex:outputPanel>
+            </apex:pageBlock> 
+             
+      
+      
+ <!---Search OutPut -->  
+ <apex:pageBlock >
+  <apex:outputPanel title="" id="error">
+     <apex:pageMessages ></apex:pageMessages>
+       </apex:outputPanel>
+       
+       <!---Search OutPut  On Accounts--> 
+      <apex:pageblockTable value="{!accList }" var="acc" id="acct" title="Accounts">
+          <apex:column value="{!acc.name}"/>
+      </apex:pageblockTable>
+      
+      <!---Search OutPut  On Contacts--> 
+      <apex:pageblockTable value="{!conList}" var="con" title="Contacts" id="cont">
+        <apex:column value="{!con.name}"/>
+      </apex:pageblockTable>
+      
+      <!---Search OutPut  On Opportunities--> 
+      <apex:pageblockTable value="{!optyList}" var="opty" title="Opportunities" id="oppt">
+       <apex:column value="{!opty.name}"/>
+       </apex:pageblockTable>
+       
+</apex:pageBlock>
+            
+            
+            
+            
+          
+</apex:form>
+</apex:page>

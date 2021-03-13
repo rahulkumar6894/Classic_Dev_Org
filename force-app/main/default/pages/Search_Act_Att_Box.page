@@ -1,0 +1,484 @@
+<apex:page id="page" standardController="Account" extensions="Search" action="{!PageActionfn}"  >
+  <apex:pageMessages />     
+        <head>   
+            <!-- Static Resource for ActiveWidgets -->
+            <apex:includeScript value="{!URLFOR($Resource.ActiveWidgetsRes,'/ActiveWidgets/runtime/lib/aw.js')}" /> 
+            <apex:stylesheet value="{!URLFOR($Resource.ActiveWidgetsRes,'/ActiveWidgets/runtime/styles/aqua/aw.css')}" />
+       </head>
+       <!-- Static Resource for AJAX --> 
+       <script type="text/javascript">var __sfdcSessionId = '{!GETSESSIONID()}';</script>
+       <script src="../../soap/ajax/40.0/connection.js" type="text/javascript"></script>
+       <!-- CSS Style Class -->
+       <style type="text/css">
+                    #myGrid {height: 200px; width: 0%;} /* SetGrid height and width */
+                    #myGrid .aw-alternate-even {background: #efe}/* Background color of Even line */
+                    #myGrid .aw-alternate-odd {background: #def} /*  Background color of odd line */
+                    #myGrid .aw-grid-row {border-bottom: 1px solid #ccc}    /* horizontal lines */
+                    #myGrid .aw-grid-cell {border-right: 1px solid #ccc}  /* vertical lines for all columns */
+                    #myGrid .aw-column-7 {border-right:0 !important} /* to None Border of coloumn -7 */
+                    .custom3 {
+                            background-color:   #ADD8E6 !important; /* Background color of PageBlockSection 1 */
+                    }
+                    
+                    .search{                                      /* Style Class for Search Input Box */
+                            overflow: hidden;
+                            width: 220px;
+                            vertical-align: middle;
+                            white-space: nowrap;
+                    }
+                    .settings_Icon{                                      /* Image for Setting Icon as  Apex CommandLink */
+                            content: url("{!$Resource.settings_Icon}");          
+                            width: 15px;
+                            border:1px solid #ff0000;
+                    }
+                    .aw-strict .aw-item-template /* css for AW to set Padding */
+                     {
+                        height: 15px !important;
+                        width: 92px;
+                        padding: 0px 4px 4px 3px !important;
+                    }
+                    .bPageBlock .detailList .dataCol 
+                    {
+                        width: 0% !important;
+                     }
+
+                    .bPageBlock .detailList .labelCol 
+                    {
+                        width: 16% !important;
+                        position: relative !important;
+                        top: 3px !important;
+                        left: 17px !important;
+                    }
+                              /*   1St Css class for popUp Div  */
+                    .tabClass{   
+                    
+                    display: none;
+                    position: fixed; 
+                    z-index: 1;
+                    padding-top: 100px; 
+                    left: 0;
+                    top: 0;
+                    width: 100%; 
+                    height: 100%;
+                    overflow: auto; 
+                    background-color: rgb(0,0,0); 
+                    background-color: rgba(0,0,0,0.4); 
+                }
+                 /*   2nd Css class for popUp Div  */
+                .tabClass1 {
+                    background-color:White ;
+                    margin: auto;
+                    padding: 20px;
+                    border: 1px solid #888;
+                    width: 20%;
+                }
+                
+                   
+        </style>
+        <apex:pageBlock id="pb"> <!-- Page Block -->
+                 <apex:form id="fm">
+                          <!-- Action Function for  boxSearch-->
+                <apex:actionFunction id="box" action="{!boxSearch}" name="callActionfn"  oncomplete="getrecord();" reRender="panel"> 
+                    <apex:param name="param1" assignTo="{!BoxStr}" value=""/>
+                </apex:actionFunction>
+                <!--   OutputPanel to Change color of PageBlockSection 1 -->
+                <apex:outputPanel layout="block" styleClass="custom3"  id="op1"> 
+                    <apex:pageBlockSection id="pbs1" > <!-- PageBlockSection 1 for Show Ist Headding Line -->
+                        <H1 style="font-size:15px;"> <span style="color:blue">Search Results</span></h1>
+                    </apex:pageBlockSection>
+                </apex:outputPanel>
+                <apex:pageBlockSection id="pbs2" columns="6">
+                    <apex:pageBlockSectionItem id="pbsItem1" >
+                        <apex:inputText value="{!SearchStr}" styleClass="search" id="inputtext" /> <!-- InputText for search the String -->
+                        <apex:commandButton value="Search" id="search"  onclick="searchitem();return false;"  /> <!-- Search Button for Searching -->
+                    </apex:pageBlockSectionItem>
+                    <!-- Checkbox for Activities -->
+                    <apex:pageBlockSectionItem id="pbsItem2"  >
+                        Activities<apex:inputCheckbox id="Activities"  selected="true"/> 
+                    </apex:pageBlockSectionItem>
+                    <apex:pageBlockSectionItem id="pbsItem3" >
+                        Attachment<apex:inputCheckbox id="Attachment" selected="true"  /><!-- Checkbox for attachment -->
+                    </apex:pageBlockSectionItem>
+                    <apex:pageBlockSectionItem id="pbsItem4" >
+                        BoxDocuments<apex:inputCheckbox id="BoxDocuments" selected="true" /><!-- Checkbox for BoxDocuments -->
+                    </apex:pageBlockSectionItem>
+                    <apex:pageBlockSectionItem id="pbsItem5"  >
+                             <apex:commandLink styleClass="settings_Icon" id="settings_Icon" action="{!Boxlogin}" onclick="getuser();" oncomplete="return null;" /> <!-- SettingIcon as Box CommandLink-->
+                    </apex:pageBlockSectionItem>
+                    <apex:pageBlockSectionItem id="pbsItem6" > 
+                           <strong>Range:</strong><apex:selectlist value="{!Range}" size="1" style=" width: 200px;" onchange="selectlistfn(this.value);" > <!-- Selcection type to Show According Selected Item -->
+                                    <apex:selectOption itemlabel="All Time"    itemValue="AllTime"/>
+                                    <apex:selectOption itemlabel="Today"       itemValue="Today"/>
+                                    <apex:selectOption itemlabel="Last 7Days"  itemValue="7Days"/>
+                                    <apex:selectOption itemlabel="Last 30Days" itemValue="30Days"/>
+                                    <apex:selectOption itemlabel="Last 60Days" itemValue="60Days"/>
+                                    <apex:selectOption itemlabel="Last 90Days" itemValue="90Days"/>
+                                    <apex:selectOption itemlabel="Year To Date" itemValue="Year "/>
+                            </apex:selectlist>
+                    </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+            <div id="myTab" class="tabClass"> 
+                        <div id="myTab1" class="tabClass1">
+                           UserType:-<apex:outputText value="{!UserType}"></apex:outputText><br></br>
+                           UserName:-<apex:outputText value="{!UserName}"></apex:outputText><br></br>
+                           UserID:-<apex:outputText value="{!UserID}"></apex:outputText><br></br>
+                           UserLoginId:-<apex:outputText value="{!Login_ID}"></apex:outputText><br></br>
+                           <center> 
+                                <apex:commandButton value="Ok" id="Ok"  onclick="cancel(); return false;"  /> <!-- PopUp Button for ok-->
+                                <apex:commandButton value="UpdateUser" id="UpdateUser"  Action="{!UpdateUser}" /> <!-- UpdateUser Button for Searching -->
+                           </center>
+                        </div>
+                    </div>     
+        </apex:form>
+     </apex:pageBlock>
+     <script type="text/javascript"> 
+        // debugger;
+        window.onload = ShowGrid;   // When Windows is ONLoad then ShowGrid fn Call     
+        var obj = new AW.UI.Grid(); 
+        obj.setId("myGrid"); // css set for  Grid
+        obj.setStyle("width", "100%"); // width for Grid
+        obj.setStyle("height", "350px");  // Height  for  Grid  
+        var myHeaders = ["Date", "Name", "Contact Name","Related To","Category","Status","Owner","Type"]; // Header of Grid
+        document.write(obj);  // Display the Grid
+        var rowsData = new Array();
+        var finalArray =''; 
+        var  item = '{!boxfiledata}'; // Box Data From Controller
+         // function to show the Grid 
+        function ShowGrid()
+        {     
+                //debugger;
+                rowsData = new Array();
+                // Query for task According to Selected Id 
+                var query = "SELECT Id,ActivityDate,subject,Status,WhoId,who.Name,What.Name,owner.name FROM task where whatId ='{!AccId}' "; 
+                var records = sforce.connection.query(query); 
+                var records1= records.getArray('records');
+                // Query for Event According to Selected Id            
+                var query2 = "SELECT Id, ActivityDate,subject,who.Name,What.Name,owner.name FROM event where whatId ='{!AccId}' "; 
+                var records2 = sforce.connection.query(query2); 
+                var records22= records2.getArray('records');
+                // Query for Attachment According to Selected Id
+                var query3 = "SELECT Id,CreatedDate,Name, Parent.Name,ContentType, Owner.Name FROM Attachment where ParentId  = '{!AccId}'";          
+                var record3 = sforce.connection.query(query3); 
+                var records3= record3.getArray('records');
+                // Headers for Grid 
+                var myHeaders = ["Date", "Name", "Contact Name","Related To","Category","Status","Owner","Type"];
+                //Combination of Task ,Event And Attachment to Store One Array 
+                finalArray =records1.concat(records22,records3);
+                var Type = ''; // Initial Type is Null
+                // Array to Show in Grid
+                for(var i=0; i < finalArray.length;i++)
+                {   
+                          if(finalArray[i].Who== null )
+                          {
+                             finalArray[i].Who = '';
+                          } 
+                          if(finalArray[i].What == null )
+                          {
+                            finalArray[i].What = ''; 
+                          } 
+                          if(finalArray[i].Status == null)
+                          {
+                               Type  = 'Event';
+                          }else{Type = 'Task';}
+                          if(finalArray[i].CreatedDate == null) // Condition if CreatedDate is Empty then Show Task And Event because Task And Event have ActivityDate
+                          {
+                              var PageUrl= "https://ap5.salesforce.com/"+finalArray[i].Id; // Link to Open Task of click Subject
+                              var rowVal = [finalArray[i].ActivityDate,'<a href="'+PageUrl+'" target="_blank">'+finalArray[i].Subject+'</a>',finalArray[i].Who.Name,finalArray[i].What.Name,'',finalArray[i].Status,finalArray[i].Owner.Name,Type  ];
+                              rowsData.push(rowVal);
+                          }else{      // OtherWise Show CreatedDate and Array which have CreateDate
+                                   var AttachmentUrl = "https://ap5.salesforce.com/"+finalArray[i].Id; // Link for Open Attachment
+                                   var rowVal = [finalArray[i].CreatedDate,'<a href="'+AttachmentUrl +'" target="_blank">'+finalArray[i].Name+'</a>','',finalArray[i].Parent.Name,finalArray[i].ContentType,'',finalArray[i].Owner.Name,'Attachment'];
+                                   rowsData.push(rowVal);
+                               }
+               }
+               if(item != "")
+               {
+                    var Split1 = item.split(","); // Split the record geting from box
+                    for(var i =0 ; i<Split1.length;i=i+4) // arrange the record to Show in Active Widget
+                    {   
+                        var boxId = Split1[i]; // first String Is ID in String
+                        var BoxUrl = "https://app.box.com/files/0/f/0/1/f_"+boxId; // After Click Box Document Open
+                        var rowVal = [Split1[i+1],'<a href="'+BoxUrl+'" target="_blank">'+Split1[i+2]+'</a>',"","","","",Split1[i+3],"Box Document"]; // Creating the array Arroding to AW Header
+                        rowsData.push(rowVal ); // Box record Concate in Array 
+                    }
+                }
+               obj.setCellText(rowsData);  // rowsData Set In Grid as a CellText
+               obj.setHeaderText(myHeaders );  // Set Haader for Grid
+               obj.setColumnCount(myHeaders.length); // to set no. of column to display. 
+               obj.setRowCount(rowsData.length);     // Set Row of Length According to RowData
+               obj.refresh();
+        }
+         // Method for searching String Input in InputText 
+         function searchitem()
+         {
+                // debugger;   
+                var srchstr = document.getElementById('page:pb:fm:pbs2:pbsItem1:inputtext').value;// Get value of Inputfield field 
+                finalArray = new Array();  // initial finalArray are Empty
+                rowsData = new Array();   //  initial Roewdata for AW Empty
+                if (srchstr == '') // Condition if InputText Not  Empty 
+                {
+                alert('Please Enter the Value');
+               }else{
+                            var Activities  = document.getElementById('page:pb:fm:pbs2:pbsItem2:Activities').checked; // Get Value of Activities CheckBox
+                            if(Activities) // Condition When Activites CheckBox is Checed
+                            {
+                                    // Query for task to search Input String for Search                                
+                                    var query1 = "SELECT Id, ActivityDate, subject, Status, WhoId, who.Name, What.Name, owner.name FROM task  where whatId ='{!AccId}' And  subject LIKE '%" + srchstr + "%' ";
+                                    var records = sforce.connection.query(query1); 
+                                    var records1= records.getArray('records'); // Task Record after Search 
+                                    // Query for Event  to search Input String for Search                                
+                                    var query2 = "SELECT Id, ActivityDate,subject,who.Name,What.Name,owner.name FROM event  where whatId ='{!AccId}' And  subject LIKE '%" + srchstr + "%' ";
+                                    var records2 = sforce.connection.query(query2); 
+                                    var records2= records2.getArray('records'); // Event record After Search
+                                    finalArray =records1.concat(records2);
+                                    //if(finalArray == ''){ alert('No Item Found in Activities ');} // Condition When No record found from Task & Event
+                                    var Type = ''; // Initial Type is Null
+                                    // Array to Show in Grid
+                                    for(var i=0; i < finalArray.length; i++)
+                                    {   
+                                              if(finalArray[i].Who== null )
+                                              {
+                                                 finalArray[i].Who = '';
+                                              } 
+                                              if(finalArray[i].What == null )
+                                              {
+                                                finalArray[i].What = ''; 
+                                              } 
+                                              if(finalArray[i].Status == null)
+                                              {
+                                                   Type  = 'Event';
+                                              }else{Type = 'Task';}
+                                              if(finalArray[i].CreatedDate == null) // Condition if CreatedDate is Empty then Show Task And Event because Task And Event have ActivityDate
+                                              {
+                                                  var PageUrl= "https://ap5.salesforce.com/"+finalArray[i].Id; // Link to Open Task of click Subject
+                                                  var rowVal = [finalArray[i].ActivityDate,'<a href="'+PageUrl+'" target="_blank">'+finalArray[i].Subject+'</a>',finalArray[i].Who.Name,finalArray[i].What.Name,'',finalArray[i].Status,finalArray[i].Owner.Name,Type  ];
+                                                  rowsData.push(rowVal);
+                                              }
+                                    }
+                                   obj.setCellText(rowsData);  // Array Set In Grid
+                                   obj.setHeaderText(myHeaders );  // Set Haader for Grid
+                                   obj.setColumnCount(myHeaders.length); // to set no. of column to display. 
+                                   obj.setRowCount(rowsData.length);     // Set Row of Length According to RowData
+                                   obj.refresh();
+                       }
+                        var Attachment  = document.getElementById('page:pb:fm:pbs2:pbsItem3:Attachment').checked; // Get Value of Attachment CheckBox
+                        if(Attachment) // Condition When Attachment CheckBox is Checed
+                        {
+                            // Query for Attachment to search Input String for Search                                
+                            var query3 = "SELECT Id,CreatedDate,Name, Parent.Name,ContentType, Owner.Name FROM Attachment where ParentId  ='{!AccId}' And  Name LIKE '" + srchstr + "%' ";
+                            var records3 = sforce.connection.query(query3); 
+                            var records3= records3.getArray('records'); // Store Record Getting from Attachment after Search
+                           // if(records3== ''){ alert('No Item Found in Attachment ');} // Condition When No record found from Attachment
+                            for(var i=0; i < records3.length; i++)
+                            {   
+                                var AttachmentUrl = "https://ap5.salesforce.com/"+records3[i].Id;  // Attachment url According to Attachment Id
+                                var rowVal = [records3[i].CreatedDate,'<a href="'+AttachmentUrl +'" target="_blank">'+records3[i].Name+'</a>','',records3[i].Parent.Name,records3[i].ContentType,'',records3[i].Owner.Name,'Attachment']; // Make Array For AW
+                                rowsData.push(rowVal); // Push Array after Getting record form Attachment
+                             }
+                            obj.setCellText(rowsData);  // Array Set In Grid
+                            obj.setHeaderText(myHeaders );  // Set Haader for Grid
+                            obj.setColumnCount(myHeaders.length); // to set no. of column to display. 
+                            obj.setRowCount(rowsData.length);     // Set Row of Length According to RowData
+                            obj.refresh();
+                         } 
+                        var Boxdocument = document.getElementById('page:pb:fm:pbs2:pbsItem4:BoxDocuments').checked; // Get Value of Boxdocument CheckBox
+                        if(Boxdocument)
+                        {
+                                callActionfn(srchstr); // Calling Action Method With Passing  variable String ( variable as a Input From Inputtext )
+                        } 
+                                                       
+                        if(!Boxdocument && !Attachment && !Activities) // Condition When No CheckBox are checked
+                              {
+                                  alert( 'Please check then Search'); 
+                                  ShowGrid(); // calling again AW Grid
+                               }
+                         }
+                   
+           
+         }
+         // Method  for Range 
+         function selectlistfn(value)
+         {
+             
+                finalArray = new Array();  // initial finalArray are Empty
+                rowsData = new Array();    // initial rowsData are Empty
+                if (value == 'AllTime') // Condition When All Time Are Click
+                {
+                 ShowGrid();  // again Show Grid 
+                }else         // if AllTime Not Click then Condition 7,30,60,90 Days Click   
+                {
+                                 if (value == 'Today') // Condition When Today IS click
+                                 {
+                                        // Query for task Today Record Is createddate                        
+                                        var query1 = "SELECT Id, ActivityDate, subject, Status, WhoId, who.Name, What.Name, owner.name FROM task  where  whatId ='{!AccId}' AND ActivityDate= TODAY ";
+                                        var records = sforce.connection.query(query1); 
+                                        var records1= records.getArray('records');
+                                        // Query for event Today Record Is createddate                       
+                                        var query2 = "SELECT Id, ActivityDate,subject,who.Name,What.Name,owner.name FROM event  where whatId ='{!AccId}' AND ActivityDate = TODAY ";
+                                        var records2 = sforce.connection.query(query2); 
+                                        var records2= records2.getArray('records');
+                                        // Query for Attachment Today Record Is createddate                      
+                                        var query3 = "SELECT Id,CreatedDate,Name, Parent.Name,ContentType, Owner.Name FROM Attachment where ParentId ='{!AccId}' AND createddate = TODAY"; 
+                                        var record3 = sforce.connection.query(query3); 
+                                        var records3= record3.getArray('records');
+                                        finalArray =records1.concat(records2,records3); // Concate All Record createddate is Today
+                                  }
+                                 if( value == '7Days') // Condition for 7 Days
+                                 {
+                                        // Query for task record created with In 7 day                            
+                                        var query1 = "SELECT Id, ActivityDate, subject, Status, WhoId, who.Name, What.Name, owner.name FROM task  where  whatId ='{!AccId}' AND createddate=LAST_N_DAYS:7";
+                                        var records = sforce.connection.query(query1); 
+                                        var records1= records.getArray('records');
+                                        // Query for event record created with In 7 day                           
+                                        var query2 = "SELECT Id, ActivityDate,subject,who.Name,What.Name,owner.name FROM event  where whatId ='{!AccId}' AND createddate=LAST_N_DAYS:7 ";
+                                        var records2 = sforce.connection.query(query2); 
+                                        var records2= records2.getArray('records');
+                                        // Query for Attachment record created with In 7 day                              
+                                        var query3 = "SELECT Id,CreatedDate,Name, Parent.Name,ContentType, Owner.Name FROM Attachment where ParentId ='{!AccId}' AND createddate=LAST_N_DAYS:7"; 
+                                        var record3 = sforce.connection.query(query3); 
+                                        var records3= record3.getArray('records');
+                                        finalArray =records1.concat(records2,records3); // Concate All Record createddate is 7 Days
+                                 }
+                                 if( value == '30Days') // condition for 30Days
+                                 {
+                                        // Query for task record created with In 30 day                           
+                                        var query1 = "SELECT Id, ActivityDate, subject, Status, WhoId, who.Name, What.Name, owner.name FROM task  where  whatId ='{!AccId}' AND createddate=LAST_N_DAYS:30";
+                                        var records = sforce.connection.query(query1); 
+                                        var records1= records.getArray('records');
+                                        // Query for event record created with In 30 day                              
+                                        var query2 = "SELECT Id, ActivityDate,subject,who.Name,What.Name,owner.name FROM event  where whatId ='{!AccId}' AND createddate=LAST_N_DAYS:30 ";
+                                        var records2 = sforce.connection.query(query2); 
+                                        var records2= records2.getArray('records');
+                                        // Query for Attachment record created with In 30 day                             
+                                        var query3 = "SELECT Id,CreatedDate,Name, Parent.Name,ContentType, Owner.Name FROM Attachment where ParentId ='{!AccId}' AND createddate=LAST_N_DAYS:30"; 
+                                        var record3 = sforce.connection.query(query3); 
+                                        var records3= record3.getArray('records');
+                                        finalArray =records1.concat(records2,records3); // Concate All Record createddate is 30 Days
+                                 }  
+                                 if( value == '60Days') // condition for 60 Days
+                                 {
+                                        // Query for task record created with In 60 day                           
+                                        var query1 = "SELECT Id, ActivityDate, subject, Status, WhoId, who.Name, What.Name, owner.name FROM task  where  whatId ='{!AccId}' AND createddate=LAST_N_DAYS:60";
+                                        var records = sforce.connection.query(query1); 
+                                        var records1= records.getArray('records');
+                                        // Query for event record created with In 60 day                              
+                                        var query2 = "SELECT Id, ActivityDate,subject,who.Name,What.Name,owner.name FROM event  where whatId ='{!AccId}' AND createddate=LAST_N_DAYS:60 ";
+                                        var records2 = sforce.connection.query(query2); 
+                                        var records2= records2.getArray('records');
+                                        // Query for Attachment record created with In 60 day                             
+                                        var query3 = "SELECT Id,CreatedDate,Name, Parent.Name,ContentType, Owner.Name FROM Attachment where ParentId ='{!AccId}' AND createddate=LAST_N_DAYS:60"; 
+                                        var record3 = sforce.connection.query(query3); 
+                                        var records3= record3.getArray('records');
+                                        finalArray =records1.concat(records2,records3);// Concate All Record createddate is 60 Days 
+                                }
+                                 if( value == '90Days') //Condition for 90  Days
+                                 {        
+                                        // Query for task record created with In 90 day                           
+                                        var query1 = "SELECT Id, ActivityDate, subject, Status, WhoId, who.Name, What.Name, owner.name FROM task  where  whatId ='{!AccId}' AND createddate=LAST_N_DAYS:90";
+                                        var records = sforce.connection.query(query1); 
+                                        var records1= records.getArray('records');
+                                        // Query for event record created with In 90 day                              
+                                        var query2 = "SELECT Id, ActivityDate,subject,who.Name,What.Name,owner.name FROM event  where whatId ='{!AccId}' AND createddate=LAST_N_DAYS:90 ";
+                                        var records2 = sforce.connection.query(query2); 
+                                        var records2= records2.getArray('records');
+                                        // Query for Attachment record created with In 90 day                             
+                                        var query3 = "SELECT Id,CreatedDate,Name, Parent.Name,ContentType, Owner.Name FROM Attachment where ParentId ='{!AccId}' AND createddate=LAST_N_DAYS:90"; 
+                                        var record3 = sforce.connection.query(query3); 
+                                        var records3= record3.getArray('records');
+                                        finalArray =records1.concat(records2,records3);// Concate All Record createddate is 90 Days 
+                                }
+                                 if( value == 'Year ') // condition for 1 Year 
+                                 {
+                                        // Query for task record created with In 1 Year     
+                                        var query1 = "SELECT Id, ActivityDate, subject, Status, WhoId, who.Name, What.Name, owner.name FROM task  where  whatId ='{!AccId}' AND createddate=LAST_N_DAYS:365";
+                                        var records = sforce.connection.query(query1); 
+                                        var records1= records.getArray('records');
+                                        // Query for event record created with In 1 Year 
+                                        var query2 = "SELECT Id, ActivityDate,subject,who.Name,What.Name,owner.name FROM event  where whatId ='{!AccId}' AND createddate=LAST_N_DAYS:365 ";
+                                        var records2 = sforce.connection.query(query2); 
+                                        var records2= records2.getArray('records');
+                                        // Query for Attachment record created with In 1 Year        
+                                        var query3 = "SELECT Id,CreatedDate,Name, Parent.Name,ContentType, Owner.Name FROM Attachment where ParentId ='{!AccId}' AND createddate=LAST_N_DAYS:365"; 
+                                        var record3 = sforce.connection.query(query3); 
+                                        var records3= record3.getArray('records');
+                                        finalArray =records1.concat(records2,records3); // Concate All Record createddate is 1 Year 
+                             }
+                                 if(finalArray == ''){ alert('No Item Found ');} // condition When No Record Found
+                                 var Type = ''; // Initial Type is Null
+                                // Array to Show in Grid
+                                 for(var i=0; i < finalArray.length;i++)
+                                 {   
+                                      if(finalArray[i].Who== null )
+                                      {
+                                         finalArray[i].Who = '';
+                                      } 
+                                      if(finalArray[i].What == null )
+                                      {
+                                        finalArray[i].What = ''; 
+                                      } 
+                                      if(finalArray[i].Status == null)
+                                      {
+                                           Type  = 'Event';
+                                      }else{Type = 'Task';}
+                                      if(finalArray[i].CreatedDate == null) // Condition if CreatedDate is Empty then Show Task And Event because Task And Event have ActivityDate
+                                      {
+                                              var PageUrl= "https://ap5.salesforce.com/"+finalArray[i].Id; // Link to Open Task of click Subject
+                                              var rowVal = [finalArray[i].ActivityDate,'<a href="'+PageUrl+'" target="_blank">'+finalArray[i].Subject+'</a>',finalArray[i].Who.Name,finalArray[i].What.Name,'',finalArray[i].Status,finalArray[i].Owner.Name,Type  ];
+                                              rowsData.push(rowVal);
+                                      }else{      // OtherWise Show CreatedDate and Array which have CreateDate
+                                               var AttachmentUrl = "https://ap5.salesforce.com/"+finalArray[i].Id; // Link for Open Attachment
+                                               var rowVal = [finalArray[i].CreatedDate,'<a href="'+AttachmentUrl +'" target="_blank">'+finalArray[i].Name+'</a>','',finalArray[i].Parent.Name,finalArray[i].ContentType,'',finalArray[i].Owner.Name,'Attachment'];
+                                               rowsData.push(rowVal);
+                                            }
+                                 }
+                                 obj.setCellText(rowsData);  // Array Set In Grid
+                                 obj.setHeaderText(myHeaders );  // Set Haader for Grid
+                                 obj.setColumnCount(myHeaders.length); // to set no. of column to display. 
+                                 obj.setRowCount(rowsData.length);     // Set Row of Length According to RowData
+                                 obj.refresh();
+                                                
+                 } 
+         } 
+         function getuser()
+         {
+            var UserInfo = '{!UserInfo}';
+            if(UserInfo !='')
+                {
+                   document.getElementById("myTab").style.display='inline';
+                }
+          }
+         function cancel()
+         {
+           document.getElementById("myTab").style.display='none';
+         }                      
+     </script > 
+     <!-- Another OutputPannel and Again Task Script  when Action Function ON completed  -->  
+     <apex:outputPanel id="panel">
+             <script>
+                     function getrecord()  
+                     {
+                        //debugger;  
+                        var record = '{!afterSearchRecord }'; // geting Record After Hit BOX Search
+                        //if(record  == ''){ alert('No recard Found');} // condition When No 
+                       // rowsData = new Array(); // intial rowdata  are empty When again make AW Grid
+                        if(record != "")
+                        {
+                            var Split1 = record .split(",");
+                                for(var i =0 ; i<Split1.length;i=i+4)
+                                {   
+                                    var boxId = Split1[i];
+                                    var BoxUrl = "https://app.box.com/files/0/f/0/1/f_"+boxId; // Box url to Open Record After Click
+                                    var rowVal = [Split1[i+1],'<a href="'+BoxUrl+'" target="_blank">'+Split1[i+2]+'</a>',"","","","",Split1[i+3],"Box Document"]; //creating Array According to Grid Headers
+                                    rowsData.push(rowVal);  // Push the rowVal Value in final Array to show Grid
+                                 }
+                         }        
+                    obj.setCellText(rowsData);  // Array Set In Grid
+                    obj.setHeaderText(myHeaders );  // Set Haader for Grid
+                    obj.setColumnCount(myHeaders.length); // to set no. of column to display. 
+                    obj.setRowCount(rowsData.length);     // Set Row of Length According to RowData
+                    obj.refresh();         // Refresh the Grid
+                    }
+          </script>
+    </apex:outputPanel>
+                       
+</apex:page>

@@ -1,0 +1,61 @@
+<apex:page controller="ExtjsbuildPage_ctrl" id="pg" >
+    <apex:form id="formId">
+       <apex:includeScript value="{!URLFOR($Resource.ExtJs,'extjs/adapter/ext/ext-base.js')}"/>
+        <apex:includeScript value="{!URLFOR($Resource.ExtJs,'extjs/ext-all.js')}"/>
+        <apex:stylesheet value="{!URLFOR($Resource.ExtJs, 'extjs/resources/css/ext-all.css')}"/>
+        <apex:stylesheet value="{!URLFOR($Resource.ExtJs, 'extjs/treenode.css')}"/>
+                    <!--	
+            "text":'<span onmouseover="showImage();" onmouseout="hideImage();"><img src="{!URLFOR($Resource.ExtJs1,'extjs/resources/images/default/tree/folder-open.gif')}" id="img1"/>{!rootName}<img src="{!URLFOR($Resource.ExtJs1,'extjs/resources/images/default/tree/drop-add.gif')}" id="img" onclick="addNode();" height="15" width="15" style="visibility:hidden;margin-bottom: -4px;"/> <img src="{!$Resource.Rename}" onclick="renamefn();"style="visibility:hidden"; height="15" width="12" id="imgRename";/><img src="{!$Resource.minusIcon}" onclick="renamefn();"style="visibility:hidden"; height="15" width="12" id="minus";/></span>',
+            expanded : true,
+            children:[{!child}]    
+            function showImage(){
+            document.getElementById("img").style.visibility='visible';
+            document.getElementById("imgRename").style.visibility='visible';
+            //document.getElementById("minus").style.visibility='visible';
+            }
+            // hide Section of Root
+            function hideImage()
+            {
+            document.getElementById("img").style.visibility='hidden';
+            document.getElementById("imgRename").style.visibility='hidden';
+            // document.getElementById("minus").style.visibility='hidden';
+            }
+            function addNode(){
+            alert('add');
+            
+            }
+            function renamefn(){
+            alert('rename');
+            
+            } 
+            
+            -->
+            <script>
+                Ext.onReady(function(){
+                    var Tree = Ext.tree;
+                    var tree = new Tree.TreePanel
+                    ({
+                        root:{
+                            
+                            text: "My Root",
+                            children: {!child},
+                            expanded: true,
+                       },
+                       
+                       listeners:{
+                           click: function(node)
+                           		{
+                                   alert(node.text);
+                                   alert(node.id);
+                                }
+                       }
+                     });
+                     tree.render('renderTree');
+        
+                 });
+                  
+            </script>
+           
+        <span id="renderTree"></span>
+    </apex:form>
+</apex:page>

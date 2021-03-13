@@ -1,0 +1,68 @@
+<apex:page Controller="Controller11" sidebar="true" showHeader="true" docType="html-5.0">
+    <apex:form >
+   <center>  <h1>Leave Form-2017 </h1> </center>
+    <br/>
+    <apex:pageBlock >
+    <!-- Table for input Data -->
+<TABLE >
+  <TR>
+    <TD>Name:-</TD>
+    <TD>
+     <apex:inputtext value="{!inputText1}" />
+    </TD>
+    <td></td>
+    <TD> EmpCode:-</TD>
+    <TD>
+     <apex:inputtext value="{!inputText2}"/>
+    </TD>
+    <TD> Department:-</TD>
+    <TD>
+      <apex:inputtext value="{!inputText3}" /> 
+    </TD>
+  </TR>
+  </table>
+  </apex:pageBlock> 
+  <apex:pageBlock > 
+  
+  <table>   
+  <TR>
+    <TD> Reason:-</TD>
+    <TD>
+    <apex:inputText value="{!inputText4}"/>
+    </TD> <td></td>
+     
+  </TR>
+</table>
+</apex:pageBlock>   
+<!-- Page Block for Selection of Leave Type -->
+ <apex:pageBlock > 
+ <apex:selectlist value="{!Leave}" size="1"> 
+      <apex:selectOption itemlabel="Leave Type" itemValue=""/>
+      <apex:selectOption itemlabel="Annual Leave" itemValue="Annual Leave"/>
+      <apex:selectOption itemlabel="Compensatory off" itemValue="Compensatory off"/>
+      <apex:selectOption itemlabel="Extra Work On(For Comp Off Only)" itemValue="Extra Work On(For Comp Off Only)"/>
+      <apex:selectOption itemlabel="Work From Home" itemValue="Work From Home"/>
+      <apex:selectOption itemlabel="Short Leave" itemValue="Short Leave"/>
+</apex:selectlist>
+ </apex:pageBlock> 
+ 
+ 
+
+  
+     
+    <!-- Input box for Date   (datatype :- date)--> 
+   From:<apex:input type="date"  value="{!MYdate}"/>
+   To:<apex:input type="date"  value="{!MYdateto}"/>
+   <br/>
+   <!-- Selection type for Approved/not-->
+   <apex:selectlist value="{!Approved}" size="1"> 
+      <apex:selectOption itemlabel="Approved/Not" itemValue=""/>
+      <apex:selectOption itemlabel="Yes" itemValue="Yes"/>
+      <apex:selectOption itemlabel="No" itemValue="No"/>
+      </apex:selectlist>
+     <br/>
+     <!-- Command Button to send value for One Page to Another Page -->
+     
+        <apex:commandButton value="Send" action="{!GoToPage2}" reRender="result"/>
+    </apex:form>
+</apex:page>

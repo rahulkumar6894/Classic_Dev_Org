@@ -1,0 +1,31 @@
+<apex:page >
+    
+    <apex:includeScript value="{!URLFOR($Resource.ActiveWidgetsRes,'/ActiveWidgets/runtime/lib/aw.js')}" />
+    <apex:stylesheet value="{!URLFOR($Resource.ActiveWidgetsRes,'/ActiveWidgets/runtime/styles/aqua/aw.css')}" />
+    
+    <script>
+// datasource with dates in iso8601 format
+        var myData = [
+            ["Grid 1.0", "2004-05-18"],
+            ["ActiveWidgets 2.0", "2006-02-08"]
+        ];
+    
+        // date converter
+        var date = new AW.Formats.Date;
+        date.setDataFormat("ISO8601");
+        date.setTextFormat("dd-mmm-yyyy");
+    
+        // grid control
+        var obj = new AW.UI.Grid;
+        obj.setCellData(myData);
+        
+        obj.setCellFormat(date, 1) // dates in the second column
+        obj.setColumnCount(2);
+        obj.setRowCount(2);
+        obj.setColumnWidth(0, 0);
+        
+        document.write(obj);    
+    </script>
+        
+
+</apex:page>

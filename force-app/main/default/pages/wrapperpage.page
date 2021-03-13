@@ -1,0 +1,24 @@
+<apex:page controller="wrapperTest" >
+<style>
+        .headerRow .TableTitle {
+            color: #CC0000 !important; 
+            font-size:150% !important;
+            background-color: #F0F8FF !important; 
+        }
+</style>
+
+<apeX:pageBlock >
+<apex:pageBlockTable value="{!wrapperRecordLst}" var="item">
+<apex:column value="{!item.id}"  headerValue="ID" headerClass="TableTitle" />
+
+<apex:column headerClass="TableTitle" headerValue="Employee2/Project Name" >
+<apex:outputLink target="_blank"  value="/{!item.id}">{!item.name}</apex:outputLink>
+</apex:column>
+
+
+
+<apex:column value="{!item.ObjectName}" headerValue="Object Name"  headerClass="TableTitle"/>
+<apex:column value="{!item.CreatedByname}" headerValue="CreatedByname"  headerClass="TableTitle"/>
+</apex:pageBlockTable>
+</apeX:pageBlock>
+</apex:page>

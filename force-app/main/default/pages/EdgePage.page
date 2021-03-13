@@ -1,0 +1,13 @@
+<apex:page >
+<apex:form >
+ 
+ <apex:commandButton value=" NextPage"  onclick="OpenWindow()" />
+ </apex:form>
+<Script>
+ debugger ;
+function OpenWindow() {
+alert(Hiii);
+    
+}
+</Script>
+</apex:page>

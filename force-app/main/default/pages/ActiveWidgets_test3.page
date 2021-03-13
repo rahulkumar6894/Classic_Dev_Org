@@ -1,0 +1,32 @@
+<apex:page >
+    
+    <!-- Example1 static values  -->
+    <head>
+        <title>Visualforce using ActiveWidgets Example</title>        
+        <apex:includeScript value="{!URLFOR($Resource.ActiveWidgetsRes,'/ActiveWidgets/runtime/lib/aw.js')}" />        
+        <apex:stylesheet value="{!URLFOR($Resource.ActiveWidgetsRes,'/ActiveWidgets/runtime/styles/aqua/aw.css')}" />
+    </head>
+    <script>
+        var myCells = [
+                        ["Account1","123456789", "Type1", "Industry1", "Rating1", "123456789", "123456789"],
+                        ["Account2","987654321", "Type2", "Industry2", "Rating2", "987654321", "654789123"]
+                      ];
+    
+        var myHeaders = ["Account Name", "Account No.", "Type", "Industry", "Rating", "Phone", "Fax"];
+    
+        // create grid object
+        var obj = new AW.UI.Grid();
+        
+        // assign cells and headers text
+        obj.setCellText(myCells);
+        obj.setHeaderText(myHeaders);
+        
+        // set number of columns/rows
+        obj.setColumnCount(7);
+        obj.setRowCount(2);
+        
+        // write grid to the page
+        document.write(obj);
+    </script>
+                                    
+</apex:page>

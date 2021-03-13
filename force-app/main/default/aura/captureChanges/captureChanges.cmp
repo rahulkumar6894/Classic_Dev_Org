@@ -1,0 +1,17 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+ access="global" >
+    <aura:attribute name="myVal" type="String" />
+    <aura:handler name="change" value="{!v.myVal}" action="{!c.handleValueChange}"/>
+
+    <lightning:inputRichText value="{!v.myVal}" aura:id="grr"/>
+     
+     
+     
+    
+    <aura:attribute name="myBool" type="Boolean" default="true"/>
+
+    <!-- Handles the aura:valueChange event -->
+    <aura:handler name="change" value="{!v.myBool}" action="{!c.handleValueChange}"/>
+    <ui:button label="change value" press="{!c.changeValue}"/>
+
+</aura:component>

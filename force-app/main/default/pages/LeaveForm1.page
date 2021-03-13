@@ -1,0 +1,52 @@
+<apex:page controller="LeaveController12" >
+<style>
+h1{
+text-align : center;
+}
+</style>
+ <apex:form >
+<h1>Leave Form-2017 </h1>
+<apex:pageBlock >
+    <apex:pageBlockButtons >
+        <apex:commandButton value="Save" action="{!GoToPage2}" reRender="result" style="width: 100px;" />  
+  </apex:pageBlockButtons>
+  <apex:pageBlockSection columns="10">
+      <apex:pageBlockSectionItem >
+      Name:-<apex:inputtext value="{!name}" required="true"/>
+      </apex:pageBlockSectionItem>
+      <apex:pageBlockSectionItem >
+      EmpCode:-<apex:inputtext value="{!empcode}"   /> 
+      </apex:pageBlockSectionItem>
+      <apex:pageBlockSectionItem >
+      EmpCode:-<apex:inputtext value="{!empcode}"   /> 
+      </apex:pageBlockSectionItem>
+      <apex:pageBlockSectionItem >
+      EmpCode:-<apex:inputtext value="{!empcode}"   /> 
+      </apex:pageBlockSectionItem>
+      <apex:pageBlockSectionItem >
+      EmpCode:-<apex:inputtext value="{!empcode}"   /> 
+      </apex:pageBlockSectionItem>
+      <apex:pageBlockSectionItem >
+      EmpCode:-<apex:inputtext value="{!empcode}"   /> 
+      </apex:pageBlockSectionItem>
+      <apex:pageBlockSectionItem >
+      EmpCode:-<apex:inputtext value="{!empcode}"   /> 
+      </apex:pageBlockSectionItem>
+      <apex:pageBlockSectionItem >
+      EmpCode:-<apex:inputtext value="{!empcode}"   /> 
+      </apex:pageBlockSectionItem>
+      <apex:pageBlockSectionItem >
+      EmpCode:-<apex:inputtext value="{!empcode}"   /> 
+      </apex:pageBlockSectionItem>
+      <apex:pageBlockSectionItem >
+      EmpCode:-<apex:inputtext value="{!empcode}"   /> 
+      </apex:pageBlockSectionItem>
+      <apex:pageBlockSectionItem >
+      EmpCode:-<apex:inputtext value="{!empcode}"   /> 
+      </apex:pageBlockSectionItem>
+  </apex:pageBlockSection>
+</apex:pageBlock>
+
+
+</apex:form>
+</apex:page>

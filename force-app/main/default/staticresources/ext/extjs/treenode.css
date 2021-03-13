@@ -1,0 +1,23 @@
+/*!
+ * Ext JS Library 3.0.0
+ * Copyright(c) 2006-2009 Ext JS, LLC
+ * licensing@extjs.com
+ * http://www.extjs.com/license
+ */
+
+.x-tree-node-expanded .x-tree-node-icon {
+background-image:none !important;
+}
+
+.x-tree-node-collapsed .x-tree-node-icon {
+background-image:none !important;
+}
+.x-tree-node-leaf .x-tree-node-icon {
+background-image:none !important;
+}
+
+
+.highlight-node .x-tree-node-anchor span{
+//background-color: yellow !important;
+font-weight:bold !important;
+}

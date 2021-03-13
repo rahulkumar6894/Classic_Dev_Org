@@ -1,0 +1,97 @@
+<apex:page standardController="Account"  >
+
+    <!-- ?id=0017F00001DcGXE :-Pass Id IN URL-->
+    <style>
+      .activeTab {background-color: #236FBD; color:white; 
+         background-image:none}
+      .inactiveTab { background-color: lightgrey; color:black; 
+         background-image:none}
+    </style>
+    <!--For buttons or links that navigate a user to a standard tab, you can redirect the content to present a list of standard objects.
+      action="{!URLFOR($Action.Contact.List, $ObjectType.Contact)}" 
+    -->
+    
+    
+    <!--<apex:outputLink value="{! $Page.standard_DisplayRecord}">I am me!</apex:outputLink>-->
+    
+    <!-- Start Get Current User details -->
+         {!$user.FirstName} 
+    <!-- End Get Current User details -->
+    
+    
+    <!-- for standardController="Account"
+    <apex:pageBlock title="Account Record Show">
+        <apex:pageBlockSection >
+            <p>My Name is:-{!Account.Name}</p>
+            <H1>my ContactName is-{!Account.Owner.Name}</h1>
+        </apex:pageBlockSection>
+    </apex:pageBlock>
+     -->
+     
+     
+    <!-- Call Standard Details Page 
+        <apex:detail subject="{!account.Id}" relatedList="false" /> 
+        <apex:detail subject="{!account.Id}" relatedList="false" inlineEdit="true"/> 
+
+    -->
+    
+    
+    <!-- Call Tab 
+    <apex:tabPanel tabClass='activeTab' inactiveTabClass='inactiveTab'>
+    
+         <apex:tab title="CustomTab" label="RahulTab">
+         </apex:tab>
+         
+         <apex:tab label="Details" name="AccDetails" id="tabdetails">
+           <apex:detail relatedList="false" title="true"/>
+         </apex:tab>
+         
+         <apex:tab label="Contacts" name="Contacts" id="tabContact">
+           <apex:relatedList subject="{!account}" list="contacts" />
+         </apex:tab>
+    </apex:tabPanel>
+    -->
+    <apex:form title="FormTittle" id="frm1">
+        <apex:pageBlock id="pb1" helpTitle="MyLInkHelp" helpUrl="https://www.google.co.in/" title="Account Update Form" >
+        
+            <apex:pageBlockSection columns="2" id="locationPicker">
+                    <apex:inputField id="textName1" label="Account Name:-" value="{!account.name}" tabOrderHint="5"/> 
+                    <apex:inputField id="frstName2" label="Account Number:-" value="{!account.AccountNumber}"  tabOrderHint="4"/>
+                    <apex:inputField id="frstName3" label="Website:-" value="{!account.Website}" tabOrderHint="3" />
+                    <apex:inputField id="frstName4" label="Phone:-" value="{!account.Phone}" tabOrderHint="2"/>
+                    <apex:inputField id="frstName5" value="{!account.LookupTest__c}" tabOrderHint="1"/>
+                      
+                    <!-- ...with an inline-edit enabled dependent field -->
+                    <apex:outputField value="{!account.Emp_Code_Test__c}"  label="Emp_Code_Test__c#">
+                        <apex:inlineEditSupport event="ondblClick" />
+                    </apex:outputField>
+
+
+            </apex:pageBlockSection>
+        
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Refresh Picklists" reRender="frm1" />
+
+                <apex:commandButton action="{!save}" value="Save New Account Name"/>
+            </apex:pageBlockButtons>
+            
+            
+        </apex:pageBlock>
+        
+    </apex:form>
+    <!--For this page to display the related list data-->
+    <apex:relatedList list="Employee2s__r"/>
+    
+     <apex:panelGrid columns="1" width="100%">
+            <apex:outputText value="{!account.Name}" styleClass="companyName"/>
+            <apex:outputText value="{!NOW()}"></apex:outputText>
+     </apex:panelGrid>
+     
+     <apex:pageBlock title="Contacts">
+          <apex:pageBlockTable value="{!account.Contacts}" var="contact">
+             <apex:column value="{!contact.Name}"/>
+             <apex:column value="{!contact.MailingCity}"/>
+             <apex:column value="{!contact.Phone}"/>
+          </apex:pageBlockTable>
+     </apex:pageBlock>
+</apex:page>

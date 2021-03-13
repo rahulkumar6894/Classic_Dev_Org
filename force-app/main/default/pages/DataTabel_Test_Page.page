@@ -1,0 +1,168 @@
+<apex:page controller="Datatable">
+ <Html> 
+<head> 
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" />
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <style type="text/css">
+        .divClass
+        {
+            display: none;
+            position: fixed; 
+            z-index: 1;
+            padding-top: 100px; 
+            left: 0;
+            top: 0;
+            width: 100%; 
+            height: 100%;
+            overflow: auto; 
+            background-color: rgb(0,0,0); 
+            background-color: rgba(0,0,0,0.4); 
+        }
+        .divClass2
+        {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 55%;
+            height: 45%;
+        } 
+        .Division
+        {
+            float: left;
+            width: 220px;
+            height: 250px;
+            border: 2px solid #000000;
+            margin-left: 75px;
+                overflow: auto;
+        }
+
+        .Division1 
+        {
+            float: left;
+            width: 60px;
+            height: 250px;
+            //border: 2px solid #000000;
+            margin-left: 75px;
+        }  
+
+        .Division2 
+        {
+            float: left;
+            width: 60px;
+            height: 100px;
+        }
+    </style>
+    <script>
+        $(document).ready(function() {
+            $('#example').DataTable( {
+                "scrollY":        "200px",
+                "scrollCollapse": true,
+                "paging":         false
+            } );
+        } );
+        function PopUp()
+        {
+        document.getElementById("myDiv").style.display='inline';
+        }
+        function cancel()
+        {
+        document.getElementById("myDiv").style.display='none';
+        }
+        var arrId = new Array();
+        function  Selectedfieldfn()
+        {
+            var value = '{!optionsnext} ';
+           alert ('hello'+value );
+
+        }
+    </script>
+
+</head>
+
+<body>
+    <!--<apex:dataTable id="example" StyleClass="display" value="{!acclist}" var="acc" cellpadding="0" width="100%">
+    <apex:column value="{!acc.Id}"/>
+    <apex:column value="{!acc.Name}"/>
+    </apex:dataTable> -->
+    
+    <apex:form ><apex:commandLink value="show2" onclick="PopUp();return false;"/></apex:form>
+    <table id="example" class="display" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Phone</th>
+                <th>Fax</th>
+                <th>Company</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <apex:repeat value="{!acclist}" var="string">
+                <tr>
+                    <td><apex:outputText value="{!string.ID}"/></td>
+                    <td> <apex:outputLink target="_blank"  value="/{!string.id}">{!string.name}</apex:outputLink></td>
+                    <td> <apex:outputText value="{!string.Phone}"/></td>
+                    <td> <apex:outputText value="{!string.Fax}"/></td> 
+                    <td> Navatar Group </td> 
+                </tr>
+            </apex:repeat>  
+        </tbody>
+    </table>
+  </body>
+</html>
+
+      
+ 
+         
+         
+   
+<apex:form id="Popfrm" > 
+   
+        <div id="myDiv" class="divClass">
+           <apex:outputPanel id="outpanel">  
+                  <div id="myDiv2" class="divClass2">                        <!-- Div -->
+                   <div class="Division">  
+                 <apex:selectList value="{!Field}" size="15"  multiselect="true">
+                    <apex:selectOptions value="{!Fields}"/>
+                </apex:selectList>
+                
+                    </div>                           <!-- 1st Div --> 
+                   <div class="Division1">                                     <!-- 2nd Div -->
+                        <div class="Division2"></div>                          <!-- 2.1 div -->
+                            <center>
+                                <apex:commandButton value="<"  /> <br/><br/>
+                                <apex:commandLink value="<" action="{!selectedField}" styleClass="btn" style="text-decoration:none;padding:4px;"   reRender="outpanel"  />
+                               
+                            </center> 
+                        <div class="Division2"></div>                           <!--2.2 div -->
+                   </div>
+                  <div class="Division" id="showlist">
+              
+                  <!--<apex:selectList value="{!nextField}" size="15"  multiselect="true">
+                     <apex:selectOptions value="{!optionsnext}"/>
+                </apex:selectList>
+                      <apex:repeat value="{!optionsnext}" var="string" id="theRepeat">   </apex:repeat>
+                       <apex:outputText value="{!optionsnext}" id="theValue"/><br/>
+                      -->
+                
+                           <apex:pageBlock >
+                        <apex:pageblockTable value="{!optionsnext}" var="f">
+                        <apex:column value="{!f}"/>
+                        </apex:pageblockTable>
+                        </apex:pageBlock>
+
+                       
+
+                   </div>                                <!-- 3rd Div -->
+                  <center>
+                    <apex:commandButton id="btnCancel" onclick="cancel()" value="OK" />
+                  </center>     
+                  </div>
+               </apex:outputPanel> 
+        </div>
+       
+</apex:form>    
+</apex:page>

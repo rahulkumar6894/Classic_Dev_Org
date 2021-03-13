@@ -1,0 +1,11 @@
+<apex:page Controller="Facebook_Integration_ctrl">
+    <apex:form >
+           
+         <apex:pageBlock title="facebook Integration" mode="edit">
+            <apex:commandButton action="{!save}" value="Save" id="theButton"/>          
+          </apex:pageBlock>
+            Id = {!conList[0].Id} 
+          Name= {!conList[0].Name} 
+          
+        </apex:form>
+</apex:page>

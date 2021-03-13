@@ -1,0 +1,64 @@
+<apex:page >
+<head>
+    <apex:includeScript value="{!URLFOR($Resource.ActiveWidgetsRes,'/ActiveWidgets/runtime/lib/aw.js')}" /> 
+    <apex:stylesheet value="{!URLFOR($Resource.ActiveWidgetsRes,'/ActiveWidgets/runtime/styles/aqua/aw.css')}" /> 
+</head>
+<style>
+table {
+    border-collapse: collapse;
+}
+
+table, td, th {
+    border: 1px solid black;
+}
+
+</style>
+
+
+
+    <script type="text/javascript">var __sfdcSessionId = '{!GETSESSIONID()}';</script>
+    <script src="../../soap/ajax/40.0/connection.js" type="text/javascript"></script>
+<script type="text/javascript">
+
+    var result = sforce.connection.query("Select Name,Id,Phone,Email from contact", {
+    onSuccess : layoutResults, onFailure : failure});
+    function failure(error) {
+        console.log("An error has occurred " + error);
+    }
+    
+    function layoutResults(queryResult, source) {
+    if (queryResult.size > 0) {
+            
+        var records = queryResult.getArray('records');
+        
+        for (var i = 0; i < records.length; i++) {
+            var acc= records[i];
+             
+
+            var tr = document.createElement("tr");
+            tr.innerHTML = '<td>' + acc.Id + '</td>' + '<td>' + acc.Name + '</td>' + '<td>' + acc.Phone + '</td>'+ '<td>' + acc.Email + '</td>';
+            document.getElementById("myTable").appendChild(tr); 
+            
+                  
+        }
+        
+    }
+}
+
+    
+
+    </script>
+   
+
+<table id="myTable">
+
+    <!-- Header -->
+    <tr>
+        <td> Id    </td>
+        <td> Name  </td>
+        <td> Phone </td>
+        <td> Email </td>
+    </tr>
+</table>
+
+</apex:page>

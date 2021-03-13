@@ -1,0 +1,26 @@
+<apex:page controller="RemotingWithWrapper">
+    <script type="text/javascript">
+    function getRemoteAccount() {
+        var accountName = document.getElementById('acctSearch').value;
+        var param = '{!strDealIdMNA}';
+        alert(param);
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.RemotingWithWrapper.searchJosn}',param, 
+            function(result, event){
+                if (event.status) {
+                    alert(result.sAccountJson +'--'+result.sTargetJson);
+                    sayHello();
+                } 
+            }, 
+            {escape: true}
+        );
+    }
+    </script>
+	<apex:form >
+        <!-- Define the JavaScript function sayHello-->
+        <apex:actionFunction name="sayHello" action="{!sayHello}" rerender="out" status="myStatus"/>
+    </apex:form>
+    <input id="acctSearch" type="text"/>
+    <button onclick="getRemoteAccount()">Get Account</button>
+    <div id="responseErrors"></div>
+</apex:page>

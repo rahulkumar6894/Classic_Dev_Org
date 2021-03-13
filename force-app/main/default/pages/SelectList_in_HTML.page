@@ -1,0 +1,96 @@
+<apex:page controller="SelectListCon">
+    
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+    <script>
+        
+        var sDealArray;
+        var arrDealIds;
+        function dosomething()
+        {
+            debugger;
+            arrDealIds = new Array();
+            var sDealSelect = document.getElementById('SelectedDealId222');
+            sDealArray = {!SelectDealOption };
+            var selectedDeal = '{!JSENCODE(sSelectedDeal)}';
+            //document.getElementById('SelectedDealId222').value = selectedDeal ;
+            for(var i =0 ;i< sDealArray.length;i++)
+            {
+                var sDealOption = document.createElement('option');
+                sDealOption.value = sDealArray[i].split('¤')[0];
+                arrDealIds.push(sDealArray[i].split('¤')[0]);
+                sDealOption.innerHTML = sDealArray[i].split('¤')[1];
+                sDealSelect.appendChild(sDealOption);
+            }
+        }
+        function DealChange(selectObj) 
+        {      
+            // get the index of the selected option 
+            var sSelectedIndex = selectObj.selectedIndex; 
+            // get the value of the selected option 
+            var sSelectedDeal = selectObj.options[sSelectedIndex].value;
+            alert('xczc'+sSelectedDeal );
+        }
+        
+        function myFunction()
+        {
+            var xxx =  arrDealIds.includes(document.getElementById('SelectedDealId222').value);
+            if(xxx){
+                alert('yes' );
+            }else{
+                alert('no' );
+            }
+        } 
+        // Start Search function
+        function buttonCode()
+        {
+            alert("Button code executed.");
+        }
+        function searchKeyPress(e)
+        {
+                debugger;
+                // look for window.event in case event isn't passed in
+                e = e || window.event;
+                if (e.keyCode == 13)
+                {
+                    document.getElementById('btnSearch').click();
+                    
+                    if(document.getElementById('txtSearch').value !='')
+                    {
+                       alert(document.getElementById('txtSearch').value);
+                    }else{
+                         alert('Please Enter Value');
+                    }
+                    
+                    return false;
+                    
+                }
+                return true;
+        }
+        // End Search function 
+        $("#txtClear").keyup(function() {
+             debugger;
+            if (!this.value) {
+                alert('The box is empty');
+            }
+
+        });     
+    </script>
+    <apex:form >
+         <select name="SelectedDealId" id ="SelectedDealId222" onchange ="DealChange(this);" style="width:200px !important;">
+         </select>   
+         <apex:inputHidden id="DealhdnField" value="{!sSelectedDeal}"/>
+    </apex:form>
+    <button onclick="myFunction()">Click me</button><br/>
+    
+    
+    ============================= Search Function=====================================================<br/>
+    <input type="text"  value="Press Enter btn Function" id="txtSearch" onkeypress="return searchKeyPress(event);" />
+    <input type="button" id="btnSearch" Value="Search" onclick="buttonCode();" /><br/>
+    ============================= Clear a textbox Function=====================================================<br/>
+       <input type="text" id="txtClear"/><br/>
+    <script>
+         window.onload = dosomething();
+        //window.addEventListener("load", dosomething(), true); 
+    </script>
+</apex:page>

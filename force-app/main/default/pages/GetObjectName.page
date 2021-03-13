@@ -1,0 +1,14 @@
+<apex:page Controller="GetObjectName_ctrl" sidebar="false" >  
+<apex:form >  
+    <apex:pageblock id="pg" >  
+        <apex:pageblockSection >  
+            <apex:pageBlockSectionItem >Record Id</apex:pageBlockSectionItem>  
+            <apex:pageblockSectionItem ><apex:inputtext value="{!recId}" /></apex:pageblockSectionItem>  
+        </apex:pageblockSection>  
+        <apex:pageBlockButtons >  
+            <apex:commandButton value="Find" action="{!find}" reRender="pg"/>  
+        </apex:pageBlockButtons>  
+        <apex:outputText >The object type is : {!objType}</apex:outputText>  
+    </apex:pageblock>  
+</apex:form>     
+</apex:page>

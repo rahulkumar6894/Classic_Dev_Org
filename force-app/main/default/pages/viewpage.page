@@ -1,0 +1,12 @@
+<apex:page standardController="Account" extensions="viewpage_ctrl">
+ <apex:form >
+  <!-- Begin Default Content REMOVE THIS -->
+  <h1>Congratulations !!!!!!!!!!!!   viewpage</h1>
+  This is your new Page
+  <apex:commandButton value="CMDBTN" action="{!cmdbtn}"/>
+  <apex:commandLink value="CMDLINK"  action="{!cmdlink}"/>
+  
+  <!-- End Default Content REMOVE THIS -->
+  </apex:form>
+
+</apex:page>

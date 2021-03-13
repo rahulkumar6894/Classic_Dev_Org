@@ -1,0 +1,150 @@
+<apex:page controller="validation" id="a">
+
+
+<style>
+        .tableContainer
+        {
+            height:290px; 
+            width: 100%;
+            overflow: auto;
+        }       
+</style>
+
+<apex:form id="b">
+  <apex:pageBlock id="c">
+   <apex:outputText > <span style="color:blue;font-weight:bold"><p id="show"></p></span></apex:outputText> 
+    
+   <!-- Block Section of Show FirstName ,LastName,Email ,Id Field -->
+    
+    <apex:pageBlockSection columns="1" id="d">
+    
+        <apex:inputtext label="FirstName" value="{!firstname}"  id="e"/>
+            <span style="color:red;font-weight:bold"><p id="errorBox" ></p></span>
+        <apex:inputtext label="LastName" value="{!lastName}"  id="f" />
+            <span style="color:red;font-weight:bold"><p id="errorBox1"></p></span>
+        <apex:inputtext label="Email" value="{!email}"  id="g" />
+            <span style="color:red;font-weight:bold"><p id="errorBox2"></p></span>
+         <apex:inputtext label="Phone No" value="{!Phone}"  id="h" />
+            <span style="color:red;font-weight:bold"><p id="errorBox3"></p></span>
+   </apex:pageBlockSection>
+    <apex:actionFunction id="display" action="{!showData}" name="CallClass" oncomplete="display1();">
+    </apex:actionFunction>
+    <apex:pageBlockButtons >
+    <apex:commandButton value="ValidationSet" onclick="display();return false;" />  
+   
+       
+    </apex:pageBlockButtons>
+     
+ <!-- Block Section of display Record From Contact with Button -->   
+</apex:pageBlock>
+
+<apex:pageBlock title="Show Results" id="pb2">
+
+ <!-- Button edit delete and multi delete for check option -->
+<apex:pageBlockButtons >
+ <!--<apex:commandButton value="Edit" id="editbtn" style="display: none"/>-->
+<div id="editbtn" style="display: none" >
+    <apex:commandButton value="Edit"   action="{!editMethod}"/>
+</div>
+<div id="delbtn" style="display: none" >
+<apex:commandButton value="Delete" action="{!DeleteMthod}" />
+</div>
+<div id="multidelete" style="display:none">
+<apex:commandButton value="multidelete" action="{!multiDeleteMthod}" />
+</div>
+<!-- OutputPannel for Display Recard from Contact -->
+</apex:pageBlockButtons>
+    <apex:outputPanel styleClass="" id="result">
+      <apex:pageBlockTable value="{!conlist}" var="item">
+         <apex:column >
+        <apex:inputCheckbox id="chkbox" onclick="editbtnMethod(this,'{!item.id}')"   />
+         <!--<input type="checkbox" id="chkbox" onclick="editbtnMethod(this)"/> -->    
+         </apex:column> 
+         <apex:column value="{!item.FirstName}"> </apex:column>
+         <apex:column value="{!item.LastName}"/>
+         <apex:column value="{!item.Email}"/>
+         <apex:column value="{!item.Phone}"/>
+     </apex:pageBlockTable>
+     </apex:outputPanel>
+</apex:pageBlock>
+</apex:form>  
+<script>
+
+ // Method for field Validation
+function display(){
+         debugger;
+        
+    var FirstName = document.getElementById('a:b:c:d:e').value;// Get value of FirstName field
+    var LastName  = document.getElementById('a:b:c:d:f').value; 
+        if(FirstName== '' || FirstName== null||FirstName.length>=255) {
+        text = "Enter First Name";
+        document.getElementById("errorBox").innerHTML = text; 
+        return false;}
+        
+        if(LastName  == '' || LastName  == null || LastName.length>=255) {
+        text = "Enter LastName  Name";
+        document.getElementById("errorBox1").innerHTML = text;
+        return false; }
+       
+   var x = document.getElementById('a:b:c:d:g').value; 
+       var atpos = x.indexOf("@");
+       var dotpos = x.lastIndexOf(".");
+       if (atpos<1 || dotpos<atpos+2 || dotpos+2>=x.length) {
+        text="Please Enter Valid Email";
+       document.getElementById("errorBox2").innerHTML = text;
+       return false;}
+  var phoneNo = document.getElementById('a:b:c:d:h').value; 
+      if(phoneNo.length>=12 ) {
+      text = "PhoneNumber Not valid";
+      document.getElementById("errorBox3").innerHTML = text;
+      text = "False";
+      document.getElementById("show").innerHTML = text ;
+      return false; }
+      else{
+      text = "True";
+      document.getElementById("show").innerHTML = text ;}
+       CallClass();
+  }
+    
+   var arrId = new Array();    
+    
+//Method for Button show Hide
+  function editbtnMethod(chkbox,id) {
+ 
+    alert(arrId.length);
+   
+    if(chkbox.checked){
+      arrId.push(id);
+      alert('addIdin Array'+arrId );
+      alert('ArrayLength'+arrId.length);
+      
+    if(arrId.length == 1){
+       document.getElementById("editbtn").style.display="block" ;
+       document.getElementById("delbtn").style.display="block" ;
+       document.getElementById("multidelete").style.display="none" ;
+       }
+     if(arrId.length > 1){
+     document.getElementById("delbtn").style.display="none" ;
+     document.getElementById("editbtn").style.display="none" ;
+     document.getElementById("multidelete").style.display="block" ;
+     }
+    
+     }
+    if(!chkbox.checked)
+     {
+     alert('cheched__ID'+id);
+     arrId.pop(id);}
+     alert('checkremove'+id);
+     alert('array after checkid Remove'+arrId);
+     
+     }
+     
+     
+   
+       
+       
+       
+     
+    
+</script>
+</apex:page>

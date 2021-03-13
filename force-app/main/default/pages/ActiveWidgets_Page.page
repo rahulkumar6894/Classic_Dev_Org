@@ -1,0 +1,93 @@
+<apex:page Controller="ActiveWidgetsCtrl">
+
+    <head>   
+        <!-- Static Resource for ActiveWidgets -->
+        <apex:includeScript value="{!URLFOR($Resource.ActiveWidgetsRes,'/ActiveWidgets/runtime/lib/aw.js')}" /> 
+        <apex:stylesheet value="{!URLFOR($Resource.ActiveWidgetsRes,'/ActiveWidgets/runtime/styles/aqua/aw.css')}" />
+    </head>
+    <!--Style Class -->
+    <style type="text/css">
+        #myGrid { width: 100%; height:300px; border:#e9f2f7 1px solid !important; padding:0 !important;}
+        #myGrid .aw-column-0 { padding-left:10px;text-align:center !important;}
+        #myGrid .aw-column-0 img {position:relative; top:4px;}
+        #myGrid .aw-column-2 { text-align:center !important;}
+        #myGrid .aw-column-2 input { position:relative; top:4px;}
+        #myGrid .aw-column-3 {border-right:none !important; }
+    </style>    
+    
+    <script>
+        debugger;
+        var obj = new AW.UI.Grid(); 
+        
+        obj.setId("myGrid"); // css set for  Grid
+        obj.setStyle("width", "500Px"); // width for Grid
+        obj.setStyle("height", "350px");  // Height  for  Grid  
+        
+        var date = new AW.Formats.Date;
+        date.setTextFormat("dd-mm-yy");
+        date.setDataFormat("ISO8601"); obj.setCellFormat(date, 1) 
+        
+        var myHeaders = ["Action", "Name","values"]; // Header of Grid
+        obj.setHeaderText(myHeaders );  // Set Haader for Grid
+        obj.setColumnCount(myHeaders.length); // to set no. of column to display. 
+        
+        var FnlListData = {!emplist};
+        //var FnlListData = ["<a href='#'>More...</a>", "456", "1/12/2006"];
+        obj.setCellText(FnlListData );  // rowsData Set In Grid as a CellText
+        obj.setRowCount(FnlListData.length);
+        obj.onCellTextChanging = function(text, column, row){
+            //alert('cccccccccccc'+text);
+        }
+
+        obj.onCellClicked = function(event, column, row)
+        {
+            debugger;
+            //alert("row: " + row + " - col: " + column + " - val: " + this.getCellText(column, row));
+             var ccc = this.getCellText(column, row);
+            //var ccc =" <a href='#'  value='xxx' id='AAA'>I am file</a>";
+             /*alert(''+ccc);
+             var results = [];
+                $("<div></div>").html(ccc).find("a").each(function(l) {
+                  results.push($(this).text());
+                });
+            alert('resultsresults'+results);*/
+            //var doc = new DOMParser().parseFromString(ccc, "text/html");
+            //alert('doc'+doc);
+            //alert('gdgdfgdfg'+doc.getElementById('AAA').value);
+            var fildID  = '1233';
+            if(column ==0){
+            Visualforce.remoting.Manager.invokeAction(
+                        '{!$RemoteAction.ActiveWidgetsCtrl.CreatePath}',
+                        fildID, 
+                        function(result, event){
+                            if (event.status) {
+                               //alert('Done'+result);
+                               //alert('Done'+result.sPath);
+                               //alert('Done'+result.sTittle);
+                               //alert('Done'+result.sSize);
+                                obj.setCellText("<span id='ssss'>"+result.sPath+"</span>",column, row);
+                                obj.setCellText(result.sSize,2, row)
+                                document.getElementById('ssss').title = result.sTittle;                      
+                            } 
+                        }, 
+                        {escape: true}
+                    );
+            
+            }
+            
+        }
+        
+        document.write(obj);  // Display the Grid*/       
+        // document.getElementById("maingrid").innerHTML = obj;
+    </script>
+     <script>
+     function ShowData(sdgg){
+     
+         //alert('dddd'+sdgg);
+     
+     }
+    
+      </script>
+    <apex:outputPanel id="OP1" rendered="true"></apex:outputPanel>
+  
+</apex:page>

@@ -1,0 +1,98 @@
+<apex:page showHeader="false" standardStylesheets="false">
+    <script type="text/javascript">
+        var __sfdcSessionId = '{!GETSESSIONID()}';
+    </script>
+    <script src="/soap/ajax/28.0/connection.js" type="text/javascript"></script>
+    <script src="/soap/ajax/28.0/apex.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        var lead;
+        var soql;
+        var leadToUpdate;
+        var serverTimestampPre;
+        var serverTimestampPost;
+        var createdLeadId;
+            
+        function Process() {
+            createLead();
+            serverTimestampPre = sforce.connection.getServerTimestamp().timestamp;
+            queryAndUpdateLead();
+            serverTimestampPost = sforce.connection.getServerTimestamp().timestamp;
+            queryByTimeOrID();
+        }
+        
+        function createLead() {
+            lead = new sforce.SObject("Lead");
+            lead.LastName = "test";
+            lead.Company = "testCorp";
+            result = sforce.connection.create([lead])[0];
+            if (!result.getBoolean("success")) {
+                console.log('Failed #1: ' + result.toString());
+                alert('Failed #1: ' + result.toString());
+                return;
+            }
+            createdLeadId = result.id;
+        }
+        
+        function queryAndUpdateLead() {
+            // Query Lead
+            soql = "SELECT Id, FirstName FROM Lead WHERE ID = '" + createdLeadId + "'";
+            result = sforce.connection.query(soql);
+            records = result.getArray("records");
+            
+            // Update Lead
+            for (var i=0; i< records.length; i++) {
+                var record = records[i];
+                record.FirstName = "updated";
+            }
+            result = sforce.connection.update(records);
+            if (!result[0].getBoolean("success")) {
+                console.log('Failed #2: ' + result.toString());
+                alert('Failed #2: ' + result.toString());
+            }
+        }
+        
+        function queryByTimeOrID() {
+            // Query by server time
+            soql = "SELECT Id, CreatedDate, LastModifiedDate FROM Lead WHERE LastModifiedDate < " + serverTimestampPost;
+            result = sforce.connection.query(soql);
+            records = result.getArray("records");
+            for (var i=0; i< records.length; i++) {
+                var record = records[i];
+                if (record.Id == createdLeadId) {
+                    addRow(createdLeadId, records[0].CreatedDate, records[0].LastModifiedDate, serverTimestampPre, serverTimestampPost, 'Time');
+                    return;
+                }
+            }
+ 
+            // Query by ID
+            soql = "SELECT Id, CreatedDate, LastModifiedDate FROM Lead WHERE id = '" + createdLeadId + "'";
+            result = sforce.connection.query(soql);
+            records = result.getArray("records");
+            addRow(createdLeadId, records[0].CreatedDate, records[0].LastModifiedDate, serverTimestampPre, serverTimestampPost, 'Record ID');
+        }
+        
+        function addRow(LeadID, CreatedDate, LastModified, ServerPre, ServerPost, FoundBy) {
+            var table=document.getElementById("myTable");
+            var row=table.insertRow(-1);
+            row.insertCell(-1).innerHTML=createdLeadId;
+            row.insertCell(-1).innerHTML=CreatedDate;
+            row.insertCell(-1).innerHTML=LastModified;
+            row.insertCell(-1).innerHTML=ServerPre;
+            row.insertCell(-1).innerHTML=ServerPost;
+            row.insertCell(-1).innerHTML=FoundBy;
+        }
+    </script>
+    <apex:form >
+        <apex:commandButton value="Create Lead" onclick="Process();" rerender="Results"/>
+        <table border="1" id="myTable" >
+            <tr>
+                <th>LeadID</th>
+                <th>Created</th>
+                <th>LastModified</th>
+                <th>Server (pre)</th>
+                <th>Server (post)</th>
+                <th>Found By</th>
+            </tr>
+        </table>
+    </apex:form>
+</apex:page>

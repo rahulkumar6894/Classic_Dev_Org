@@ -1,0 +1,69 @@
+<apex:page controller="validation" id="a">
+<apex:form id="b">
+<apex:pageBlock id="c">
+    <apex:pageBlockSection columns="1" id="d">
+        <apex:inputtext label="FirstName" value="{!firstname}"  id="e"/>
+             <div id="Div1" style="display:none">
+             <span style="color:red;font-weight:bold">Enter First Name</span>
+             </div>
+        <apex:inputtext label="LastName" value="{!lastName}"  id="f" />
+             <div id="Div2" >
+             <span style="color:red;font-weight:bold">Enter Secound Name</span>
+             </div>
+        <apex:inputtext label="Email" value="{!email}"  id="g" />
+            <div id="Div3" >
+             <span style="color:red;font-weight:bold">Enter Valid Email</span>
+             </div>
+         <apex:inputtext label="Phone No" value="{!Phone}"  id="h" />
+            <span style="color:red;font-weight:bold"><p id="errorBox3"></p></span>
+    </apex:pageBlockSection>
+    <apex:pageBlockButtons >
+       <apex:commandButton value="ValidationSet" onclick="fnshow();" reRender="result"/>  
+      
+    </apex:pageBlockButtons>
+</apex:pageBlock>
+</apex:form>
+    
+    <script>
+   
+     function fnshow()
+     {
+            debugger;
+            var FirstName = document.getElementById("a:b:c:d:e").value;
+            var LastName  = document.getElementById("a:b:c:d:f").value; 
+            var x = document.getElementById("a:b:c:d:g").value; 
+            var atpos = x.indexOf("@");
+            var dotpos = x.lastIndexOf(".");
+            var phoneNo = document.getElementById("a:b:c:d:h").value;
+            if(FirstName == "" || FirstName.length>= 255)
+            {
+                 alert('*****');
+                document.getElementById("Div1").innerHTML = text; 
+            }else{
+                     document.getElementById("Div1").innerHTML = none; 
+                    if(LastName  == "" || LastName.length>=255) 
+                    {
+                    document.getElementById("errorBox1").innerHTML = "Enter LastName  Name";
+                    } else
+                          {
+                            if (atpos<1 || dotpos<atpos+2 || dotpos+2>=x.length)
+                            {
+                                document.getElementById("errorBox2").innerHTML = "Please Enter Valid Email";
+                            }else{
+                                        if(phoneNo.length>=12 )
+                                         {
+                                             document.getElementById("errorBox3").innerHTML = "PhoneNumber Not valid";
+                                             document.getElementById("show").innerHTML ="False"; 
+                                         }else{
+                                               document.getElementById("show").innerHTML = "True";
+                                          } 
+                                  }
+                           }
+             
+             }  
+                        
+     }
+     
+       
+    </script>
+</apex:page>

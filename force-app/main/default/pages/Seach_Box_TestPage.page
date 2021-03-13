@@ -1,0 +1,95 @@
+<apex:page id="page" standardController="Account" extensions="Search">
+<head>
+    <apex:includeScript value="{!URLFOR($Resource.ActiveWidgetsRes,'/ActiveWidgets/runtime/lib/aw.js')}" /> 
+    <apex:stylesheet value="{!URLFOR($Resource.ActiveWidgetsRes,'/ActiveWidgets/runtime/styles/aqua/aw.css')}" /> 
+</head>
+
+    <style>
+    
+    .custom3 {
+        background-color:   #ADD8E6 !important;
+    }
+    .search{
+                overflow: hidden;
+                width: 220px;
+                vertical-align: middle;
+                white-space: nowrap;
+    }
+    .settings_Icon{
+                        content: url("{!$Resource.settings_Icon}");          
+                        width: 15px;
+                        
+    }
+    
+      
+    </style>
+    
+    <apex:pageBlock id="pd">
+         <apex:form >
+            <apex:outputPanel layout="block" styleClass="custom3"  id="op1">
+                <apex:pageBlockSection id="pbs1" >
+                    <H1 style="font-size:15px;"> <span style="color:blue">Search Results</span></h1>
+               </apex:pageBlockSection>
+           </apex:outputPanel>
+           <apex:pageBlockSection id="pbs2" columns="8">
+              <apex:pageBlockSectionItem >
+
+                      <apex:commandButton value="box" id="search"  action="{!Boxlogin}" />
+              </apex:pageBlockSectionItem>
+              <apex:pageBlockSectionItem >
+                      Activities<apex:inputCheckbox id="Activities"/>
+              </apex:pageBlockSectionItem>
+              <apex:pageBlockSectionItem >
+                      Attachment<apex:inputCheckbox id="Attachment"/>
+              </apex:pageBlockSectionItem>
+              <apex:pageBlockSectionItem >
+                      Box Documents<apex:inputCheckbox id="BoxDocuments"/>
+              </apex:pageBlockSectionItem>
+              <apex:pageBlockSectionItem >
+              
+                                    Setting  <apex:commandLink styleClass="settings_Icon" id="settings_Icon" action="{!Boxlogin}" /> <!-- SettingIcon as Box CommandLink  -->
+              </apex:pageBlockSectionItem>
+               <apex:pageBlockSectionItem >
+                    Range<apex:selectlist value="{!Range}" size="1" > 
+                        <apex:selectOption itemlabel="All Time" itemValue="All Time"/>
+                        <apex:selectOption itemlabel="Today" itemValue="Annual Leave"/>
+                        <apex:selectOption itemlabel="Compensatory off" itemValue="Compensatory off"/>
+                        <apex:selectOption itemlabel="Extra Work On(For Comp Off Only)" itemValue="Extra Work On(For Comp Off Only)"/>
+                        <apex:selectOption itemlabel="Work From Home" itemValue="Work From Home"/>
+                        <apex:selectOption itemlabel="Short Leave" itemValue="Short Leave"/>
+                    </apex:selectlist>
+           </apex:pageBlockSectionItem>
+           </apex:pageBlockSection>     
+      </apex:form>
+    </apex:pageBlock>
+    <script>
+    var item = {!boxfiledata};
+    alert(item );
+    var rowsData = new Array();
+       rowsData.push(item);
+       alert(rowsData);
+
+    var myHeaders = ["Name", "Id"];
+
+    // create grid object
+    var obj = new AW.UI.Grid;
+
+    // assign cells and headers text
+    obj.setCellText(rowsData);
+    obj.setHeaderText(myHeaders);
+
+    // set number of columns/rows
+    obj.setColumnCount(4);
+    obj.setRowCount(5);
+    
+ 
+     obj.setSelectorVisible(true);
+     
+     
+    // write grid to the page
+    document.write(obj);
+
+</script>
+
+   
+</apex:page>

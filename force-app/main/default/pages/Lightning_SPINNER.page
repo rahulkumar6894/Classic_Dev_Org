@@ -1,0 +1,19 @@
+<apex:page >
+<!-- Begin Default Content REMOVE THIS -->
+   
+<h1>Congratulations</h1>
+ <apex:slds />
+    <div class="slds-scope">
+    <apex:form id="form" style="height: 200px;">
+        <!-- SPINNER -->
+                <div id="spinner" class="slds-spinner_container slds-is-relative" >
+                    <div role="status" class="slds-spinner slds-spinner--large slds-spinner--brand">
+                        <div class="slds-spinner__dot-a"></div>
+                        <div class="slds-spinner__dot-b"></div>
+                    </div>
+                </div>
+        <!-- / SPINNER -->
+    </apex:form>
+   
+    </div>
+</apex:page>

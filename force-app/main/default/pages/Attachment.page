@@ -1,0 +1,76 @@
+<apex:page Controller="Attachment_ctrl" sidebar="false" >
+  <apex:pageMessages />
+<apex:form id="frm1" >
+ <script>
+  function deleteFile(id)
+  {
+        debugger;
+        methodOneInJavascript(id);
+      
+  }
+  function Results()
+  {
+        debugger;
+        var staus = '{!resultStatus}';
+        alert('staus'+staus)
+  }
+ </script>
+      <apex:actionFunction action="{!DeleteAfile}" name="methodOneInJavascript" rendered="frm3">
+        <apex:param name="firstparam" assignTo="{!DeletedId}" value="" />
+    </apex:actionFunction>
+   <apex:pageBlock title="Target Name">
+  
+        <apex:selectList value="{!selectedId }" size="1">
+                <apex:selectOptions value="{!AccountNames}" />
+                <apex:actionSupport event="onchange" action="{!showContacts}" rerender="frm2,frm3"/>
+        </apex:selectList><br/><br/>
+   </apex:pageBlock>
+</apex:form>
+
+<apex:form id="frm2" >
+    <apex:outputPanel rendered="{!readValue}">
+    <table>
+        <tr>
+            <td>Selected ID: </td>
+            <td> <apex:outputText value="{!selectedId }"></apex:outputText></td>
+           
+        </tr>
+        <tr>
+            <td>CV </td>
+             <td>  <apex:inputFile accept="doc, txt, pdf" contentType="{!contentType}" filename="{!fileName}"   filesize="1000" size="50" value="{!resume}"/> </td>
+        </tr> 
+        <tr>
+            <td></td> 
+            <td>
+              <apex:actionRegion >
+                   <apex:commandButton value="Upload" action="{!Uploadfile}" />
+              </apex:actionRegion>
+              
+            </td>
+        </tr>
+    </table>
+    </apex:outputPanel>
+</apex:form>      
+<apex:form id="frm3">
+   <apex:outputPanel rendered="{!readValue}" id="op2">
+     <apex:commandButton value="Refresh" action="{!ShowAttachments}"/>
+       <apex:pageblock id="pd2" >      
+            <apex:pageBlockTable value="{!attachsList}" var="attach"> 
+            
+             <apex:column headerValue="Actions">
+                   <apex:commandButton value="View" onclick="window.open('https://rahulkasaundhan-dev-ed--c.ap5.content.force.com/servlet/servlet.FileDownload?file={!attach.Id}');"/>
+                   <apex:commandButton value="edit" onclick="window.open('https://rahulkasaundhan-dev-ed.my.salesforce.com/{!attach.Id}/e?retURL=%2F{!selectedId }');"/> 
+                   <apex:commandButton value="Del" action="{!DeleteAfile}" reRender="op2">
+                       <apex:param name="DelId" value="{!attach.Id}"  assignTo="{!DeletedId }"/>
+                   </apex:commandButton>  
+             </apex:column>
+             <apex:column value="{!attach.Id}"/>
+             <apex:column headerValue="FileName" > 
+                     <apex:outputLink target="_blank" value="/{!attach.Id}" >{!attach.Name}</apex:outputLink>
+             </apex:column>
+            </apex:pageBlockTable>
+        </apex:pageblock>
+     </apex:outputPanel>
+</apex:form>      
+
+</apex:page>

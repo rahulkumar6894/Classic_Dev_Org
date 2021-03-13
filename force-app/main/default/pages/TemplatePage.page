@@ -1,0 +1,17 @@
+<apex:page sidebar="false" showHeader="false">
+<apex:composition template="AccountCreation_CustomPage">
+<apex:define name="header">
+<p>This header Area</p>
+</apex:define>
+ </apex:composition>
+ <apex:composition template="CustomObjectFieldDisplay_Fields">
+<apex:define name="body">
+<p>This is Body Area .</p>
+</apex:define>
+ </apex:composition>
+ <apex:composition template="SObject_FieldsPickList">
+<apex:define name="footer">
+<p>This is a Footer Area .</p>
+</apex:define>
+ </apex:composition>
+</apex:page>

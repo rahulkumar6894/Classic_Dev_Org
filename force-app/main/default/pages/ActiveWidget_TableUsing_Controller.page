@@ -1,0 +1,102 @@
+<apex:page controller="TableController"  id="Page">
+        
+        <head>
+            <apex:includeScript value="{!URLFOR($Resource.ActiveWidgetsRes,'/ActiveWidgets/runtime/lib/aw.js')}" /> 
+            <apex:stylesheet value="{!URLFOR($Resource.ActiveWidgetsRes,'/ActiveWidgets/runtime/styles/aqua/aw.css')}" /> 
+        </head>
+
+        <style>
+
+            .aw-mouseover-row {
+            background: #ccc;
+            }
+            #myGrid {height: 200px; width: 47%;}
+            #myGrid .aw-column-0 {width:  50px;}
+            #myGrid .aw-column-1 {width: 130px;}
+            #myGrid .aw-column-2 {text-align: right;}
+            #myGrid .aw-column-3 {text-align: right;}
+            #myGrid .aw-column-4 {text-align: right;}
+
+            #myGrid .aw-grid-cell {border-right: 1px solid threedlightshadow;}
+            #myGrid .aw-grid-row {border-bottom: 1px solid threedlightshadow;}
+             #myGrid .aw-alternate-even {background: #fff;}
+            #myGrid .aw-alternate-odd {background: #eee;}
+
+            #myGrid .aw-alternate-even .aw-column-1 {background: #eee;}
+            #myGrid .aw-alternate-odd .aw-column-1 {background: #ddd;}
+
+            /* Selected cells */
+            #myGrid .aw-grid-row .aw-cells-selected {background: #316ac5;}
+
+       </style> 
+
+        <apex:form id="form">
+               <apex:pagemessages ></apex:pagemessages>
+               <!-- Action Function for  delete Buttton-->
+               <apex:actionFunction id="delete" action="{!deletedata}" name="calldelete" reRender="result,form"  oncomplete="return false;" > 
+               <apex:param name="param1" assignTo="{!Idstr}" value=""/>
+               </apex:actionFunction>
+               <!-- Action Function for edit Buttton-->
+               <apex:actionFunction id="edit" action="{!editrecord}" name="Editclass"  oncomplete="return false;"  reRender="pb,form,pbs"> 
+               <apex:param name="param1" assignTo="{!Idstr}" value=""/>
+               </apex:actionFunction>
+           <apex:pageBlock id="pb">
+              
+                 <!-- Edit,Delete Buttton on top of pageBlock -->
+                 <apex:pageBlockButtons id="pbb" location="top">
+                    <apex:commandButton value="Edit"  onclick="editfn(); return false;"  />
+                    <apex:commandButton value="Delete" onclick="deleteFn(); return false;"  /> 
+                 </apex:pageBlockButtons>
+                 
+                 <!-- Page Block Section for display --> 
+                 <apex:pageBlockSection columns="1" id="pbs">
+                    <apex:inputtext label="FirstName" value="{!firstname}"  id="text1" />
+                    <apex:inputtext label="LastName" value="{!lastName}"  id="text2" />
+                    <apex:inputtext label="Phone No" value="{!Phone}"  id="text4" />
+                </apex:pageBlockSection>
+                
+        </apex:pageBlock>
+       <center><apex:commandButton value="Update" action="{!updateData}" reRender="pb,form"/> </center>
+
+    </apex:form>
+
+    <script type="text/javascript">
+                var arrId = new Array();
+                // method for retrive Id and Store in Array
+                function oncolumnckeckboxclick(val){
+                    arrId.push(val);
+                }
+                // Method for Delete Data
+                function deleteFn(){
+                    debugger;
+                     calldelete(arrId);
+                }
+                
+                // Method for Edit Data
+                function editfn(){
+                     debugger;
+                     Editclass(arrId);
+                }
+                 
+    
+                var conlist = {!conlist};   //  Retrive list of Contact from  Controller
+               
+                var Columns = ["", "Id", "FirstName", "LastName", "Phone"];  // Set columns Name for Contact List
+                var obj= new AW.UI.Grid;     // Grid control for conlist
+                obj.setId("myGrid");            
+                obj.setCellText(conlist);    // show Data retrive from  contact in Controller
+                obj.setHeaderText(Columns);  // Set Header coloumns name
+                obj.setColumnCount(5);      // Set Row of Table
+                obj.setRowCount(10);         // Set Row of Table
+                obj.setColumnResizable(false, 0);  // resizable of column  by index 
+                obj.setColumnResizable(false, 1); 
+                obj.setColumnResizable(false,0);   // resizable of column index 1
+                obj.onHeaderClicked = function(event,index){if (index==2) return 'disabled'};  // Disabled sort method at Index 2   
+               // obj.setScrollBars("none");
+               // obj.onScrollBarsChanging = function(){return 1}; // Disable ScrollBars
+                document.write(obj);       // show Table in UI
+         
+    
+    </script>
+
+</apex:page>

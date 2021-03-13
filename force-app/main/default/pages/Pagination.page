@@ -1,0 +1,20 @@
+<apex:page title="pagination" controller="pagination">
+    <apex:form >
+    <apex:pageBlock id="details">
+        <apex:pageblockTable value="{!acclist}" var="acc">
+            <apex:column value="{!acc.Name}"/>
+            <apex:column value="{!acc.website}"/>
+            <apex:column value="{!acc.AnnualRevenue}"/>
+            <apex:column value="{!acc.Description}"/>
+            <apex:column value="{!acc.Type}"/>
+        </apex:pageblockTable>
+        <apex:pageblockButtons >
+            <apex:commandButton value="First Page" rerender="details?" action="{!FirstPage}" disabled="{!prev1}"/>
+            <apex:commandButton value="Previous" rerender="details" action="{!previous}" disabled="{!prev1}"/>
+            <apex:commandButton value="Next" rerender="details" action="{!next}" disabled="{!nxt}"/>
+           <apex:commandButton value="Last Page" rerender="details" action="{!LastPage}" disabled="{!nxt}"/>
+
+        </apex:pageblockButtons>
+    </apex:pageBlock>
+    </apex:form>
+</apex:page>

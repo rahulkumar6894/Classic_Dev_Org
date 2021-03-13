@@ -1,0 +1,54 @@
+<apex:page cache="false" controller="boxController"  >
+    <apex:form >
+    <style>
+      .icon{
+           content: url("{!URLFOR($Resource.ExtJs,'extjs/resources/images/default/tree/folder-open.gif')}");                 
+           width: 15px;
+           }
+    </style>
+        <apex:includeScript value="{!URLFOR($Resource.ExtJs,'extjs/adapter/ext/ext-base.js')}"/>
+        <apex:includeScript value="{!URLFOR($Resource.ExtJs,'extjs/ext-all.js')}"/>
+        <apex:stylesheet value="{!URLFOR($Resource.ExtJs, 'extjs/resources/css/ext-all.css')}"/>
+        <apex:stylesheet value="{!URLFOR($Resource.ExtJs, 'extjs/treenode.css')}"/>
+        <apex:commandButton value="Log In To Box" style="background:LightBlue;width:78px;" action="{!Boxlogin}"/><br/>
+        <apex:commandButton value="GetfolderInfo" style="background:LightBlue;width:78px;"  action="{!GetfolderInfo}"/><br/>
+        <apex:commandButton value="Insert" style="background:LightBlue;width:78px;"  action="{!InsertfolderInfo}"/>
+        <apex:actionFunction action="{!getChildf}" name="childofchild" oncomplete="return false;" >
+          <apex:param name="Param" assignTo="{!data1}" value="" />
+        </apex:actionFunction>
+
+            <script>
+                Ext.onReady(function(){
+                    var Tree = Ext.tree;
+                    var tree = new Tree.TreePanel
+                    ({
+                       root:{
+                               "text":'{!root}',
+                               expanded : true,
+                               children:[{!child}] 
+                                                                                 
+                       },
+                       
+                     });
+                     tree.render('renderTree');
+                 });
+                 
+                 
+                 
+               function getchild(val,val2)
+               {
+                debugger;
+                  alert(val);  
+                  alert(val2);  
+                  childofchild(val);
+                
+               }
+               
+               </script> 
+                 
+                 <span id="renderTree"></span>
+              
+                   
+     
+     </apex:form>
+</apex:page>

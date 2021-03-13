@@ -1,0 +1,27 @@
+<apex:page >
+<!--<script type=”text/javascript”>
+var __sfdcSessionId = '{!GETSESSIONID()}';
+</script>
+<script src="../../soap/ajax/34.0/connection.js” type=”text/javascript"></script>
+<script type=”text/javascript”>
+function SendMail() {
+try {
+sforce.connection.sessionId = “{!$Api.Session_ID}”;
+var message = new sforce.SingleEmailMessage();
+message.replyTo = “xxxx@gmail.com”;
+message.targetObjectId = “xxxxxxxxxxxxxxxxx”;
+message.templateId = “xxxxxxxxxxxxxxxxx”;
+message.saveAsActivity = false;
+message.plainTextBody = “this test went through ajax”;
+var result = sforce.connection.sendEmail([message]);
+if(result[0].success == ‘true’) {
+alert(“Mail sent successfully”);
+} else {
+alert(“I had a booboo.”);
+}
+}catch(e) {
+alert(“Error Occurred: \n\n” + (e.message||e));
+}
+}
+</script>-->
+</apex:page>

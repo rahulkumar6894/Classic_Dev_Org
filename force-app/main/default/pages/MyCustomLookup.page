@@ -1,0 +1,33 @@
+<apex:page extensions="MyCustomLookupController" StandardController="Account" recordSetVar="re">
+ <apex:form >
+        <apex:pageBlock title="Account Name">
+         <apex:inputField id="Account" label="Select Your Account"   value="{!contact.AccountId}">
+                 <apex:actionSupport event="onchange" action="{!readAcoountId}" reRender="relatedContactsBlock,OutputPannel1"/>
+          </apex:inputField><br/>
+            <apex:selectList value="{!selectedAccId}" size="1">
+                <apex:selectOptions value="{!AccountNames}" />
+                <apex:actionSupport event="onchange" action="{!showContacts}" reRender="relatedContactsBlock,OutputPannel1"  />
+            </apex:selectList><br/><br/>
+            <apex:outputPanel id="OutputPannel1">
+                   This Account Have <b> {!count}</b> Contacts.
+              </apex:outputPanel> <br/>
+            <b>Related Contacts</b>
+        
+            <apex:pageblockTable title="Contacts" value="{!conlist}" var="sc" id="relatedContactsBlock">
+               
+                <apex:column value="{!sc.name}"/>
+                <!--<apex:column value="{!sc.phone}"/>-->
+                <apex:column value="{!sc.AccountId}"/>
+                     <apex:outputText value="{! IF((sc.phone== null), 'NA', sc.phone) }"/>
+                fsdfssfsdfssfsdfssfsdfssfsdfssfsdfssfsdfss
+            </apex:pageblockTable>
+        </apex:pageBlock>
+        <apex:pageBlock >
+            <apex:selectList value="{!contactobj}" size="1">
+             <apex:selectOptions value="{!contactNames}"></apex:selectOptions>
+            </apex:selectList> 
+            <apex:actionSupport event="onchange" action="{!ContactDetails}"/> 
+            <apex:commandButton value="Upload" action="{!Uploadfile}"/>
+       </apex:pageBlock>
+ </apex:form>
+</apex:page>

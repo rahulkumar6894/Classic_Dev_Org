@@ -1,0 +1,28 @@
+<apex:page >
+<apex:form >
+    <script type="text/javascript">var __sfdcSessionId = '{!GETSESSIONID()}';</script>
+    <script src="../../soap/ajax/40.0/connection.js" type="text/javascript"></script>
+    <script type="text/javascript">
+     
+    
+          var account = new sforce.SObject("Account");
+        account.Name = "retrieve update test";
+        account.Phone = "2837484894";
+        var result = sforce.connection.create([account]);
+        if (result[0].getBoolean("success") == false) throw "create failed";
+        alert("account created " + result[0]);
+        
+        result = sforce.connection.retrieve("Name,Phone", "Account", [result[0].id]);
+        if (result[0] == null) throw "retrive failed";
+        alert("account retrieved: " + result[0]);
+        document.getElementById("j_id0:j_id1:phone").innerHTML = result[0].Phone ;
+        result[0].Phone = "111111111111";
+        result = sforce.connection.update(result);
+        if (result[0].getBoolean("success") == false) throw "update failed";
+        alert("account updated: " + result[0]);
+       document.getElementById("j_id0:j_id1:phone").innerHTML=result[0].Phone ;    
+                
+    </script>  
+     <apex:inputText label="phone" id="phone"/>   
+ </apex:form>
+</apex:page>

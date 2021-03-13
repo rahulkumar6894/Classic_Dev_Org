@@ -1,0 +1,7 @@
+<apex:page controller="passingRecordId_ctrl">
+  
+  <h1>Congratulations</h1>
+  <apex:form >
+  <apex:commandButton action="{!RedirectUrlWithId}"  rerender="none"/>
+  </apex:form>
+</apex:page>

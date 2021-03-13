@@ -1,0 +1,1325 @@
+<!-- 
+/*********************************************************************************
+        ** Module Name : Preqin Javascript controller 
+        ** Description : To show and hide Preqin data for PERE
+        ** Revision History:-
+        ** Version   Date        Author        WO#   Description of Action
+        ** 1.2      02/07/2018  Kumar Jonson        To show and hide Preqin PERE data
+        
+*********************************************************************************-->
+
+<aura:component implements="force:appHostable,flexipage:availableForRecordHome,force:hasRecordId" access="global" controller="preqinRE_Controller">
+    
+    <!--<ltng:require scripts="{!$Resource.preqinjs + '/preqinjqueryevent.js'}" /> -->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit1}" />
+    <aura:attribute name="recordId" type="Id" />
+    <aura:attribute name="setUprecId" type="string" />
+    <aura:attribute name="selectedField" type="string" default="name"/>
+    <aura:attribute name="wrappers" type="Object" />  
+    <aura:attribute name="show_primary_contact" type="String" default="false"/>
+    <aura:attribute name="show_all_contact" type="boolean" default="false"/>
+    <aura:attribute name="mycolumns1" type="List"/>
+    <aura:attribute name="selectedfirmID" type="String" />
+    <aura:attribute name="firmname" type="String" default=""/>
+    <aura:attribute name="mydata" type="Object"/>
+    <aura:attribute name="mycolumns" type="List"/>
+    <aura:attribute name="sortedBy" type="string" default="firmName" />
+    <aura:attribute name="sortedDirection" type="string" default="asc" />
+    <aura:attribute name="alertforblanktext" type="boolean" default="false"/>
+    <aura:attribute name="mydataPageCount" type="Integer" default="1"/>
+    <aura:attribute name="accountPreqinId" type="string" default=""/>
+    <aura:attribute name="selectedRows" type="List"/>
+    <aura:attribute name="moreOtherOffices" type="Integer" default="0"/>
+    <aura:attribute name="allocationSectionCheck" type="boolean" default="false"/>
+    <aura:attribute name="current_N_TargetAlloc_check" type="boolean" default="false"/>
+    <aura:attribute name="next12MonthsTable" type="boolean" default="false"/>
+    <aura:attribute name="futurePlanSection" type="boolean" default="false"/>
+    <aura:attribute name="contactSection" type="boolean" default="false"/>
+    <aura:attribute name="preferenceSection" type="boolean" default="false"/>
+    <aura:attribute name="investmentConsultantsSection" type="boolean" default="false"/>
+	
+	
+    <div style="min-height:150px; position:relative;">
+    
+    <div aura:id="col1_pere" style="width:100%"></div>
+    
+    
+
+    
+    <div class="demo-only" style="display:none;" id="{!globalId + '_errorpopup'}">
+        <section role="alertdialog" tabindex="-1" aria-labelledby="prompt-heading-id" aria-describedby="prompt-message-wrapper" class="slds-modal slds-fade-in-open slds-modal_prompt" aria-modal="true">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header slds-theme_error slds-theme_alert-texture">
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close">         
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+                    <h2 class="slds-text-heading_medium" id="prompt-heading-id"><span id="{!globalId + '_errorheader'}"></span></h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium" id="prompt-message-wrapper" style="min-height: 3rem;padding-left: 0.5rem;">
+                    <!--<p><span id="errorBody"></span></p> -->
+                    <div style="padding: 10px;">This page has an error. You might need to refresh it.<br/><div style="margin-top: 10px;">Techincal Stuff - <span id="{!globalId + '_errorbody'}"></span></div></div>
+                </div>
+                <footer class="slds-modal__footer slds-theme_default">
+                    <button class="slds-button slds-button_neutral" onclick="{!c.hideErrorPopUp}">OK</button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </div>
+    
+    
+    <div style="background-color:white; padding: 2px 2px 2px 2px;">  <!-- overflow: auto;min-width:400px; : Used for 3 column apporach-->
+        <div class="slds-show" aura:id="articleOne">
+            
+            
+            <!-- Start Div1 -->
+            <div class="slds-p-around--medium" id="{!globalId + '_div_login_pere'}" style="display:none;">
+                <center>
+                    Please login to start using Preqin.<br />
+                    If you have not yet purchased a license, please contact 
+                    <a href="https://www.preqin.com/item/contact-details/100/299/" target="_blank" title="Preqin">Preqin</a>.
+                    <br /><br />
+                    <!-- Modified by Jonson: Added Onclick method 'openPreqin' and defined its functionality in js controller 19-03-2018-->
+                    <a class="slds-button slds-button_neutral" title="Login" target="_blank" onclick="{!c.openPreqin}"><lightning:icon iconName="utility:download" size="xx-small" class="icnColor icnLogin" /> &nbsp;Login</a><br /><br />
+                    
+                </center>
+            </div>
+            <!-- End Div1 -->
+            
+            <!-- Start Div1 - 1 -->
+            <div class="slds-p-around--medium" aura:id="col2"  id="{!globalId +'_div_refresh_pere'}" style="display:none;">
+                <center>
+                    Please refresh to continue using Preqin.
+                    <br /><br />
+                    <a class="slds-button slds-button_neutral" title="Refresh"  onclick="{!c.doInit1}">Refresh</a>
+                    <br /><br />
+                    
+                </center>
+            </div>
+            <!-- End Div1 - 1 -->
+            
+            
+            <!-- Start Div2 -->
+            <div class=" slds-p-around--medium"  aura:id="col3" id="{!globalId +'_div_detail_pere'}" style="display:none;">
+                <div style="padding:0 0.5rem;">
+                    <div style="float:left; text-align:right; width:55%;">					
+                    </div>
+                    
+                    <div style="float:right; text-align:right; width:100px;">
+                    </div>				
+                    <div style="clear:both;"></div>
+                    
+                    <h1 style="font-weight: bold;font-size: 1.3em;">{!( !empty(v.wrappers.name) ? v.wrappers.name :'')}</h1>
+                </div>
+                <div class="slds-section slds-is-open">
+                    <h3 class="slds-section__title">
+                        <div class="slds-button slds-section__title-action" style="cursor: pointer;" onclick="{!c.toggleCollapseShow_Div1}"> 
+                            <div  style="float:left; width:50%; overflow:hidden;text-overflow: ellipsis;white-space: nowrap;padding-right: 15px;" aura:id="generalSectionId">
+                                <span id="Show_Div1" aura:id="Show_Div1_pere" class="slds-truncate" ><lightning:icon iconName="utility:chevrondown" aura:id="articleOne" size="x-small" class="IconChevron" /> General</span>
+                                <span id="Hide_Div1" aura:id="Hide_Div1_pere" class="slds-truncate slds-hide"><lightning:icon iconName="utility:chevronright" aura:id="articleOne" size="x-small" class="IconChevron"  /> General</span>
+                            </div>
+                            <div style="font-size: .8rem; width:50%;text-align: right; float:right;line-height: 1rem;" >
+                            </div>
+                            <div style="clear:both;"></div>
+                        </div>      
+                    </h3>
+                    <div id="ShoHide_Div1_pere" aura:id="ShoHide_Div1_pere">
+                        
+                        <div aria-hidden="false" class="slds-section__content" id="expando-unique-id ShoHide_Div1_pere">
+                            <div class="slds-form" style="width:47%; float:left;"> 
+                                <aura:if isTrue="{! and(!empty(v.wrappers.addresses), greaterthan(v.wrappers.addresses.length ,0))}">
+                                    <aura:iteration items="{!v.wrappers.addresses}" var="addr">
+                                        <aura:if isTrue="{!addr.isMain == 'true'}">
+                                            
+                                            <aura:if isTrue="{! !empty(addr.address1) || !empty(addr.address2) || !empty(addr.city) || !empty(addr.state) || !empty(addr.zipCode) || !empty(addr.country) }">                                                
+                                                <div class="slds-grid full forcePageBlockSectionRow" >
+                                                    <div class="slds-has-flexi-truncate slds-p-horizontal_x-small full forcePageBlockItem forcePageBlockItemView">
+                                                        <div class="slds-form-element slds-m-bottom_xx-small slds-form-element_edit slds-grow slds-hint-parent override--slds-form-element">
+                                                            <div class="test-id__field-label-container">
+                                                                <span class="test-id__field-label slds-form-element__label">Address</span>
+                                                            </div>
+                                                            <div class="slds-form-element__control slds-grid itemBody">
+                                                                <span class="test-id__field-value slds-form-element__static slds-grow slds-form-element_separator">
+                                                                    <!-- <aura:if isTrue="{! !empty(addr.googleMapUri)}">
+                                                                        <a href="{!addr.googleMapUri}" target="_blank" title="{!addr.address1+''+if( !empty(addr.address1), ', ',' ')+''+addr.address2+''+if( !empty(addr.address2), ', ',' ')+' '+addr.city+''+if( !empty(addr.city), ', ',' ')+''+ addr.state+' '+addr.zipCode+' '+ addr.country}">
+                                                                            {!addr.address1}{!if(!empty(addr.address1), ', ','')}{!addr.address2}{!if(!empty(addr.address2), ', ','')}{!addr.city}{!if(!empty(addr.city), ', ','')}{!addr.state}{!if(!empty(addr.state), ' ','')}{!addr.zipCode}{!if(!empty(addr.zipCode), ' ','')}{!addr.country} 
+                     
+                                                                        </a>
+                                                                        <aura:set attribute="else"> -->
+                                                                    <a href="{!'https://www.google.co.in/maps?q='+addr.address1+' '+addr.address2+' '+addr.city+' '+addr.state+' '+addr.zipCode+' '+ addr.country}" target="_blank" title="{!addr.address1+''+if( and(!empty(addr.address1), empty(addr.address2)), ', ',if( and(empty(addr.address1), !empty(addr.address2)),addr.address2+', ',if( and(!empty(addr.address1), !empty(addr.address2)),', '+addr.address2+', ','')))+''+ if( and(and(!empty(addr.city), empty(addr.state)),empty(addr.zipCode)),addr.city+', ',if(and(and( !empty(addr.city), !empty(addr.state)), empty(addr.zipCode)),addr.city+', '+addr.state+', ',if(and(and(empty(addr.city),!empty(addr.state)),empty(addr.zipCode)),addr.state+', ',if(and(and(empty(addr.city),empty(addr.state)),!empty(addr.zipCode)),addr.zipCode+', ',if(and(and(!empty(addr.city),empty(addr.state)),!empty(addr.zipCode)),addr.city+', '+addr.zipCode+', ',if(and(and(empty(addr.city),!empty(addr.state)),!empty(addr.zipCode)),addr.state+' '+addr.zipCode+', ',if(and(and(!empty(addr.city),!empty(addr.state)),!empty(addr.zipCode)),addr.city+', '+addr.state+' '+addr.zipCode+', ','')))))))+''+addr.country}">
+                                                                        <lightning:formattedText value="{!addr.address1+''+if( and(!empty(addr.address1), empty(addr.address2)), '\n',if( and(empty(addr.address1), !empty(addr.address2)),addr.address2+'\n',if( and(!empty(addr.address1), !empty(addr.address2)),', '+addr.address2+'\n','')))+''+ if( and(and(!empty(addr.city), empty(addr.state)),empty(addr.zipCode)),addr.city+'\n',if(and(and( !empty(addr.city), !empty(addr.state)), empty(addr.zipCode)),addr.city+', '+addr.state+'\n',if(and(and(empty(addr.city),!empty(addr.state)),empty(addr.zipCode)),addr.state+'\n',if(and(and(empty(addr.city),empty(addr.state)),!empty(addr.zipCode)),addr.zipCode+'\n',if(and(and(!empty(addr.city),empty(addr.state)),!empty(addr.zipCode)),addr.city+', '+addr.zipCode+'\n',if(and(and(empty(addr.city),!empty(addr.state)),!empty(addr.zipCode)),addr.state+' '+addr.zipCode+'\n',if(and(and(!empty(addr.city),!empty(addr.state)),!empty(addr.zipCode)),addr.city+', '+addr.state+' '+addr.zipCode+'\n','')))))))+''+addr.country}" />
+                                                                    </a>
+                                                                    <!-- </aura:set>
+                                                                    </aura:if>  -->
+                                                                    
+                                                                </span> 
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
+                                            </aura:if>
+                                            <aura:if isTrue="{! !empty(addr.fax)}">
+                                                
+                                                <div class="slds-grid full forcePageBlockSectionRow">
+                                                    <div class="slds-has-flexi-truncate slds-p-horizontal_x-small full forcePageBlockItem forcePageBlockItemView">
+                                                        <div class="slds-form-element slds-m-bottom_xx-small slds-form-element_edit slds-grow slds-hint-parent override--slds-form-element">
+                                                            <div class="test-id__field-label-container">
+                                                                <span class="test-id__field-label slds-form-element__label">Fax</span>
+                                                            </div>
+                                                            <div class="slds-form-element__control slds-grid itemBody">
+                                                                <span class="test-id__field-value slds-form-element__static slds-grow slds-form-element_separator">
+                                                                    <span>{!addr.fax}</span>  
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
+                                            </aura:if>
+                                            
+                                            <aura:if isTrue="{! !empty(addr.email)}">
+                                                
+                                                <div class="slds-grid full forcePageBlockSectionRow">
+                                                    <div class="slds-has-flexi-truncate slds-p-horizontal_x-small full forcePageBlockItem forcePageBlockItemView">
+                                                        <div class="slds-form-element slds-m-bottom_xx-small slds-form-element_edit slds-grow slds-hint-parent override--slds-form-element">
+                                                            <div class="test-id__field-label-container">
+                                                                <span class="test-id__field-label slds-form-element__label">Email</span>
+                                                            </div>
+                                                            <div class="slds-form-element__control slds-grid itemBody">
+                                                                <span class="test-id__field-value slds-form-element__static slds-grow slds-form-element_separator">
+                                                                    <span class="breakwordtext"><ui:outputEmail value="{!addr.email}" class="uiOutputEmail"/></span>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
+                                            </aura:if>
+                                            
+                                            <aura:if isTrue="{! !empty(v.wrappers.investorCurrency)}">
+                                                
+                                                <div class="slds-grid full forcePageBlockSectionRow">
+                                                    <div class="slds-has-flexi-truncate slds-p-horizontal_x-small full forcePageBlockItem forcePageBlockItemView">
+                                                        <div class="slds-form-element slds-m-bottom_xx-small slds-form-element_edit slds-grow slds-hint-parent override--slds-form-element">
+                                                            <div class="test-id__field-label-container">
+                                                                <span class="test-id__field-label slds-form-element__label">Investor Currency</span>
+                                                            </div>
+                                                            <div class="slds-form-element__control slds-grid itemBody">
+                                                                <span class="test-id__field-value slds-form-element__static slds-grow slds-form-element_separator">
+                                                                    <span>{!v.wrappers.investorCurrency}</span>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
+                                            </aura:if>
+                                            
+                                            
+                                            
+                                        </aura:if>
+                                    </aura:iteration>
+                                </aura:if>
+                            </div>
+                            
+                            <div class="slds-form" style="width:47%; float:right;"> 
+                                <aura:if isTrue="{! and (!empty(v.wrappers.addresses), greaterthan(v.wrappers.addresses.length ,0))}">
+                                    <aura:iteration items="{!v.wrappers.addresses}" var="addr">
+                                        <aura:if isTrue="{!addr.isMain == 'true'}">
+                                            
+                                            <aura:if isTrue="{! !empty(addr.tel)}">
+                                                
+                                                <div class="slds-grid full forcePageBlockSectionRow" >
+                                                    <div class="slds-has-flexi-truncate slds-p-horizontal_x-small full forcePageBlockItem forcePageBlockItemView">
+                                                        <div class="slds-form-element slds-m-bottom_xx-small slds-form-element_edit slds-grow slds-hint-parent override--slds-form-element">
+                                                            <div class="test-id__field-label-container">
+                                                                <span class="test-id__field-label slds-form-element__label">Phone</span>
+                                                            </div>
+                                                            <div class="slds-form-element__control slds-grid itemBody">
+                                                                <span class="test-id__field-value slds-form-element__static slds-grow slds-form-element_separator">
+                                                                    <span>{!addr.tel}</span> 
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
+                                            </aura:if>
+                                            
+                                            <aura:if isTrue="{! !empty(addr.web)}">
+                                                
+                                                <div class="slds-grid full forcePageBlockSectionRow">
+                                                    <div class="slds-has-flexi-truncate slds-p-horizontal_x-small full forcePageBlockItem forcePageBlockItemView">
+                                                        <div class="slds-form-element slds-m-bottom_xx-small slds-form-element_edit slds-grow slds-hint-parent override--slds-form-element">
+                                                            <div class="test-id__field-label-container">
+                                                                <span class="test-id__field-label slds-form-element__label">Website</span>
+                                                            </div>
+                                                            <div class="slds-form-element__control slds-grid itemBody">
+                                                                <span class="test-id__field-value slds-form-element__static slds-grow slds-form-element_separator">
+                                                                    <span class="breakwordtext">
+																	<lightning:formattedUrl value="{!addr.web}" title="{!addr.web}" target="_blank"/>
+																	<!--<a href="{!if(addr.web.contains('http'),'','http:'+addr.web)}" target="_blank" title="{!addr.web}">{!addr.web} </a>--></span> 
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
+                                            </aura:if>
+                                            
+                                        </aura:if>
+                                    </aura:iteration>
+                                </aura:if>
+                                
+                                <aura:if isTrue="{! !empty(v.wrappers.type)}">
+                                    
+                                    <div class="slds-grid full forcePageBlockSectionRow">
+                                        <div class="slds-has-flexi-truncate slds-p-horizontal_x-small full forcePageBlockItem forcePageBlockItemView">
+                                            <div class="slds-form-element slds-m-bottom_xx-small slds-form-element_edit slds-grow slds-hint-parent override--slds-form-element">
+                                                <div class="test-id__field-label-container">
+                                                    <span class="test-id__field-label slds-form-element__label">Type</span>
+                                                </div>
+                                                <div class="slds-form-element__control slds-grid itemBody">
+                                                    <span class="test-id__field-value slds-form-element__static slds-grow slds-form-element_separator">
+                                                        <span>{!v.wrappers.type}</span>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                </aura:if>
+                                
+                                <aura:if isTrue="{! !empty(v.wrappers.alternativeNames)}">
+                                    
+                                    <div class="slds-grid full forcePageBlockSectionRow">
+                                        <div class="slds-has-flexi-truncate slds-p-horizontal_x-small full forcePageBlockItem forcePageBlockItemView">
+                                            <div class="slds-form-element slds-m-bottom_xx-small slds-form-element_edit slds-grow slds-hint-parent override--slds-form-element">
+                                                <div class="test-id__field-label-container">
+                                                    <span class="test-id__field-label slds-form-element__label">Alternative Names</span>
+                                                </div>
+                                                <div class="slds-form-element__control slds-grid itemBody">
+                                                    <span class="test-id__field-value slds-form-element__static slds-grow slds-form-element_separator">
+                                                        <span class="NameFocus">
+                                                            <aura:if isTrue="{! and (!empty(v.wrappers.alternativeNames), greaterthan(v.wrappers.alternativeNames.length, 0))}">
+                                                                <aura:iteration items="{!v.wrappers.alternativeNames}" var="alter_name">
+                                                                    <span> {!alter_name}</span>
+                                                                </aura:iteration> 
+                                                            </aura:if>
+                                                        </span>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                </aura:if>
+                            </div>
+                            <div style="clear:both;"></div>
+                            <aura:if isTrue="{!!empty(v.wrappers.background )}">
+                                <div class="slds-text-body_regular">
+                                    <div class="slds-text-title">About</div>
+                                    <lightning:formattedRichText value="{!v.wrappers.background}" />
+                                </div>
+                            </aura:if>
+                            <hr />
+                        </div>
+                        <div style="clear:both"></div>
+                        
+                        <div style="width:100%">
+                            <div aura:id ="assetDivId_pere" class="slds-form" >  <!-- style="width:47%; float:left;" -->
+                                <aura:if isTrue="{! or( !empty(v.wrappers.totalFundsUnderManagement.ic), v.current_N_TargetAlloc_check == true)}">  
+                                    <div aura:id="oneCol2_pere" style="padding-left:0;padding-right:3% !important; width:100%;margin-top:5px;" class="TableAssets">
+                                        <span class="test-id__field-label slds-form-element__label">Assets 
+										{!if( and( or(equals(v.current_N_TargetAlloc_check, true),!empty(v.wrappers.totalFundsUnderManagement.ic)), !empty(v.wrappers.investorCurrency)), '('+v.wrappers.investorCurrency+' mn)','(mn)')}
+										</span>
+                                        <table border="1" class="TablePrq" style="border-bottom: none !important;">
+                                            <aura:if isTrue="{! !empty(v.wrappers.totalFundsUnderManagement.ic)}">
+                                                <tr>	
+                                                    <td width="60%" colspan="3" style="text-align:left;">Total Funds under Management</td>
+                                                    <td width="20%" style="text-align:right;">
+                                                        <ui:outputNumber value="{!v.wrappers.totalFundsUnderManagement.ic}"/>
+                                                    </td>	
+                                                    <td width="20%" style="text-align:right;border-bottom: none !important;border-right:none !important; border-top:none !important;"></td>												
+                                                </tr>
+                                            </aura:if>
+                                            
+                                            <aura:if isTrue="{! and(!empty(v.wrappers.investmentAllocations), greaterthan(v.wrappers.investmentAllocations.length, 0))}">
+                                                <aura:iteration items='{!v.wrappers.investmentAllocations}' var='allc'>
+                                                    
+                                                    <aura:if isTrue="{! and(allc.allocationType == 'Current Allocation',and(!empty(allc.value), !empty(allc.percent)))}">
+                                                        <tr >	
+                                                            <td width="60%" colspan="3">Allocation to Infrastructures</td>
+                                                            <td width="20%" style="text-align:right;">
+                                                                
+                                                                <ui:outputNumber value="{!allc.value}"/>
+                                                            </td>
+                                                            <td width="20%" style="text-align:right;word-break: break-word;" class="breakwordtext">
+                                                                {!allc.percent}{!if( !empty(allc.percent),'%','')}
+                                                            </td>
+                                                        </tr>
+                                                    </aura:if>
+                                                    <aura:if isTrue="{! and(allc.allocationType == 'Target Allocation',or(!empty(allc.value), !empty(allc.percent)))}">
+
+                                                                <tr>	
+                                                                    <td width="60%" colspan="3">Target Allocation to Infrastructures</td>
+                                                                    <td width="20%" style="text-align:right;">
+                                                                        <ui:outputNumber value="{!allc.value}"/>
+                                                                    </td>
+                                                                    <td width="20%" style="text-align:right;word-break: break-word;" class="breakwordtext">
+                                                                        {!allc.percent}{!if( !empty(allc.percent),'%','')}
+                                                                    </td>
+                                                                </tr>
+																
+                                                    </aura:if>
+                                                </aura:iteration>
+                                            </aura:if>
+                                        </table>
+                                        <div class="slds-form-element_separator" style="margin-top:5px;width:103%; margin-bottom:0px;"></div>
+                                    </div>
+                                </aura:if>  
+                                <div style="clear:both"></div>
+                                <aura:if isTrue="{! or( !empty(v.wrappers.alternativesAllocation.percent),!empty(v.wrappers.alternativesAllocation.value) )}"> 
+                                    <div aura:id="oneCol2_pere" style="padding-left:0 !important;padding-right:3% !important; width:100%; margin-top:5px; " class="TableAssets">
+                                        
+                                        
+                                        <span class="test-id__field-label slds-form-element__label">Wider Portfolio Allocations - Current Allocation 	{!if(and(or(!empty(v.wrappers.alternativesAllocation.percent),!empty(v.wrappers.alternativesAllocation.value)),!empty(v.wrappers.investorCurrency)),'('+v.wrappers.investorCurrency+' mn)','(mn)')}
+										</span>
+                                        <table border="1" class="TablePrq">
+                                            
+                                            <tr>	
+                                                <td width="60%">Alternatives</td>
+                                                <td  width="20%" style="text-align:right;"><ui:outputNumber value="{!v.wrappers.alternativesAllocation.value}"/></td>
+                                                <td width="20%" style="text-align:right;" class="breakwordtext">{!v.wrappers.alternativesAllocation.percent}{!if( !empty(v.wrappers.alternativesAllocation.percent),'%','')}</td>
+                                            </tr>
+                                        </table>
+                                        <div class="slds-form-element_separator" style="margin-top:5px;width:103%; margin-bottom:0px;"></div>
+                                    </div>
+                                </aura:if> 
+                                <div style="clear:both"></div>
+								
+								
+                                
+                                <aura:if isTrue="{! or(!empty(v.wrappers.typicallyInvest.ic.min),!empty(v.wrappers.typicallyInvest.ic.max))}">
+                                    <div aura:id="oneCol2_pere"  class="TableAssets2" style="padding:0 !important; width:100%;margin-top:5px;" >
+                                        <div class="slds-grid full forcePageBlockSectionRow" >
+                                            <div class="slds-has-flexi-truncate slds-p-horizontal_x-small full forcePageBlockItem forcePageBlockItemView">
+                                                <div class="slds-form-element slds-m-bottom_xx-small slds-form-element_edit slds-grow slds-hint-parent override--slds-form-element">
+                                                    <div class="test-id__field-label-container">
+                                                        <span class="test-id__field-label slds-form-element__label">Typically Invest in Funds 	{!if(and(or(!empty(v.wrappers.typicallyInvest.ic.min),!empty(v.wrappers.typicallyInvest.ic.max)),!empty(v.wrappers.investorCurrency)),'('+v.wrappers.investorCurrency+' mn)','(mn)')}
+														</span>
+                                                    </div>
+                                                    <div class="slds-form-element__control slds-grid itemBody">
+                                                        <span class="test-id__field-value slds-form-element__static slds-grow slds-form-element_separator">
+                                                            {!v.wrappers.typicallyInvest.ic.min}{!if( and(!empty(v.wrappers.typicallyInvest.ic.min), !empty(v.wrappers.typicallyInvest.ic.max)),'-','')} {!v.wrappers.typicallyInvest.ic.max}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                </aura:if>
+								<aura:if isTrue="{! !empty(v.wrappers.yearOfFirstInvestment )}">
+								<div aura:id="oneCol2_pere"  class="TableAssets2" style="padding:0 !important; width:100%;margin-top:5px;" >
+                                        <div class="slds-grid full forcePageBlockSectionRow" >
+                                            <div class="slds-has-flexi-truncate slds-p-horizontal_x-small full forcePageBlockItem forcePageBlockItemView">
+                                                <div class="slds-form-element slds-m-bottom_xx-small slds-form-element_edit slds-grow slds-hint-parent override--slds-form-element">
+                                                    <div class="test-id__field-label-container">
+                                                        <span class="test-id__field-label slds-form-element__label">Year First Investment 
+														</span>
+                                                    </div>
+                                                    <div class="slds-form-element__control slds-grid itemBody">
+                                                        <span class="test-id__field-value slds-form-element__static slds-grow slds-form-element_separator">
+                                                             <span>{!v.wrappers.yearOfFirstInvestment}</span>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                            </aura:if>
+                                <div style="clear:both"></div>
+								
+                            </div>
+                            
+                            
+                            <div aura:id ="allocationDivId_pere" class="slds-form" > <!-- style="width:47%; float:right;"  --> 
+                                <aura:if isTrue="{! v.allocationSectionCheck == true}">  
+                                    <div aura:id="oneCol2_pere"  class="TableAssets2" style="padding:0 !important; width:101%;margin-top:5px;overflow:auto">
+										<!-- Preqin RE change -->
+                                        <span class="test-id__field-label slds-form-element__label">Allocations 
+										{!if( and(equals(v.allocationSectionCheck, true), !empty(v.wrappers.investorCurrency)), '('+v.wrappers.investorCurrency+' mn)','(mn)')}
+										</span>
+										
+										<table class="TablePrq" border="1">
+										<!--border="1" class="datatable TablePrq"-->                                            
+											<tr>	
+												<td width="30%" style="text-align:center; background:#f5f5f5;">Type</td>
+												<td width="26%" style="text-align:center; background:#f5f5f5;">Investing</td>
+												<td width="22%" style="text-align:center; background:#f5f5f5;" colspan="2">Current Allocation</td>
+												<td width="22%" style="text-align:center;  background:#f5f5f5;" colspan="2">Target Allocation</td>
+											</tr>
+											 fdfdh?{!v.wrappers.allocationWrapperList}
+											<aura:iteration items='{!v.wrappers.allocationWrapperList}' var='allcWrap'>
+											<tr>	
+											
+												<td style="text-align: center;">{!allcWrap.type}</td>
+												<td style="text-align: center;">{!allcWrap.status}</td>
+												<td  style="text-align:right;"><ui:outputNumber value="{!allcWrap.current_value}"/></td>
+												<td style="text-align:right;" class="breakwordtext">{!allcWrap.current_perc}{!if( !empty(allcWrap.current_perc),'%','')}</td> 
+												<td  style="text-align:right;"><ui:outputNumber value="{!allcWrap.target_value}"/></td>
+												<td style="text-align:right;" class="breakwordtext">{!allcWrap.target_perc}{!if( !empty(allcWrap.target_perc),'%','')}</td>
+											</tr>
+											</aura:iteration>
+									    </table>
+										
+                                        <div class="slds-form-element_separator" style="margin-top:5px;width:100%; margin-bottom:0px;"></div>
+                                    </div>
+                                    <div style="clear:both"></div>
+                                </aura:if>
+								
+								<!-- New PRE Field-->
+								<aura:if isTrue="{! and( !empty(v.wrappers.strategyAllocationsRE), greaterthan(v.wrappers.strategyAllocationsRE.length, 0)) }">
+								<div aura:id="oneCol2_pere"  class="TableAssets2" style="padding:0 !important; width:100%;margin-top:5px;">
+									<!-- Preqin RE change -->
+									<span class="test-id__field-label slds-form-element__label">Private Real Estate Strategy Allocation 
+									</span>
+									
+									<table border="1" class="TablePrq">                                            
+										<tr>	
+											<td width="50%" style="text-align:center;background:#f5f5f5;">Strategy</td>
+											<td width="50%" style="text-align:center;background:#f5f5f5;">% Invested</td>
+										</tr>
+										<aura:iteration items='{!v.wrappers.strategyAllocationsRE}' var='allc'>
+												
+										<tr>	
+											<td style="text-align:center;">{!allc.strategy}</td>
+											<td style="text-align:center;">
+												<aura:if isTrue="{!(allc.percent == null || allc.percent == '')}">
+													<span style="cursor: text;" title="Invests, but value n/a">
+													<lightning:icon iconName="utility:check" size="x-small" />
+													</span>
+													<aura:set attribute="else">
+														{!allc.percent} 
+													</aura:set>
+												</aura:if>
+											</td>
+										</tr>
+										
+									</aura:iteration>
+									</table>
+									
+									<!--<table border="1" class="TablePrq">
+									{!if( allc.percent == null|| allc.percent =='','abc' , 'xyz')}
+									<tr>	
+											<td>Value Added</td>
+											<td style="text-align:center;"><lightning:icon iconName="utility:check" size="x-small" /></td>
+										</tr>
+										
+										
+										<aura:if isTrue="{!and( !empty(v.wrappers.primaryDirectSecondaryInvAllocList), greaterthan(v.wrappers.primaryDirectSecondaryInvAllocList.length, 0))}">
+											<aura:iteration items='{!v.wrappers.primaryDirectSecondaryInvAllocList}' var='allc'>
+												<aura:if isTrue="{!and(allc.allocationType != 'Current Allocation', allc.allocationType != 'Target Allocation')}">
+													<tr>	
+														<td width="60%">
+															{!if(allc.allocationType=='Current Primary Allocation','Primary','')}
+															{!if(allc.allocationType=='Current Secondary Allocation','Secondary','')}
+															{!if(allc.allocationType=='Current Direct Allocation','Direct','')}
+														</td>
+														<td width="20%" style="text-align:right;"><ui:outputNumber value="{!allc.value}"/></td>
+														<td width="20%" style="text-align:right;">{!allc.percent}{!if( !empty(allc.percent),'%','')}</td>
+													</tr>
+												</aura:if>
+											</aura:iteration>
+										</aura:if>
+									</table>-->
+									<div class="slds-form-element_separator" style="margin-top:5px;width:100%; margin-bottom:0px;"></div>
+								</div>
+								<div style="clear:both"></div>
+                                </aura:if>
+                            </div>
+							<aura:if isTrue="{! !empty(v.wrappers.allocationSource)}">
+								<div aura:id="oneCol2_pere"  class="TableAssets2" style="padding:0 !important; width:100%;margin-top:5px;" >
+                                        <div class="slds-grid full forcePageBlockSectionRow" >
+                                            <div class="slds-has-flexi-truncate slds-p-horizontal_x-small full forcePageBlockItem forcePageBlockItemView">
+                                                <div class="slds-form-element slds-m-bottom_xx-small slds-form-element_edit slds-grow slds-hint-parent override--slds-form-element">
+                                                    <div class="test-id__field-label-container">
+                                                        <span class="test-id__field-label slds-form-element__label">Source of Allocation
+														</span>
+                                                    </div>
+                                                    <div class="slds-form-element__control slds-grid itemBody">
+                                                        <span class="test-id__field-value slds-form-element__static slds-grow slds-form-element_separator">
+                                                             <span>{!v.wrappers.allocationSource}</span>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                            </aura:if>
+                        </div>
+                       
+                        <div style="clear:both"></div>
+                        
+                        <div class="{!v.moreOtherOffices > 0 ? 'slds-show':'slds-hide'}"> 
+                            
+                            <div class="slds-section slds-is-open" style="margin:0; margin-top:10px;">					
+                                <div style="border:#eee 1px solid;border-radius:5px;padding: 5px;" onclick="{!c.OtherOfficeCollapseShow}"><span style="font-size: 1rem;">Other Offices</span>
+                                    &nbsp;
+                                    <span aura:id="Show_Div_OtherOffices_pere" style="cursor:pointer;"><lightning:icon iconName="utility:expand_all" aura:id="articleOne" size="x-small" class="IconChevron" /> Show</span>
+                                    <span aura:id="Hide_Div_OtherOffices_pere" style="cursor:pointer;" class="slds-hide"><lightning:icon iconName="utility:collapse_all" aura:id="articleOne" size="x-small" class="IconChevron" /> Hide</span>
+                                </div>
+                                
+                                <div aura:id="ShoHide_Div_OtherOffices_pere" class="slds-hide">
+                                    <aura:if isTrue="{! and(!empty(v.wrappers.otherCountryList), greaterthan(v.wrappers.otherCountryList.length, 0))}">
+                                        <aura:iteration items="{!v.wrappers.otherCountryList}" var="country">
+                                            <!-- Start BootstrapContainer -->
+                                            <div class="BootstrapContainer OtherOffices" >
+                                                <div class="slds-text-body_regular">
+                                                    <div class="slds-text-title">{!country}</div>
+                                                </div>
+                                                <div style="clear:both;"></div>		
+                                                <aura:if isTrue="{! and(!empty(v.wrappers.addresses), greaterthan(v.wrappers.addresses.length, 0 ))}">
+                                                    <aura:iteration items="{!v.wrappers.addresses}" var="region">
+                                                        <aura:if isTrue="{!and( and(region.country == country, region.isMain=='false'),or(or( or( or (or ( or( or(!empty(region.address1), !empty(region.address2)), !empty(region.city)), !empty(region.state)), !empty(region.zipCode)), !empty(region.country)) , !empty(region.tel)), !empty(region.fax)))}">
+                                                            <!-- Start Contact Div -->
+                                                            <div aura:id="oneCol_pere" class="ConCol_bg_location">
+                                                                <div style="float:left;">
+                                                                    <div class="data-social-photo-guid-f882dc30-5c5f-413f-9564-418fa474e83f photoContainer forceSocialPhoto_v2 forceOutputLookup" style="margin-right: .5rem;padding-right: .25rem;">
+                                                                        <lightning:icon iconName="standard:location" class="slds-show" aura:id="articleOne" size="small"/>
+                                                                    </div>
+                                                                </div>
+                                                                <div style="float:left; width:85%; padding-right:0px !important;">   
+                                                                    <ul class="itemRows" style="margin-left:-20px;"><!--style="margin-left:-20px;"-->
+                                                                        
+                                                                        <aura:if isTrue="{! !empty(region.address1) || !empty(region.address2) || !empty(region.city) || !empty(region.state) || !empty(region.zipCode) || !empty(region.country) }">
+                                                                            <li class="tableRowGroup">
+                                                                                <div class="slds-list--horizontal forceListRecordItem">
+                                                                                    <div class="slds-item--label slds-text-color--weak slds-truncate recordCell" title="Address">Address:</div>
+                                                                                    <div class="slds-item--detail recordCell" style="white-space: normal !important;">
+                                                                                        <span>
+                                                                                            <!--  <aura:if isTrue="{! !empty(region.googleMapUri)}">
+                                                                                        <a href="{!region.googleMapUri}" target="_blank" title="{!region.address1+''+if( and(!empty(region.address1), !empty(region.address2)), ', '+region.address2,region.address2)+''+if( or(!empty(region.address1),!empty(region.address1),!empty(region.city)), ', ','')+''+region.city+''+if( or(!empty(region.address1),!empty(region.address2),!empty(region.city),!empty(region.state)), ', ',', ')+''+ region.state+' '+region.zipCode+' '+ region.country}">
+                      <lightning:formattedText value="{!region.address1+''+if( and(!empty(region.address1), empty(region.address2)), ', '+region.address1+'\n',if( and(empty(region.address1), !empty(region.address2)),region.address2+'\n',if( and(!empty(region.address1), !empty(region.address2)),', '+region.address2+'\n','')))+''+region.city+if( and(!empty(region.city),!empty(region.state)), ', ','')+''+region.state+''+if( and(!empty(region.city),empty(region.state)), ', '+region.zipCode+'\n',' '+region.zipCode+'\n')+''+ region.country}" />
+                                                                                            {!region.address1}{!if( and(!empty(region.address1),!empty(region.address2)) ,', '+region.address2,region.address2)}<br/>
+                                                                                            {!region.city}
+                                                                                            {!if( and(!empty(region.city), !empty(region.state)), ', '+region.state,region.state)}&nbsp;{!region.zipCode}<br/>{!region.country} 
+                                                                                        </a> 
+                                                                                        <aura:set attribute="else"> -->
+                                                                                            
+                                                                                            <a href="{!'https://www.google.co.in/maps?q='+region.address1+' '+region.address2+' '+region.city+' '+region.state+' '+region.zipCode+' '+ region.country}" target="_blank" title="{!region.address1+''+if( and(!empty(region.address1), empty(region.address2)), ', ',if( and(empty(region.address1), !empty(region.address2)),region.address2+', ',if( and(!empty(region.address1), !empty(region.address2)),', '+region.address2+', ','')))+''+ if( and(and(!empty(region.city), empty(region.state)),empty(region.zipCode)),region.city+', ',if(and(and( !empty(region.city), !empty(region.state)), empty(region.zipCode)),region.city+', '+region.state+', ',if(and(and(empty(region.city),!empty(region.state)),empty(region.zipCode)),region.state+', ',if(and(and(empty(region.city),empty(region.state)),!empty(region.zipCode)),region.zipCode+', ',if(and(and(!empty(region.city),empty(region.state)),!empty(region.zipCode)),region.city+', '+region.zipCode+', ',if(and(and(empty(region.city),!empty(region.state)),!empty(region.zipCode)),region.state+' '+region.zipCode+', ',if(and(and(!empty(region.city),!empty(region.state)),!empty(region.zipCode)),region.city+', '+region.state+' '+region.zipCode+', ','')))))))+''+region.country}">
+                                                                                                
+                                                                                                <lightning:formattedText value="{!region.address1+''+if( and(!empty(region.address1), empty(region.address2)), '\n',if( and(empty(region.address1), !empty(region.address2)),region.address2+'\n',if( and(!empty(region.address1), !empty(region.address2)),', '+region.address2+'\n','')))+''+ if( and(and(!empty(region.city), empty(region.state)),empty(region.zipCode)),region.city+'\n',if(and(and( !empty(region.city), !empty(region.state)), empty(region.zipCode)),region.city+', '+region.state+'\n',if(and(and(empty(region.city),!empty(region.state)),empty(region.zipCode)),region.state+'\n',if(and(and(empty(region.city),empty(region.state)),!empty(region.zipCode)),region.zipCode+'\n',if(and(and(!empty(region.city),empty(region.state)),!empty(region.zipCode)),region.city+', '+region.zipCode+'\n',if(and(and(empty(region.city),!empty(region.state)),!empty(region.zipCode)),region.state+' '+region.zipCode+'\n',if(and(and(!empty(region.city),!empty(region.state)),!empty(region.zipCode)),region.city+', '+region.state+' '+region.zipCode+'\n','')))))))+''+region.country}" />
+                                                                                            </a>
+                                                                                            <!-- </aura:set>
+                                                                                    </aura:if> -->
+                                                                                        </span>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </li>
+                                                                        </aura:if> 																	
+                                                                        <!-- </aura:if> -->
+                                                                        <aura:if isTrue="{! !empty(region.tel)}">
+                                                                            <li class="tableRowGroup">
+                                                                                <div class="slds-list--horizontal forceListRecordItem">
+                                                                                    <div class="slds-item--label slds-text-color--weak slds-truncate recordCell" title="Phone">Phone:</div>
+                                                                                    <div class="slds-item--detail recordCell"><span>{!region.tel}</span></div>
+                                                                                </div>
+                                                                            </li>
+                                                                        </aura:if>
+                                                                        <aura:if isTrue="{! !empty(region.fax)}">
+                                                                            <li class="tableRowGroup">
+                                                                                <div class="slds-list--horizontal forceListRecordItem">
+                                                                                    <div class="slds-item--label slds-text-color--weak slds-truncate recordCell" title="Fax">Fax:</div>
+                                                                                    <div class="slds-item--detail recordCell">
+                                                                                        <span>{!region.fax}</span>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </li>
+                                                                        </aura:if>
+                                                                        
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+                                                            <!-- End Contact Div -->
+                                                        </aura:if>
+                                                    </aura:iteration>
+                                                </aura:if>
+                                            </div>
+                                            <div style="clear:both;"></div>	
+                                             <hr />
+                                        </aura:iteration>
+                                    </aura:if>
+                                    
+                                   
+                                </div>
+                                <div style="clear:both"></div>
+                                
+                            </div>
+                        </div>                         
+                        <div style="clear:both"></div>
+						
+                         
+                        <aura:if isTrue="{!v.preferenceSection}" >  
+                            <div class="slds-section slds-is-open" style="margin:0; margin-top:10px;" >
+                                <div style="border:#eee 1px solid; border-radius:5px;padding: 5px;">
+                                    <span style="font-size: 1rem;">Preferences</span>
+                                </div>
+							 <aura:iteration items="{!v.wrappers.investorPreferences.strategies}" var="geo1">
+                                                                 <span> {!geo1}</span>
+                                          </aura:iteration> 
+                                <div aria-hidden="false" id="expando-unique-id" style="margin-top:5px;">
+                                      
+                                    <div class="slds-form" style="width:47%; float:left;">
+										<aura:if isTrue="{! and( !empty(v.wrappers.investorPreferences.strategies), greaterthan(v.wrappers.investorPreferences.strategies.length, 0)) }">
+                                            <div class="slds-grid full forcePageBlockSectionRow">
+                                                <div class="slds-has-flexi-truncate slds-p-horizontal_x-small full forcePageBlockItem forcePageBlockItemView">
+                                                    <div class="slds-form-element slds-m-bottom_xx-small slds-form-element_edit slds-grow slds-hint-parent override--slds-form-element">
+                                                        <div class="test-id__field-label-container">
+                                                            <span class="test-id__field-label slds-form-element__label">strategies</span>
+                                                        </div>
+                                                        <div class="slds-form-element__control slds-grid itemBody">
+                                                            <span class="test-id__field-value slds-form-element__static slds-grow slds-form-element_separator">
+                                                                <span class="NameFocus">
+                                                                    <aura:iteration items="{!v.wrappers.investorPreferences.strategies}" var="strategy">
+                                                                        <span> {!strategy}</span>
+                                                                    </aura:iteration> 
+                                                                </span>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>	
+                                        </aura:if>
+										
+                                        <aura:if isTrue="{!and( !empty(v.wrappers.investorPreferences.locations), greaterthan(v.wrappers.investorPreferences.locations.length, 0)) }">
+                                            <div class="slds-grid full forcePageBlockSectionRow">
+                                                <div class="slds-has-flexi-truncate slds-p-horizontal_x-small full forcePageBlockItem forcePageBlockItemView">
+                                                    <div class="slds-form-element slds-m-bottom_xx-small slds-form-element_edit slds-grow slds-hint-parent override--slds-form-element">
+                                                        <div class="test-id__field-label-container">
+                                                            <span class="test-id__field-label slds-form-element__label">Locations</span>
+                                                        </div>
+                                                        <div class="slds-form-element__control slds-grid itemBody">
+                                                            <span class="test-id__field-value slds-form-element__static slds-grow slds-form-element_separator">
+                                                                <span class="NameFocus">
+                                                                    <aura:iteration items="{!v.wrappers.investorPreferences.locations}" var="property">
+                                                                        <span> {!property}</span>
+                                                                    </aura:iteration> 
+                                                                </span>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </aura:if>
+										<aura:if isTrue="{! !empty(v.wrappers.investorPreferencesRE.coinvestwithGP)}">
+                                            <div class="slds-grid full forcePageBlockSectionRow">
+                                                <div class="slds-has-flexi-truncate slds-p-horizontal_x-small full forcePageBlockItem forcePageBlockItemView">
+                                                    <div class="slds-form-element slds-m-bottom_xx-small slds-form-element_edit slds-grow slds-hint-parent override--slds-form-element">
+                                                        <div class="test-id__field-label-container">
+                                                            <span class="test-id__field-label slds-form-element__label">Co-Invest alongside Fund Manager</span>
+                                                        </div>
+                                                        <div class="slds-form-element__control slds-grid itemBody">
+                                                            <span class="test-id__field-value slds-form-element__static slds-grow slds-form-element_separator">
+                                                                <span>{!v.wrappers.investorPreferencesRE.coinvestwithGP}</span>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </aura:if>
+                                        <aura:if isTrue="{! !empty(v.wrappers.investorPreferencesRE.separateAccountsRE)}">
+                                            <div class="slds-grid full forcePageBlockSectionRow">
+                                                <div class="slds-has-flexi-truncate slds-p-horizontal_x-small full forcePageBlockItem forcePageBlockItemView">
+                                                    <div class="slds-form-element slds-m-bottom_xx-small slds-form-element_edit slds-grow slds-hint-parent override--slds-form-element">
+                                                        <div class="test-id__field-label-container">
+                                                            <span class="test-id__field-label slds-form-element__label">Interested in Real Estate Separate Accounts</span>
+                                                        </div>
+                                                        <div class="slds-form-element__control slds-grid itemBody">
+                                                            <span class="test-id__field-value slds-form-element__static slds-grow slds-form-element_separator">
+                                                                <span>{!v.wrappers.investorPreferencesRE.separateAccountsRE}</span>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </aura:if>
+                                    </div>
+                                    
+                                    <div class="slds-form" style="width:47%; float:right;">
+                                         <aura:if isTrue="{!and( !empty(v.wrappers.investorPreferencesRE.locations), greaterthan(v.wrappers.investorPreferencesRE.locations.length, 0)) }">
+                                            <div class="slds-grid full forcePageBlockSectionRow">
+                                                <div class="slds-has-flexi-truncate slds-p-horizontal_x-small full forcePageBlockItem forcePageBlockItemView">
+                                                    <div class="slds-form-element slds-m-bottom_xx-small slds-form-element_edit slds-grow slds-hint-parent override--slds-form-element">
+                                                        <div class="test-id__field-label-container">
+                                                            <span class="test-id__field-label slds-form-element__label">Indirect Location Preferences</span>
+                                                        </div>
+                                                        <div class="slds-form-element__control slds-grid itemBody">
+                                                            <span class="test-id__field-value slds-form-element__static slds-grow slds-form-element_separator">
+                                                                <span class="NameFocus">
+                                                                    <aura:iteration items="{!v.wrappers.investorPreferencesRE.locations}" var="geo">
+                                                                        <span> {!geo}</span>
+                                                                    </aura:iteration> 
+                                                                </span>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </aura:if>	
+                                        <aura:if isTrue="{! !empty(v.wrappers.investorPreferencesRE.firstTimeREFunds)}">								
+                                            <div class="slds-grid full forcePageBlockSectionRow">
+                                                <div class="slds-has-flexi-truncate slds-p-horizontal_x-small full forcePageBlockItem forcePageBlockItemView">
+                                                    <div class="slds-form-element slds-m-bottom_xx-small slds-form-element_edit slds-grow slds-hint-parent override--slds-form-element">
+                                                        <div class="test-id__field-label-container">
+                                                            <span class="test-id__field-label slds-form-element__label">First-Time Private Real Estate Funds</span>
+                                                        </div>
+                                                        <div class="slds-form-element__control slds-grid itemBody">
+                                                            <span class="test-id__field-value slds-form-element__static slds-grow slds-form-element_separator">
+                                                                <span>{!v.wrappers.investorPreferencesRE.firstTimeREFunds}</span>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </aura:if>
+                                        <aura:if isTrue="{! !empty(v.wrappers.investorPreferencesRE.jointVenturesRE)}">
+                                            <div class="slds-grid full forcePageBlockSectionRow">
+                                                <div class="slds-has-flexi-truncate slds-p-horizontal_x-small full forcePageBlockItem forcePageBlockItemView">
+                                                    <div class="slds-form-element slds-m-bottom_xx-small slds-form-element_edit slds-grow slds-hint-parent override--slds-form-element">
+                                                        <div class="test-id__field-label-container">
+                                                            <span class="test-id__field-label slds-form-element__label">Interested in Real Estate Joint Ventures</span>
+                                                        </div>
+                                                        <div class="slds-form-element__control slds-grid itemBody">
+                                                            <span class="test-id__field-value slds-form-element__static slds-grow slds-form-element_separator">
+                                                                <span>{!v.wrappers.investorPreferencesRE.jointVenturesRE}</span>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </aura:if>
+                                    </div>
+                                    <div style="clear:both;"></div>
+                                </div>
+                            </div>
+                        </aura:if> 
+                        <div style="clear:both;"></div>
+                        
+                    </div>
+                </div>
+                
+                <div style="clear:both"></div>
+                
+                
+                <div class="{!(v.futurePlanSection == true) ? 'slds-show':'slds-hide'}">
+                    <div class="slds-section slds-is-open">
+                        <h3 class="slds-section__title">
+                            <div onclick="{!c.toggleCollapseShow_Div2}" class="slds-button slds-section__title-action"> 
+                                <div style="float:left; width:100%; overflow:hidden;text-overflow: ellipsis;white-space: nowrap;padding-right: 15px;cursor: pointer;">
+                                    <span aura:id="Show_Div2_pere" class="slds-truncate"><lightning:icon iconName="utility:chevronright" aura:id="articleOne" size="x-small" class="IconChevron" /> Future Plans, Searches and Mandates</span>
+                                    <span aura:id="Hide_Div2_pere" class="slds-truncate slds-hide"><lightning:icon iconName="utility:chevrondown" aura:id="articleOne" size="x-small" class="IconChevron"  /> Future Plans, Searches and Mandates</span>
+                                </div>
+                            </div>      
+                        </h3>
+                        <div aura:id="ShoHide_Div2_pere" id="ShoHide_Div2_pere" class="slds-hide">
+                            
+                            <div aria-hidden="false" class="slds-section__content" id="expando-unique-id">
+                                
+                                <div class="slds-form" style="width:47%; float:left;">
+                                    <aura:if isTrue="{! !empty(v.wrappers.futureInvestmentPlan.next12MonthsQuarter)}">
+                                        <div class="slds-grid full forcePageBlockSectionRow">
+                                            <div class="slds-has-flexi-truncate slds-p-horizontal_x-small full forcePageBlockItem forcePageBlockItemView">
+                                                <div class="slds-form-element slds-m-bottom_xx-small slds-form-element_edit slds-grow slds-hint-parent override--slds-form-element">
+                                                    <div class="test-id__field-label-container">
+                                                        <span class="test-id__field-label slds-form-element__label">Date of Plans</span>
+                                                    </div>
+                                                    <div class="slds-form-element__control slds-grid itemBody">
+                                                        <span class="test-id__field-value slds-form-element__static slds-grow slds-form-element_separator">
+                                                            <span>{!v.wrappers.futureInvestmentPlan.next12MonthsQuarter}</span>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </aura:if>
+                                    <aura:if isTrue="{!v.next12MonthsTable}">
+                                        <div class="slds-grid full forcePageBlockSectionRow">
+                                            <div class="slds-has-flexi-truncate slds-p-horizontal_x-small full forcePageBlockItem forcePageBlockItemView">
+                                                <div class="slds-form-element slds-m-bottom_xx-small slds-form-element_edit slds-grow slds-hint-parent override--slds-form-element">
+                                                    <div class="test-id__field-label-container">
+                                                        <span class="test-id__field-label slds-form-element__label">Next 12 Months <!--{!if( !empty(v.wrappers.investorCurrency), '('+v.wrappers.investorCurrency+' mn)','')}-->
+														{!if( and(and(empty(v.wrappers.futureInvestmentPlan.numberOfFunds.min),empty(v.wrappers.futureInvestmentPlan.numberOfFunds.max)),empty(v.wrappers.futureInvestmentPlan.estimatedAmount)),'',if(empty(v.wrappers.investorCurrency),'(mn)','('+v.wrappers.investorCurrency+' mn)'))}
+														</span>
+                                                    </div>
+                                                    <div class="slds-form-element__control slds-grid itemBody">
+                                                        <span class="test-id__field-value slds-form-element__static slds-grow slds-form-element_separator">											
+                                                            <table class="TablePrq" style="margin:5px 0;">
+                                                                <aura:if isTrue="{! or(!empty(v.wrappers.futureInvestmentPlan.numberOfFunds.min), !empty(v.wrappers.futureInvestmentPlan.numberOfFunds.max) )}">
+                                                                    <tr>
+                                                                        <td width="40%"><span class="test-id__field-label slds-form-element__label">Estimated Investments</span></td>
+                                                                        <td width="60%" style="text-align: right;">{!v.wrappers.futureInvestmentPlan.numberOfFunds.min} {!( if( and(!empty(v.wrappers.futureInvestmentPlan.numberOfFunds.min),!empty(v.wrappers.futureInvestmentPlan.numberOfFunds.max)) , '-'+v.wrappers.futureInvestmentPlan.numberOfFunds.max,v.wrappers.futureInvestmentPlan.numberOfFunds.max ))}</td>
+                                                                    </tr>
+                                                                </aura:if>
+                                                                <aura:if isTrue="{! !empty(v.wrappers.futureInvestmentPlan.estimatedAmount)}">
+                                                                    <tr>
+                                                                        <td><span class="test-id__field-label slds-form-element__label">Estimated Amount</span></td>
+                                                                        <td style="text-align: right;">{!v.wrappers.futureInvestmentPlan.estimatedAmount}</td>
+                                                                    </tr>
+                                                                </aura:if>
+                                                                <aura:if isTrue="{! !empty(v.wrappers.futureInvestmentPlan.newManagers)}">
+                                                                    <tr>
+                                                                        <td><span class="test-id__field-label slds-form-element__label">Managers in Next 12 Months</span></td>
+                                                                        <td style="text-align: right;" class="breakwordtext">{!v.wrappers.futureInvestmentPlan.newManagers}</td>
+                                                                    </tr>
+                                                                </aura:if>
+                                                            </table>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </aura:if>
+                                    <aura:if isTrue="{! and( !empty(v.wrappers.futureInvestmentPlan.next12MonthsRegions), greaterthan(v.wrappers.futureInvestmentPlan.next12MonthsRegions.length, 0))}">
+                                        <div class="slds-grid full forcePageBlockSectionRow">
+                                            <div class="slds-has-flexi-truncate slds-p-horizontal_x-small full forcePageBlockItem forcePageBlockItemView">
+                                                <div class="slds-form-element slds-m-bottom_xx-small slds-form-element_edit slds-grow slds-hint-parent override--slds-form-element">
+                                                    <div class="test-id__field-label-container">
+                                                        <span class="test-id__field-label slds-form-element__label">Regions Targeting</span>
+                                                    </div>
+                                                    <div class="slds-form-element__control slds-grid itemBody">
+                                                        <span class="test-id__field-value slds-form-element__static slds-grow slds-form-element_separator">
+                                                            <span class="NameFocus">
+                                                                <aura:iteration items="{!v.wrappers.futureInvestmentPlan.next12MonthsRegions}" var="reg">
+                                                                    <span> {!reg}</span>
+                                                                </aura:iteration> 
+                                                            </span>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </aura:if>
+                                </div>
+                                
+                                <div class="slds-form" style="width:47%; float:right;">
+                                    <aura:if isTrue="{! !empty(v.wrappers.futureInvestmentPlan.timeFrameOfNextCommitments)}">
+                                        <div class="slds-grid full forcePageBlockSectionRow">
+                                            <div class="slds-has-flexi-truncate slds-p-horizontal_x-small full forcePageBlockItem forcePageBlockItemView">
+                                                <div class="slds-form-element slds-m-bottom_xx-small slds-form-element_edit slds-grow slds-hint-parent override--slds-form-element">
+                                                    <div class="test-id__field-label-container">
+                                                        <span class="test-id__field-label slds-form-element__label">Next 12 Months Plans</span>
+                                                    </div>
+                                                    <div class="slds-form-element__control slds-grid itemBody">
+                                                        <span class="test-id__field-value slds-form-element__static slds-grow slds-form-element_separator">
+                                                            <span>{!v.wrappers.futureInvestmentPlan.timeFrameOfNextCommitments}</span>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </aura:if>
+                                    
+									<!-- New PRE Fields -->
+                                    <aura:if isTrue="{! and( !empty(v.wrappers.futureInvestmentPlan.next12MonthsStrategies), greaterthan(v.wrappers.futureInvestmentPlan.next12MonthsStrategies.length, 0))}">
+                                        <div class="slds-grid full forcePageBlockSectionRow">
+                                            <div class="slds-has-flexi-truncate slds-p-horizontal_x-small full forcePageBlockItem forcePageBlockItemView">
+                                                <div class="slds-form-element slds-m-bottom_xx-small slds-form-element_edit slds-grow slds-hint-parent override--slds-form-element">
+                                                    <div class="test-id__field-label-container">
+                                                        <span class="test-id__field-label slds-form-element__label">Strategies Targeting</span>
+                                                    </div>
+                                                    <div class="slds-form-element__control slds-grid itemBody">
+                                                        <span class="test-id__field-value slds-form-element__static slds-grow slds-form-element_separator">
+                                                            <span class="NameFocus">
+                                                                <aura:iteration items="{!v.wrappers.futureInvestmentPlan.next12MonthsStrategies}" var="target">
+                                                                    <span> {!target}</span>
+                                                                </aura:iteration>
+                                                            </span>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </aura:if>
+                                    <aura:if isTrue="{! and( !empty(v.wrappers.futureInvestmentPlan.next12MonthsIndustries), greaterthan(v.wrappers.futureInvestmentPlan.next12MonthsIndustries.length, 0))}">				
+                                        <div class="slds-grid full forcePageBlockSectionRow">
+                                            <div class="slds-has-flexi-truncate slds-p-horizontal_x-small full forcePageBlockItem forcePageBlockItemView">
+                                                <div class="slds-form-element slds-m-bottom_xx-small slds-form-element_edit slds-grow slds-hint-parent override--slds-form-element">
+                                                    <div class="test-id__field-label-container">
+                                                        <span class="test-id__field-label slds-form-element__label">Industries Targeting</span>
+                                                    </div>
+                                                    <div class="slds-form-element__control slds-grid itemBody">
+                                                        <span class="test-id__field-value slds-form-element__static slds-grow slds-form-element_separator">
+                                                            <span class="NameFocus">
+                                                                <aura:iteration items="{!v.wrappers.futureInvestmentPlan.next12MonthsIndustries}" var="indus">
+                                                                    <span> {!indus}</span>
+                                                                </aura:iteration>
+                                                            </span>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>	
+                                    </aura:if>
+                                </div>
+                                <div style="clear:both;"></div>
+                                <aura:if isTrue="{! !empty(v.wrappers.futureInvestmentPlan.summaryOfNextYear)}">
+                                    <div class="slds-text-body_regular">
+                                        <div class="slds-text-title">Summary</div>
+                                        <lightning:formattedRichText value="{!v.wrappers.futureInvestmentPlan.summaryOfNextYear}" />
+                                    </div>
+                                </aura:if>
+                                <hr />
+                            </div>
+                        </div>    
+                    </div>
+                </div> 
+                
+                
+                <div style="clear:both;"></div>
+                
+                
+                
+                <div class="{!(v.contactSection) ? 'slds-show':'slds-hide'}">
+                    <div class="slds-section slds-is-open"  style="margin-top:10px;">
+                        <h3 class="slds-section__title" >
+                            <div aria-controls="expando-unique-id"  onclick="{!c.toggleCollapseShow_Div3}" aria-expanded="true" class="slds-button slds-section__title-action" style="cursor: pointer;">
+                                <span aura:id="Show_Div3_pere" class="slds-truncate"><lightning:icon iconName="utility:chevronright" aura:id="articleOne" size="x-small" class="IconChevron" /> Contacts</span>
+                                
+                                <span aura:id="Hide_Div3_pere" class="slds-truncate slds-hide"><lightning:icon iconName="utility:chevrondown" aura:id="articleOne" size="x-small" class="IconChevron" /> Contacts</span>
+                            </div>
+                        </h3>
+                        <div aura:id="ShoHide_Div3_pere" id="ShoHide_Div3_pere" class="slds-hide">
+                            <div aria-hidden="true" class="slds-section__content" id="expando-unique-id">
+                                <aura:if isTrue="{! !empty(v.wrappers.initialContact.preferedMethod)}">
+                                    
+                                    <div class="slds-form" style="width:47%; float:left;">
+                                        <div class="slds-grid full forcePageBlockSectionRow">
+                                            <div class="slds-has-flexi-truncate slds-p-horizontal_x-small full forcePageBlockItem forcePageBlockItemView">
+                                                <div class="slds-form-element slds-m-bottom_xx-small slds-form-element_edit slds-grow slds-hint-parent override--slds-form-element">
+                                                    <div class="test-id__field-label-container">
+                                                        <span class="test-id__field-label slds-form-element__label">Preferred method of initial contact</span>
+                                                    </div>
+                                                    <div class="slds-form-element__control slds-grid itemBody">
+                                                        <span class="test-id__field-value slds-form-element__static slds-grow slds-form-element_separator">
+                                                            <span>{!v.wrappers.initialContact.preferedMethod}</span>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                </aura:if>
+                                
+                                <aura:if isTrue="{! !empty(v.wrappers.initialContact.initialEmail)}">
+                                    
+                                    <div class="slds-form" style="width:47%; float:right;">
+                                        <div class="slds-grid full forcePageBlockSectionRow">
+                                            <div class="slds-has-flexi-truncate slds-p-horizontal_x-small full forcePageBlockItem forcePageBlockItemView">
+                                                <div class="slds-form-element slds-m-bottom_xx-small slds-form-element_edit slds-grow slds-hint-parent override--slds-form-element">
+                                                    <div class="test-id__field-label-container">
+                                                        <span class="test-id__field-label slds-form-element__label">Preferred Initial Contact Email</span>
+                                                    </div>
+                                                    <div class="slds-form-element__control slds-grid itemBody">
+                                                        <span class="test-id__field-value slds-form-element__static slds-grow slds-form-element_separator">
+                                                            <span><ui:outputEmail value="{!v.wrappers.initialContact.initialEmail}" class="uiOutputEmail"/></span>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>								
+                                    </div>
+                                    
+                                </aura:if>
+                                
+                                <div style="clear:both;"></div>
+                                <aura:if isTrue="{! !empty(v.wrappers.initialContact.comments)}">
+                                    <div class="slds-text-body_regular">
+                                        <div class="slds-text-title">Note</div>
+                                        <lightning:formattedRichText value="{!v.wrappers.initialContact.comments}"/>
+                                        
+                                    </div>
+                                    <hr />
+                                </aura:if>
+                                
+                                <div style="clear:both;"></div>
+                                
+                                <!-- Start BootstrapContainer -->
+                                <div class="BootstrapContainer">
+                                    <aura:if isTrue="{!v.show_all_contact}" >
+                                        <div class="slds-text-body_regular">
+                                            <div class="slds-text-title">Contacts</div>
+                                        </div>
+                                        <div style="clear:both;"></div>
+                                        
+                                        <!-- Start Contact Div -->
+                                        <aura:if isTrue="{!and( !empty(v.wrappers.contacts), greaterthan(v.wrappers.contacts.length, 0))}">
+                                            <aura:iteration items="{!v.wrappers.contacts}" var="con">
+                                                <div aura:id="oneCol400_pere" class="ConCol_bg" style="min-height:261px;">
+                                                    
+                                                    <div style="float:left;">
+                                                        <div class="data-social-photo-guid-f882dc30-5c5f-413f-9564-418fa474e83f photoContainer forceSocialPhoto_v2 forceOutputLookup" style="margin-right: .5rem;padding-right: .25rem;">
+                                                            <div class="small roundedSquare forceEntityIcon" style="background-color: #A094ED; width: 1.5rem; height: 1.5rem; border-radius: .125rem;">
+                                                                <span class="uiImage">
+                                                                    <img src="https://na50.salesforce.com/img/icon/t4v35/standard/contact_120.png" class="icon " alt="" title="" />
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div style="float:left; width:87%;">						
+                                                        
+                                                        <span class="slds-truncate breakwordtext" title="{!con.firstName+' '+con.surName}" style="display: inline-block;font-size: .875rem; margin-right:8px;"><aura:if isTrue="{!con.isPrimary != 'true'}">{!con.firstName}&nbsp;{!con.surName}</aura:if></span>
+                                                        
+                                                        <aura:if isTrue="{!con.isPrimary == 'true'}">
+                                                            <span class="slds-truncate breakwordtext" title="{!con.firstName+' '+con.surName}" style="display: inline-block;font-size: .875rem; margin-right:8px;"><a href="{!'mailto:'+''+con.email}" title="{!con.firstName+' '+con.surName}">{!con.firstName}&nbsp;{!con.surName}</a></span> 
+                                                            
+                                                            <span class="NameFocus" style="position: absolute;top: 4px; font-size: 11px;color: #666;">
+                                                                <span style="padding:3px 6px; background:#e5e5e5;">Initial Contact</span>
+                                                            </span>
+                                                        </aura:if>
+                                                        <div style="clear:both;"></div>
+                                                        <ul class="itemRows">
+                                                            <aura:if isTrue="{! !empty(con.jobTitle)}">
+                                                                <li class="tableRowGroup">
+                                                                    <div class="slds-list--horizontal forceListRecordItem">
+                                                                        <div class="slds-item--label slds-text-color--weak slds-truncate recordCell" title="Job Title" style="padding-right:7px; min-width:70px;">Job Title:</div>
+                                                                        <div class="slds-item--detail recordCell">
+                                                                            <span class="uiOutputText breakwordtext">{!con.jobTitle}</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </li>	
+                                                            </aura:if>
+                                                            <aura:if isTrue="{! !empty(con.tel)}">	
+                                                                <li class="tableRowGroup">
+                                                                    <div class="slds-list--horizontal forceListRecordItem">
+                                                                        <div class="slds-item--label slds-text-color--weak slds-truncate recordCell" title="Phone" style="padding-right:7px; min-width:70px;">Phone:</div>
+                                                                        <div class="slds-item--detail recordCell"><span dir="ltr" class="uiOutputPhone breakwordtext">{!con.tel}</span></div>
+                                                                    </div>
+                                                                </li>
+                                                            </aura:if>
+                                                            <aura:if isTrue="{! !empty(con.email)}">	
+                                                                <li class="tableRowGroup">
+                                                                    <div class="slds-list--horizontal forceListRecordItem">
+                                                                        <div class="slds-item--label slds-text-color--weak slds-truncate recordCell" title="Email" style="padding-right:7px; min-width:70px;">Email:</div>
+                                                                        <div class="slds-item--detail recordCell">
+                                                                            <span class="uiOutputEmail breakwordtext "><ui:outputEmail value="{!con.email}" class="uiOutputEmail"/></span>
+                                                                        </div>
+                                                                    </div>
+                                                                </li>
+                                                            </aura:if>
+                                                            <aura:if isTrue="{! !empty(con.address.address1) || !empty(con.address.address2) || !empty(con.address.city) || !empty(con.address.state) || !empty(con.address.zipCode) || !empty(con.address.country) }">	
+                                                                <li class="tableRowGroup">
+                                                                    <div class="slds-list--horizontal forceListRecordItem">
+                                                                        <div class="slds-item--label slds-text-color--weak slds-truncate recordCell" title="Address" style="padding-right:7px; min-width:70px;">Address:</div>
+                                                                        <div class="slds-item--detail recordCell">
+                                                                            <span class="uiOutputEmail breakwordtext">
+                                                                                <a href="{!'https://www.google.co.in/maps?q='+con.address.address1+' '+con.address.address2+' '+con.address.city+' '+con.address.state+' '+con.address.zipCode+' '+ con.address.country}" target="_blank" title="{!con.address.address1+''+if( and(!empty(con.address.address1), empty(con.address.address2)), ', ',if( and(empty(con.address.address1), !empty(con.address.address2)),con.address.address2+', ',if( and(!empty(con.address.address1), !empty(con.address.address2)),', '+con.address.address2+', ','')))+''+ if( and(and(!empty(con.address.city), empty(con.address.state)),empty(con.address.zipCode)),con.address.city+', ',if(and(and( !empty(con.address.city), !empty(con.address.state)), empty(con.address.zipCode)),con.address.city+', '+con.address.state+', ',if(and(and(empty(con.address.city),!empty(con.address.state)),empty(con.address.zipCode)),con.address.state+', ',if(and(and(empty(con.address.city),empty(con.address.state)),!empty(con.address.zipCode)),con.address.zipCode+', ',if(and(and(!empty(con.address.city),empty(con.address.state)),!empty(con.address.zipCode)),con.address.city+', '+con.address.zipCode+', ',if(and(and(empty(con.address.city),!empty(con.address.state)),!empty(con.address.zipCode)),con.address.state+' '+con.address.zipCode+', ',if(and(and(!empty(con.address.city),!empty(con.address.state)),!empty(con.address.zipCode)),con.address.city+', '+con.address.state+' '+con.address.zipCode+', ','')))))))+''+con.address.country}">
+                                                                                    
+                                                                                    <lightning:formattedText value="{!con.address.address1+''+if( and(!empty(con.address.address1), empty(con.address.address2)), '\n',if( and(empty(con.address.address1), !empty(con.address.address2)),con.address.address2+'\n',if( and(!empty(con.address.address1), !empty(con.address.address2)),', '+con.address.address2+'\n','')))+''+ if( and(and(!empty(con.address.city), empty(con.address.state)),empty(con.address.zipCode)),con.address.city+'\n',if(and(and( !empty(con.address.city), !empty(con.address.state)), empty(con.address.zipCode)),con.address.city+', '+con.address.state+'\n',if(and(and(empty(con.address.city),!empty(con.address.state)),empty(con.address.zipCode)),con.address.state+'\n',if(and(and(empty(con.address.city),empty(con.address.state)),!empty(con.address.zipCode)),con.address.zipCode+'\n',if(and(and(!empty(con.address.city),empty(con.address.state)),!empty(con.address.zipCode)),con.address.city+', '+con.address.zipCode+'\n',if(and(and(empty(con.address.city),!empty(con.address.state)),!empty(con.address.zipCode)),con.address.state+' '+con.address.zipCode+'\n',if(and(and(!empty(con.address.city),!empty(con.address.state)),!empty(con.address.zipCode)),con.address.city+', '+con.address.state+' '+con.address.zipCode+'\n','')))))))+''+con.address.country}" />
+                                                                                </a>
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
+                                                                </li>
+                                                            </aura:if>
+                                                            <aura:if isTrue="{! !empty(con.linkedIn)}">	
+                                                                <li class="tableRowGroup">
+                                                                    <div class="slds-list--horizontal forceListRecordItem">
+                                                                        <div class="slds-item--label slds-text-color--weak slds-truncate recordCell" title="LinkedIn" style="min-width: 70px; padding-right: 7px;">LinkedIn:</div>
+                                                                        <div class="slds-item--detail recordCell breakwordtext">
+                                                                            <span class="uiOutputEmail breakwordtext">
+																			<lightning:formattedUrl value="{!con.linkedIn}" title="{!con.linkedIn}" target="_blank" style="word-break: break-word;"/>
+																			<!--<a href="{!con.linkedIn}" title="{!con.linkedIn}" target="_blank">{!con.linkedIn}</a>--></span>
+                                                                        </div>
+                                                                    </div>
+                                                                </li>
+                                                            </aura:if>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </aura:iteration>
+                                        </aura:if>
+                                        <br />
+                                        
+                                        <hr />
+                                    </aura:if>
+                                    <!-- End Contact Div -->
+                                    
+                                    <aura:if isTrue="{!v.investmentConsultantsSection }">
+                                        <div class="slds-text-body_regular">
+                                            <div class="slds-text-title">Investment Consultants</div>
+                                        </div>
+                                        
+                                        <div style="clear:both;"></div>
+                                        <!-- Start Contact Div -->
+                                        <div >
+										
+                                            <aura:if isTrue="{! and( !empty(v.wrappers.investmentConsultantsINF), greaterthan(v.wrappers.investmentConsultantsINF.length, 0) )}">
+                                                <aura:iteration items="{!v.wrappers.investmentConsultantsINF}" var="pe_consultant">
+                                                    <aura:if isTrue="{! !empty(pe_consultant.name)}">	
+                                                        <div  aura:id="oneCol6_pere" class="ConCol_bg" style="min-height:100px;">
+                                                            <div style="float:left;">
+                                                                <div class="data-social-photo-guid-f882dc30-5c5f-413f-9564-418fa474e83f photoContainer forceSocialPhoto_v2 forceOutputLookup" style="margin-right: .5rem;padding-right: .25rem;">
+                                                                    <div class="small roundedSquare forceEntityIcon" style="background-color: #A094ED; width: 1.5rem; height: 1.5rem; border-radius: .125rem;">
+                                                                        <span class="uiImage">
+                                                                            <img src="https://na50.salesforce.com/img/icon/t4v35/standard/account_120.png" class="icon " alt="" title="" />
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div style="float:left; width:80%;">
+                                                                <span  title="{!pe_consultant.name}" style="display: inline-block;font-size: .875rem; margin-right:8px;" class="breakwordtext">{!pe_consultant.name}</span> 
+                                                                <ul class="itemRows truncate">
+                                                                    <li class="tableRowGroup">
+                                                                        <div style="text-align:left" class="slds-item--label slds-text-color--weak slds-truncate recordCell" title="Infrastructure">Infrastructure</div>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                            <div style="clear:both;"></div>
+                                                        </div>
+                                                    </aura:if>
+                                                </aura:iteration>
+                                            </aura:if>
+                                            
+                                            <aura:if isTrue="{! and( !empty(v.wrappers.nonPEInvConsltList),  greaterthan(v.wrappers.nonPEInvConsltList.length, 0) )}"> 
+                                                <aura:iteration items="{!v.wrappers.nonPEInvConsltList}" var="consultant">
+                                                   
+                                                        <div  aura:id="oneCol6_pere" class="ConCol_bg" style="min-height:100px;">
+                                                            <div style="float:left;">
+                                                                <div class="data-social-photo-guid-f882dc30-5c5f-413f-9564-418fa474e83f photoContainer forceSocialPhoto_v2 forceOutputLookup" style="margin-right: .5rem;padding-right: .25rem;">
+                                                                    <div class="small roundedSquare forceEntityIcon" style="background-color: #A094ED; width: 1.5rem; height: 1.5rem; border-radius: .125rem;">
+                                                                        <span class="uiImage">
+                                                                            <img src="https://na50.salesforce.com/img/icon/t4v35/standard/account_120.png" class="icon " alt="" title="" />
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div style="float:left; width:80%;">
+                                                                <span  title="{!consultant}" style="display: inline-block;font-size: .875rem; margin-right:8px;" class="breakwordtext">{!consultant}</span> 
+                                                                <ul class="itemRows truncate">
+                                                                    <li class="tableRowGroup">
+                                                                        <div style="text-align:left" class="slds-item--label slds-text-color--weak slds-truncate recordCell" title="Private Equity"></div>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                            <div style="clear:both;"></div>
+                                                        </div>
+                                                    
+                                                    
+                                                </aura:iteration> 
+                                            </aura:if> 
+                                            <div style="clear:both;"></div>
+                                            <hr />
+                                        </div>
+                                    </aura:if>
+                                    <!-- End Contact Div -->
+                                    
+                                </div>
+                                <!-- End BootstrapContainer -->
+                                
+                                <div style="clear:both;"></div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="clear:both;"></div>
+                
+            </div>
+            <!-- End Div2 -->
+            
+            <!-- Start Div3 -->
+            <div class=" slds-p-around--medium " id="{!globalId + '_div_grid_pere'}" style="display:none;">
+                <div style="float:right; text-align:right; width:190px;">
+                    <a class="slds-button slds-button_neutral" title="Logout" onclick="{!c.LogoutclearSetUpRecord}"><lightning:icon iconName="utility:logout" size="xx-small" class="icnColor" /> Logout</a><br />
+                </div>		
+                <div style="clear:both;"></div>
+                
+                <div style="background:#f5f5f5; padding:5px 10px;border-radius: 4px;margin-top: .5rem;">		
+                    
+                    <!-- Start Search Section -->
+                    <center>
+                        <div style="text-align:right;padding-left: 0%;padding-right: 0%; width:280px;">
+                            <div style="float: left;font-size: 1rem;line-height: 1.875rem; position:relative; right:3px;"> 
+                                Search:
+                            </div>
+                            <div class="slds-form-element" style="text-align:left; display: table;">
+                                <div class="slds-form-element__control">
+                                    <div class="slds-combobox_container slds-has-inline-listbox">
+                                        <div class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click slds-combobox-lookup" aria-expanded="false" aria-haspopup="listbox" role="combobox"  >
+                                            <div  class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right" role="none">
+                                                
+                                                <div onkeyup="{!c.getEnterKeyEvent}" title="Search">
+                                                    <ui:inputText class="slds-input slds-combobox__input slds-section__title" aura:id="investorSearchtext_pere" value="{!v.firmname}" maxlength="255" placeholder="Search"  />
+                                                </div>
+                                                
+                                                <a class="slds-icon_container slds-icon-utility-search slds-input__icon slds-input__icon_right"  onclick="{!c.searchFirmInfo}" style="pointer-events: all;" >
+                                                    <lightning:icon iconName="utility:search"  size="x-small" />
+                                                </a>
+                                            </div>										
+                                        </div>
+                                    </div>
+                                    
+                                    <aura:if isTrue="{!v.alertforblanktext}">
+                                        <div class="slds-form-element slds-has-error">
+                                            <div class="slds-form-element__help" style="font-size: .8125rem;color:red;" id="error-01">Please enter a value.</div>
+                                        </div>								
+                                        <aura:set attribute="else" >
+                                            <span style="display:none;"></span>
+                                        </aura:set>
+                                    </aura:if>
+                                    
+                                </div>
+                            </div>                        
+                        </div>
+                    </center>
+                    <!-- End Search Section -->
+                    
+                    <div style="clear:both;"></div>
+                </div>
+                
+                <lightning:datatable columns="{!v.mycolumns}" 
+                                     data="{!v.mydata}" 
+                                     keyField="firmID" 
+                                     hideCheckboxColumn="true" 
+                                     selectedRows="{!v.selectedRows}" 
+                                     onrowaction="{!c.getSelectedFirmData }" 
+                                     onsort="{!c.updateColumnSorting}" 
+                                     sortedBy="{!v.sortedBy}" 
+                                     sortedDirection="{!v.sortedDirection}"
+                                     />
+                
+                
+                <aura:if isTrue="{! greaterthan(v.mydata.length, 0)}">
+                    <div>
+                    </div>
+                    <aura:if isTrue="{! and( !empty(v.mydataPageCount), greaterthan(v.mydataPageCount , 1))}">		
+                        <div class="slds-form-element slds-has-error">
+                            <div class="slds-form-element__help" style="font-size: .8125rem;color: rgb(194, 57, 52);" id="error-01">The search returned more than the maximum number of rows (200). Please refine your search keyword.</div>
+                        </div>
+                        
+                        <aura:set attribute="else">
+                            <center style="color:red">&nbsp;</center>
+                        </aura:set>
+                    </aura:if>
+                    
+                    <aura:set attribute="else">
+                        <br/>
+                        <span style="color:red;margin-top: -80px;position: relative;float: left;padding-left: 1%;">No matches found.</span>
+                    </aura:set>
+                </aura:if>
+            </div>
+            
+            <!-- End Div3 -->
+            
+        </div>
+    </div>
+    <div style="clear:both;"></div>
+        
+    </div>
+    
+</aura:component>

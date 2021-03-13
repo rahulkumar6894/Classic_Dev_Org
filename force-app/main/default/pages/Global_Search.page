@@ -1,0 +1,13 @@
+<apex:page >
+    <script>
+     function  SearchTxt(){
+      var sSearchtxt =  document.getElementById("SearchTxt").value;
+      alert(sSearchtxt );
+     
+     }
+    </script>
+    <apex:form >
+        <apex:inputText title="Search" label="Enter SearchTxt" id="SearchTxt"/>
+        <apex:commandButton title="Search" value="Search" onclick="SearchTxt();"/>
+    </apex:form>
+</apex:page>

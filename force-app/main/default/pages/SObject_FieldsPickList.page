@@ -1,0 +1,24 @@
+<apex:page controller="PicklistController1">
+    <apex:form id="theForm">
+        <apex:pageBlock title="Select Object and Fields">
+        <apex:pageBlockSection title="Select an Object" collapsible="false" columns="1">
+            <apex:pageBlockSectionItem >
+              <apex:outputLabel value="Select an object:"></apex:outputLabel>
+              <apex:selectList value="{!objectName}" size="1" multiselect="false">
+                        <apex:selectOptions value="{!selectedobject}"></apex:selectOptions>
+                        <apex:actionSupport action="{!function}" event="onchange" reRender="fieldsPanel"/>  
+                    </apex:selectList>
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputPanel id="fieldsPanel">
+                <apex:outputLabel value="Information:"> </apex:outputLabel>
+                <apex:selectList value="{!fields}" multiselect="false" size="0" >
+                <apex:selectOptions value="{!lsps}">
+                </apex:selectOptions>
+                </apex:selectList>
+                </apex:outputPanel>
+            </apex:pageBlockSectionItem>
+        </apex:pageBlockSection>      
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

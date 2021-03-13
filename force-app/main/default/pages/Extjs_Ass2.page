@@ -1,0 +1,113 @@
+<apex:page controller="Extjs" id="pg" >
+    <apex:form id="formId">
+       <apex:includeScript value="{!URLFOR($Resource.ExtJs,'extjs/adapter/ext/ext-base.js')}"/>
+        <apex:includeScript value="{!URLFOR($Resource.ExtJs,'extjs/ext-all.js')}"/>
+        <apex:stylesheet value="{!URLFOR($Resource.ExtJs, 'extjs/resources/css/ext-all.css')}"/>
+        <apex:stylesheet value="{!URLFOR($Resource.ExtJs, 'extjs/treenode.css')}"/>
+        <apex:actionFunction name="actionfn" action="{!actionfn}"  reRender="formId" />
+        
+            <style>
+                .tabClass{
+                    display: none;
+                    position: fixed; 
+                    z-index: 1;
+                    padding-top: 100px; 
+                    left: 0;
+                    top: 0;
+                    width: 100%; 
+                    height: 100%;
+                    overflow: auto; 
+                    background-color: rgb(0,0,0); 
+                    background-color: rgba(0,0,0,0.4); 
+                }
+                
+                .tabClass1 {
+                    background-color: ;
+                    margin: auto;
+                    padding: 20px;
+                    border: 1px solid #888;
+                    width: 20%;
+                }
+                
+                .appendIcons{
+                    content: url("{!URLFOR($Resource.ExtJs,'extjs/resources/images/default/tree/drop-add.gif')}");                 
+                    width: 15px;
+     
+                 }
+                 
+                 .appendIcons1{
+                    content: url("{!$Resource.Rename}");          
+                    width: 15px;
+                 }
+                 
+                 .appendIcons2{
+                    content: url("{!$Resource.minusIcon}");          
+                    width: 15px;
+                 }
+                   
+                               
+            </style>
+            
+            <script>
+                Ext.onReady(function(){
+                    var Tree = Ext.tree;
+                    var tree = new Tree.TreePanel
+                    ({
+                       root:{
+                               "text":'<span onmouseover="showImage();" onmouseout="hideImage();"><img src="{!URLFOR($Resource.ExtJs1,'extjs/resources/images/default/tree/folder-open.gif')}" id="img1"/>{!rootName}<img src="{!URLFOR($Resource.ExtJs1,'extjs/resources/images/default/tree/drop-add.gif')}" id="img" onclick="addNode();" height="15" width="15" style="visibility:hidden;margin-bottom: -4px;"/> <img src="{!$Resource.Rename}" onclick="renamefn();"style="visibility:hidden"; height="15" width="12" id="imgRename";/><img src="{!$Resource.minusIcon}" onclick="renamefn();"style="visibility:hidden"; height="15" width="12" id="minus";/></span>',
+                                expanded : true,
+                               children:[{!child}]                                                                 
+                       },
+                       listeners:{
+                           click: function(node){
+                                      alert(node.text);
+                                      alert(node.parentNode.text);
+                                  }
+                       }
+                     });
+                     tree.render('renderTree');
+                 });
+                 
+                 function addNode(){
+                     document.getElementById("myTab").style.display='inline';
+                   
+                 }
+                 function cancel(){
+                     document.getElementById("myTab").style.display='none';
+                     
+                 }
+                 
+                 function save(){
+                     
+                     
+                         actionfn();
+                 }
+                  function showImage(){
+                     document.getElementById("img").style.visibility='visible';
+                     document.getElementById("imgRename").style.visibility='visible';
+                     document.getElementById("minus").style.visibility='visible';
+                     alert('hello');
+                 }
+                 // hide Section of Root
+                 function hideImage()
+                 {
+                     document.getElementById("img").style.visibility='hidden';
+                     document.getElementById("imgRename").style.visibility='hidden';
+                     document.getElementById("minus").style.visibility='hidden';
+                 }
+                                
+            </script>
+            <html>
+                <body>
+                    <div id="myTab" class="tabClass"> 
+                        <div id="myTab1" class="tabClass1">
+                             Name &nbsp; <apex:inputText value="{!name}"/><br/>
+                            <button type="button" id="buttnSave"   onclick="save();" class="close" style="margin-top: 8px;margin-left: 42px;">Save</button>
+                            <button type="button" id="buttnCancel" onclick="cancel();">Cancel</button>
+                        </div>
+                    </div>
+                    <span id="renderTree"></span>
+                </body>
+            </html>
+    </apex:form>
+</apex:page>

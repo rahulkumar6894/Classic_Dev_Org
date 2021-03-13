@@ -1,0 +1,108 @@
+<apex:page controller="BoxAuthController2" action="{!FindAccessToken}" sidebar="false">
+
+<apex:form >
+<apex:pageMessages />
+<apex:pageblock id="pgbk1">
+    <apex:pageblockbuttons location="top">
+        <apex:commandbutton value="Authorize Box" action="{!AutorizeBox}"/>
+        <apex:commandButton value="Find Folders" action="{!SearchFolders}"/>
+    </apex:pageblockbuttons>
+    <apex:pageblocksection >
+        <apex:pageBlockSectionItem >
+        <apex:outputLabel value="Client Id" for="ci"/>
+        <apex:outputtext value="{!clientid}" id="ci"/>
+        </apex:pageBlockSectionItem>
+        
+        <apex:pageBlockSectionItem >
+        <apex:outputLabel value="Client Secret" for="cs"/>
+        <apex:outputtext value="{!client_secret}" id="cs"/>
+        </apex:pageBlockSectionItem>
+        
+        <apex:pageBlockSectionItem >
+        <apex:outputLabel value="View API Key" for="ak"/>
+        <apex:outputtext value="{!ViewAPI_Key}" id="ak"/>
+        </apex:pageBlockSectionItem>
+        
+        <apex:pageBlockSectionItem >
+        <apex:outputLabel value="Access token" for="at"/>
+        <apex:outputtext value="{!AccessToken}" id="at"/>
+        </apex:pageBlockSectionItem>
+        
+        <apex:pageBlockSectionItem >
+        <apex:outputLabel value="Refresh token" for="rt"/>
+        <apex:outputtext value="{!refreshToken}" id="rt"/>
+        </apex:pageBlockSectionItem>
+        </apex:pageblocksection>
+</apex:pageblock>
+
+
+
+<apex:pageBlock title="Box folder details" id="pgbk2">
+    <apex:pageblockSection >
+        <apex:pageBlockSectionItem >
+            <apex:outputPanel >
+                <table>
+                    <tr>
+                        <td>Folders</td>
+                        <td>
+                            <apex:selectlist value="{!selectedFolder}" size="1" id="conta">
+                                       <apex:selectoptions value="{!AllFoldersList}"/>
+                                       <apex:actionSupport action="{!FindFilesFromFolder}" event="onchange"/>
+                            </apex:selectlist>
+                           
+                        </td>
+                    </tr>
+                </table>
+                <apex:pageblockTable value="{!fileList}" var="eachFile" id="pbTable">
+                    <apex:column headerValue="Name" >
+                        <apex:outputText value="{!eachFile.name}" />
+                    </apex:column>
+                    <apex:column headerValue="Folder/File" >
+                        <apex:outputText value="{!eachFile.type}" />
+                    </apex:column>
+                   <apex:column headerValue="Actions" >
+                        <apex:commandLink value="View" action="{!ViewFile}" > 
+                            <apex:param value="{!eachFile.id}" assignTo="{!selectedFileId}" id="flid" name="fid"/>
+                        </apex:commandLink>&nbsp;/&nbsp;&nbsp;
+                         <apex:commandLink value="Downloadfile" action="{!downloadFile}" > 
+                            <apex:param value="{!eachFile.id}" assignTo="{!selectedFileIdagain}" id="flidg" name="fidg" />
+                        </apex:commandLink>&nbsp;/&nbsp;&nbsp;
+                         <apex:commandLink value="Delete" action="{!DeleteFile}"> 
+                            <apex:param value="{!eachFile.id}" assignTo="{!DeletefileID}"/>
+                        </apex:commandLink>
+                    </apex:column> 
+                    
+                </apex:pageblockTable>  
+                <apex:pageblockSection title="Upload File to Box">
+                    <apex:inputFile value="{!uploadContent}" fileName="{!uploadFilename}"></apex:inputFile>
+                    <apex:commandbutton value="Upload" action="{!uploadFileToBox}"/>
+                </apex:pageblockSection>
+                <apex:pageblockSection title="Create folder at Root level">
+                   <apex:inputText id="foldername" value="{!folderName}" label="FolderName:-"/>
+                    <apex:commandbutton value="Create Folder" action="{!CreateFolderInBox}"/>
+                </apex:pageblockSection>
+            </apex:outputPanel>
+        </apex:pageBlockSectionItem> 
+       <apex:pageBlockSectionItem >
+            <apex:outputPanel >
+              <p>The URL will expire after 60 seconds </p>
+                <div>
+                    <iframe src="{!FileViewUrl}" style="width: 740px; height: 500px; border-radius: 5px; border: 1px solid #d9d9d9;"  allowfullscreen="allowfullscreen"></iframe>
+                </div>
+            </apex:outputPanel>
+        </apex:pageBlockSectionItem>
+    </apex:pageblockSection>
+</apex:pageBlock>
+
+        <apex:pageBlock title="Box Response Details" id="pgbk3">
+            <apex:pageblocksection columns="1">
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Response" for="res"/>
+                    <apex:outputtext value="{!Response}" id="res"/>
+                </apex:pageBlockSectionItem>
+                
+            </apex:pageblocksection>
+        </apex:pageBlock> 
+
+</apex:form>
+</apex:page>

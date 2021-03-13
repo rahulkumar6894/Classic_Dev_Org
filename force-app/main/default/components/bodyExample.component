@@ -1,0 +1,5 @@
+<apex:component >
+    <apex:outputText value="First custom ######## component output" /> <br/>
+        <apex:componentBody />
+    <apex:outputText value="Second custom ******** component output" /><br/>
+</apex:component>

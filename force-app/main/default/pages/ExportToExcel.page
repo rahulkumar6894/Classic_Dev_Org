@@ -1,0 +1,11 @@
+<apex:page controller="exportExcel" action="{!fetch}" > 
+    <apex:form >
+        <apex:pageBlock title="Contacts">
+     FirstName>>>>>LastName<br/>
+                <apex:repeat value="{!contacts}" var="a">
+                   {!a.FirstName}>>>>>{!a.lastName} <br/>
+                </apex:repeat>
+        </apex:pageBlock>
+        <apex:commandbutton id="button" value="Export Excel" action="{!getexport}" reRender=""/>
+    </apex:form>
+</apex:page>

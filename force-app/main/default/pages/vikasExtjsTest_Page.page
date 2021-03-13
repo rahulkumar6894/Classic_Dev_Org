@@ -1,0 +1,75 @@
+<apex:page id="pg" >
+    <apex:form id="fm">
+        <apex:includeScript value="{!URLFOR($Resource.ExtJs,'extjs/adapter/ext/ext-base.js')}"/>
+        <apex:includeScript value="{!URLFOR($Resource.ExtJs,'extjs/ext-all.js')}"/>
+        <apex:stylesheet value="{!URLFOR($Resource.ExtJs, 'extjs/resources/css/ext-all.css')}"/>
+        <apex:stylesheet value="{!URLFOR($Resource.ExtJs, 'extjs/treenode.css')}"/>
+      <script>
+     Ext.create('Ext.tree.Panel', {
+    title: 'Simple Tree',
+    width: 200,
+    height: 150,
+    
+        root: {
+            expanded: true,
+            children: [{
+                text: "detention",
+                leaf: true
+            }, {
+                text: "homework",
+                expanded: true,
+                children: [{
+                    text: "book report",
+                    leaf: true
+                }, {
+                    text: "algebra",
+                    expanded: true,
+                    children: [{
+                        text: 'algebra 1',
+                        leaf: true
+                    }, {
+                        text: 'algebra 2',
+                        leaf: true
+                    }]
+                }]
+            }, {
+                text: "buy lottery tickets",
+                leaf: true
+            }]
+        }
+    ,
+    rootVisible: false,
+    renderTo: document.body,
+    selModel: {
+        selType: 'checkboxmodel',
+        mode: 'MULTI'
+    },
+    columns: [{
+        xtype: 'treecolumn',
+        text: 'Simple Header',
+        dataIndex: 'text',
+        flex: 1
+    }],
+    listeners: {
+        select: function (selModel, rec) {
+            rec.cascadeBy(function (child) {
+                selModel.select(child, true, true);
+            });
+        },
+        deselect: function (selModel, rec) {
+            rec.cascadeBy(function (child) {
+                selModel.deselect(child, true);
+            });
+        }
+    }
+    tree.render('renderTree');
+});
+             
+       </script>
+       <div>     
+             
+                 <span id="renderTree"></span>
+                </div>
+                 
+  </apex:form>
+</apex:page>

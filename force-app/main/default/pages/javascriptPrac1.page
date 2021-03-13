@@ -1,0 +1,15 @@
+<apex:page id="pg" >
+  <apex:form id="fm">
+      <apex:inputText id="text1" />
+      <input type="text" id="text2"/>
+      <apex:commandButton value="Alert1" onclick="showMyData();return false;"  />
+  </apex:form>
+  <script>
+      function showMyData(){
+          debugger;
+          var x = document.getElementById('pg:fm:text1').value;
+          var y = document.getElementById('text2').value;
+          alert(x+'::'+y);
+      }
+  </script>
+</apex:page>

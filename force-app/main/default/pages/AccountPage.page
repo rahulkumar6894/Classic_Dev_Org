@@ -1,0 +1,4 @@
+<apex:page >
+  <c:showactivities var="Account" ></c:showactivities>
+
+</apex:page>

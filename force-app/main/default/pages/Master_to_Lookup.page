@@ -1,0 +1,14 @@
+<apex:page Controller="Master_to_Lookup_ctrl">
+    <apex:form >
+        <apex:pageBlock >
+            <apex:pageBlockSection >
+                <apex:inputfield value="{!objSourcePipeline.Name}"/>
+            </apex:pageBlockSection>
+            <apex:pageBlockSection >
+              <apex:inputfield value="{!Acc.Name}"/>
+            </apex:pageBlockSection>
+            <apex:commandButton value="Create Deal" action="{!executeQuery}" rerender="" status="myDisplayStatus" />
+                
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

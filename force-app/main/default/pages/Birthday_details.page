@@ -1,0 +1,5 @@
+<apex:page controller="Birthdaydetails_ctrl">
+<apex:form >
+ <apex:commandButton action="{!Showdetails}" value="BirthDay Details" id="Detailsbtn"/>
+</apex:form>
+</apex:page>

@@ -1,0 +1,34 @@
+<apex:page sidebar="false" showHeader="false" StandardController="Account">
+
+<apex:form >
+ 
+<apex:pageBlock title="Hello!Enter your Information" >
+ 
+<apex:pageBlockSection >
+<apex:inputField value="{!Account.name}"/>
+
+<apex:inputField value="{!Account.rating}"/>
+
+
+<apex:inputField value="{!Account.AccountSource}"/>
+<apex:inputField value="{!Account.Fax}"/>
+
+<apex:inputField value="{!account.accountNumber}"/>
+
+
+
+</apex:pageBlockSection>
+
+<apex:pageBlockButtons dir="LTR">
+<apex:commandButton action="{!save}" value="SAVE"/>
+</apex:pageBlockButtons>
+<!--<apex:commandLink action="{!save}" value="Save" id="theCommandLink"/>-->
+<!--<a id="thePage:theForm:theCommandLink" href="#" onclick="generatedJs()">Save</a>-->
+ <apex:pageMessage title="Message By Rahul" summary="This pageMessage will always display. Validation error messages appear in the pageMessages component." severity="Confirm" strength="2" />
+<apex:pageMessages />
+
+</apex:pageBlock>
+ 
+</apex:form>
+ 
+</apex:page>

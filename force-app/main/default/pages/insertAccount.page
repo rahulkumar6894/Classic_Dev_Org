@@ -1,0 +1,15 @@
+<apex:page Controller="InsertAccount">
+<apex:form >
+ <apex:pageBlock >
+ 
+     <apex:pageBlockSection >     <apex:inputText title="Name" label="AccountName" value="{!AccountName}"/> </apex:pageBlockSection>
+
+       <apex:pageBlockButtons location="bottom">      
+        Submit<apex:commandButton Action="{!insertAccount}" title="Submit" />
+        </apex:pageBlockButtons>
+
+   
+   
+ </apex:pageBlock>
+  </apex:form>
+ </apex:page>

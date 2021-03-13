@@ -1,0 +1,95 @@
+<apex:page controller="BoxPage_Sameer_Sir_ctrl" id="Page">
+   <apex:pageBlock id="pb1">
+    <apex:form id="form">
+        <apex:pageMessages id="ppmsg"></apex:pageMessages> 
+        <head>   
+            <!-- Static Resource for ActiveWidgets -->
+            <apex:includeScript value="{!URLFOR($Resource.ActiveWidgetsRes,'/ActiveWidgets/runtime/lib/aw.js')}" /> 
+            <apex:stylesheet value="{!URLFOR($Resource.ActiveWidgetsRes,'/ActiveWidgets/runtime/styles/aqua/aw.css')}" />
+        </head>
+        <!-- CSS Style Class -->
+        <style type="text/css">
+            #myGrid {height: 200px; width: 0%;} /* SetGrid height and width */
+            #myGrid .aw-alternate-even {background: #efe}/* Background color of Even line */
+            #myGrid .aw-alternate-odd {background: #def} /*  Background color of odd line */
+            #myGrid .aw-grid-row {border-bottom: 1px solid #ccc}    /* horizontal lines */
+            #myGrid .aw-grid-cell {border-right: 1px solid #ccc}  /* vertical lines for all columns */
+            #myGrid .aw-column-7 {border-right:0 !important} /* to None Border of coloumn -7 */
+        </style>    
+        <apex:actionFunction name="RootfolderDetails" action="{!RootfolderDetails}"  reRender="OP1,ppmsg" oncomplete="gridFn(); againfncall(); return false;" />
+         <apex:actionFunction name="againfiledetailsfn" action="{!againfiledetailsfn}" reRender="OP1,ppmsg" oncomplete="gridFn(); return false;" />
+           <apex:actionStatus id="Status" onstart="document.getElementById('blurred').style.display='block';" onstop="document.getElementById('blurred').style.display='none';"/>
+         
+         
+      
+        <apex:inputText value="{!accessTokens}" id="accessTokens" title="EnterAccessTokens"/> 
+        <apex:commandButton onclick="accessTokenfn(); return false;"  value="GO" reRender="pb1" status="Status"/>
+      </apex:form>
+    </apex:pageBlock>
+      
+    <script>
+        debugger;
+        var obj = new AW.UI.Grid(); 
+        obj.setId("myGrid"); // css set for  Grid
+        obj.setStyle("width", "500Px"); // width for Grid
+        obj.setStyle("height", "350px");  // Height  for  Grid  
+        var date = new AW.Formats.Date;
+        date.setTextFormat("dd-mm-yy");
+        date.setDataFormat("ISO8601"); obj.setCellFormat(date, 1) 
+        var myHeaders = ["FilleId", "FileName","FolderName"]; // Header of Grid
+        obj.setHeaderText(myHeaders );  // Set Haader for Grid
+        obj.setColumnCount(myHeaders.length); // to set no. of column to display. 
+        document.write(obj);  // Display the Grid*/
+        var rowsData = new Array();
+
+        function accessTokenfn()
+        {
+            debugger;
+            
+            RootfolderDetails();
+        }
+    </script>
+    <apex:outputPanel id="OP1" rendered="true">
+        <script>
+            function gridFn()
+            { 
+                
+                rowsData = new Array();
+                var  item = '{!FileInformatiom}'; // Box Data From Controller
+                if(item != "")
+                {
+                    var Split1 = item.split(","); // Split the record geting from box
+                    for(var i =0 ; i<Split1.length;i=i+3) // arrange the record to Show in Active Widget
+                    {  
+                        if(Split1[i] !=" ")
+                        {
+                        
+                        var rowVal = [Split1[i+0],Split1[i+1],Split1[i+2]]; // Creating the array Arroding to AW Header
+                        }
+                        if (rowVal != "")
+                        {
+                            rowsData.push(rowVal ); // Box record Concate in Array 
+                        }
+                    }
+                }
+                obj.setCellText(rowsData);  // rowsData Set In Grid as a CellText
+                obj.setRowCount(rowsData.length);     // Set Row of Length According to RowData
+                obj.refresh();
+            }
+            function againfncall()
+            {
+                debugger;
+                
+                var size = {!SizeOfSet};
+                //alert('Size of Set '+ size );
+                
+                 if(size >0)
+                 {
+                      //alert('againfncall');
+                     againfiledetailsfn();
+                 }
+            }
+           
+        </script>
+    </apex:outputPanel>
+</apex:page>

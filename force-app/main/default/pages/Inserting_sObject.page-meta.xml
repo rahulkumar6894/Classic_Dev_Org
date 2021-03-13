@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ApexPage xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>42.0</apiVersion>
+    <availableInTouch>false</availableInTouch>
+    <confirmationTokenRequired>false</confirmationTokenRequired>
+    <description>I will provide a user interface with two text fields which will take &quot;Object Name&quot; and &quot;Record Name&quot; as string from user. And when I click on Save the record with Name entered should be inserted in the provided Object. Is this possible, of-course it is.</description>
+    <label>Inserting sObject</label>
+    <packageVersions>
+        <majorNumber>1</majorNumber>
+        <minorNumber>14</minorNumber>
+        <namespace>sf_chttr_apps</namespace>
+    </packageVersions>
+    <packageVersions>
+        <majorNumber>1</majorNumber>
+        <minorNumber>7</minorNumber>
+        <namespace>sf_com_apps</namespace>
+    </packageVersions>
+</ApexPage>

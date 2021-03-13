@@ -1,0 +1,25 @@
+<apex:page Controller="MyController">
+<apex:PageBlock title="Our Product">
+<apex:pageBlockSection columns="0">
+<apex:pageBlockTable value="{!products}" var="item">
+<apex:column headervalue="product">
+<apex:outputText value="{!item.name}"/>
+</apex:column>
+<apex:column headerValue="Condition">
+<apex:outputField value="{!item.Condition__c}"/>
+</apex:column>
+<apex:column headervalue="Price">
+<apex:outputField value="{!item.Price__c}" />
+</apex:column>
+
+</apex:pageBlockTable>
+
+
+
+
+</apex:pageBlockSection>
+
+
+
+</apex:PageBlock>
+</apex:page>

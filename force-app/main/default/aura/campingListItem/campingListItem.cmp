@@ -1,0 +1,26 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+
+    <aura:attribute name="item" type="Object" required="true"  default="yes" />
+      Name: <ui:outputText value="{!v.item.Name}"/>
+    <p>
+        Quantity :<lightning:formattedNumber value="{!v.item.Quantity__c}"/>
+    </p>
+    <p>
+       Price: <lightning:formattedNumber value="{!v.item.Price__c}" style="currency"/>
+    </p>
+    <p>
+       Packed: <lightning:input type="toggle" label="Packed?" checked="{!v.item.Packed__c}"/>
+    </p>
+<!--Assignment-2 --> 
+    <aura:attribute name="message" type="String" default="Hello Sir"/>
+ 
+    <p>Message of the day: {!v.message}</p>
+    <div>
+       <lightning:button label="Click Me!" onclick="{!c.clickme}" value="Have you Nice day!!!" />
+        
+     </div> 
+   <p class="test"> Hello Rohit!!!!</p>
+   
+
+    
+</aura:component>

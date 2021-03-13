@@ -1,0 +1,36 @@
+<apex:page standardController="Contact" Sidebar="false" showHeader="false" extensions="TrackContactHistoryCtrl">
+   
+    <!--http://forceguru.blogspot.com/2011/07/binding-values-of-map-on-visualforce.html -->
+    <script>
+    window.onload = function(e)
+    { 
+        var isChangeVal =  {!isNoData};
+        if(isChangeVal){
+           document.getElementById('Display').style.display = "none";
+        }else{
+           document.getElementById('Display').style.display = "Block";
+        }
+    }
+    </script>
+    
+    <apex:form >
+        <apex:pageBlock title="Change fields" id="Display">
+            <table border="1px">
+                <tr>
+                    <th>Fields</th>
+                    <th>Old Value</th>
+                    <th>New Value</th>
+                </tr> 
+                <apex:repeat value="{!mapofTrackfiled}" var="M">
+                    <apex:repeat value="{!mapofTrackfiled[M]}" var="temp">
+                        <tr>
+                            <th> {!temp.Field}</th>
+                            <th><apex:inputField value="{!temp.OldValue}"/></th>
+                            <th><apex:inputField value="{!temp.NewValue}"/></th>
+                        </tr> 
+                    </apex:repeat>
+                </apex:repeat>
+            </table>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

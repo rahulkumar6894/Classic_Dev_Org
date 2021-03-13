@@ -1,0 +1,38 @@
+<apex:page >
+<head>
+    <apex:includeScript value="{!URLFOR($Resource.ActiveWidgetsRes,'/ActiveWidgets/runtime/lib/aw.js')}" /> 
+    <apex:stylesheet value="{!URLFOR($Resource.ActiveWidgetsRes,'/ActiveWidgets/runtime/styles/aqua/aw.css')}" /> 
+</head>
+
+<script>
+
+    var myCells = [
+        ["Rahul","Navatar ", "Nav01","12134"],
+        ["Imran", "MicroSoft", "Nav02","000201"],
+        ["Rohit", "IBM", "Nav03","1233"],
+        ["Aman", "TCS", "Nav4","12345"]
+    ];
+
+    var myHeaders = ["Name", "Company ", "empId","Phone"];
+
+    // create grid object
+    var obj = new AW.UI.Grid;
+
+    // assign cells and headers text
+    obj.setCellText(myCells);
+    obj.setHeaderText(myHeaders);
+
+    // set number of columns/rows
+    obj.setColumnCount(4);
+    obj.setRowCount(5);
+    
+ 
+     obj.setSelectorVisible(true);
+     
+     
+    // write grid to the page
+    document.write(obj);
+
+</script>
+
+</apex:page>

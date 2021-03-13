@@ -1,0 +1,76 @@
+<apex:page Controller="Controller11" sidebar="true" showHeader="true" renderAs="pdf"  >
+    <apex:form >
+    <center>  <h1>Leave Form-2017 </h1> </center>
+    <br/>
+   
+<TABLE >
+  <TR>
+   <TD> Name:-</TD>
+    <TD>
+     <apex:outputText value="{!inputText1}" label="Name:" > </apex:outputText> 
+    </TD>
+    <td></td>
+    <TD> EmpCode:-</TD>
+    <TD>
+   <apex:outputText value="{!inputText2}"  > </apex:outputText>
+    </TD>
+    <TD> Department:</TD>
+    <TD>
+      <apex:outputText value="{!inputText3}" label="Department:" > </apex:outputText>
+    </TD>
+  </TR>
+  
+  </table>
+  
+  <table>
+  <TR>
+    <TD> Reason:-</TD>
+    <TD>
+     <apex:outputText value="{!inputText4}" label="Reason"></apex:outputText>
+    </TD> <td></td>
+     
+  </TR>
+</table>
+
+ LeaveType:- <apex:outputText value="{!Leave}" label="Leave"></apex:outputText> 
+ <br/>
+ Approved/Not:- <apex:outputText value="{!Approved}" label="Approved"></apex:outputText><br/>
+ From:- <apex:outputText value="{!MYdate}" label="MYdate"></apex:outputText>
+ TO:- <apex:outputText value="{!MYdateto}" label="MYdateto"></apex:outputText>
+ 
+ 
+ <br/>
+ <apex:pageBlock >
+ <h1> Approval Section</h1>
+ <TABLE >
+   <TR>
+      <TD>Signature:-</TD>
+      <TD>
+        <inputType="text"/> 
+      </TD>
+      <td></td>
+      </TR>  
+  <TR>
+    <TD> Employee Signature:-</TD>
+    <TD>
+    <inputType="text"/>
+    </TD>
+  </TR>
+  <TR>
+     <TD> TL/PL:-</TD>
+     <TD>
+       <inputType="text"/>
+     </TD>
+     <TD> Manager:-</TD>
+     <TD>
+       <inputType="text"/>
+    </TD> <td></td>
+ </TR>
+ <TR>
+    <TD>HR Remark/Signature:-</TD>
+ </TR>
+  
+</table>
+ </apex:pageBlock> 
+    </apex:form>
+</apex:page>

@@ -1,0 +1,99 @@
+<apex:page controller="popup" >
+     
+       <style type="text/css">
+
+     
+                .divClass{
+                    display: none;
+                    position: fixed; 
+                    z-index: 1;
+                    padding-top: 100px; 
+                    left: 0;
+                    top: 0;
+                    width: 100%; 
+                    height: 100%;
+                    overflow: auto; 
+                    background-color: rgb(0,0,0); 
+                    background-color: rgba(0,0,0,0.4); 
+                }
+                
+                .divClass2 {
+                     background-color: #fefefe;
+                    margin: auto;
+                    padding: 20px;
+                    border: 1px solid #888;
+                    width: 55%;
+                    height: 45%;
+                } 
+               .Division {
+                            float: left;
+                            width: 220px;
+                            height: 250px;
+                            border: 2px solid #000000;
+                            margin-left: 75px;
+                        }
+                        
+            .Division1 {
+                            float: left;
+                            width: 60px;
+                            height: 250px;
+                            //border: 2px solid #000000;
+                            margin-left: 75px;
+                        }  
+
+            .Division2 {
+                            float: left;
+                            width: 60px;
+                            height: 100px;
+                       }
+                        
+                            
+    </style>
+   <Script>
+       function PopUp()
+        
+                 {
+                   document.getElementById("myDiv").style.display='inline';
+                 }
+        function cancel()
+                 {
+                    document.getElementById("myDiv").style.display='none';
+                 }
+   </script>
+    <apex:form >
+        
+ 
+         <apex:commandLink value="show2" onclick="PopUp();return false;"/>  
+          <div id="myDiv" class="divClass"> 
+          <div id="myDiv2" class="divClass2">
+          
+          
+                        <div class="Division">
+                                 
+                          
+                                                             
+                         </div>
+                         
+                         <div class="Division1">
+                                        <div class="Division2"></div>
+                                          
+                                           <center>
+                                           
+                                           <apex:commandButton value="<"/><br/>
+                                            <apex:commandButton value=">"/>
+
+
+
+                                          </center> 
+                                          <div class="Division2"></div>
+                          </div>
+                         <div class="Division">
+                         </div>
+                           
+                     <center><button type="button" id="btnCancel" onclick="cancel();">Ok</button></center>     
+                     
+  
+        </div>
+       </div>     
+    </apex:form>
+</apex:page>

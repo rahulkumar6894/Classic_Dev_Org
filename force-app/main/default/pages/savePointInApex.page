@@ -1,0 +1,5 @@
+<apex:page controller="savePointInApexCtrl">
+  <apex:form >
+      <apex:commandButton id="SavePonit" title="SavePoint" value="SavePoint" action="{!savePoint}" reRender="false" />
+  </apex:form>
+</apex:page>

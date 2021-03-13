@@ -1,0 +1,44 @@
+<apex:page controller="Remoting_ctrl">
+  <script type="text/javascript">
+    function getAccountJS() 
+    {
+        //get the values of input text and place into the variable.
+        var accountNameJS = document.getElementById('accName').value;        
+        Remoting_ctrl.getAccount( accountNameJS, 
+        function(result, event)
+        {
+        
+          alert('event.status==>'+event.status);
+          alert('event.type === '+event.type);
+          alert('event.message ==>'+event.message);
+            if (event.status) 
+            {
+                // demonstrates how to get ID for HTML and Visualforce tags
+                document.getElementById("{!$Component.theBlock.thePageBlockSection.theFirstItem.accId}").innerHTML = result.Id;
+                document.getElementById("{!$Component.theBlock.thePageBlockSection.theSecondItem.accNam}").innerHTML = result.Name;
+            } 
+            else if (event.type === 'exception') 
+            {
+                document.getElementById("errors-js").innerHTML = event.message;
+            } else 
+            {
+                document.getElementById("errors-js").innerHTML = 'No Records Found..';
+            }
+        }, {escape:true});
+    }
+    </script>
+ 
+ Account Name :<input id="accName" type="text" />
+    <button onclick="getAccountJS()">Get Account</button>
+    <div id="errors-js"> </div>
+    <apex:pageBlock id="theBlock">
+        <apex:pageBlockSection id="thePageBlockSection" columns="2">
+            <apex:pageBlockSectionItem id="theFirstItem">
+                <apex:outputText id="accId"/>
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem id="theSecondItem" >
+                <apex:outputText id="accNam" />
+            </apex:pageBlockSectionItem>
+        </apex:pageBlockSection>
+    </apex:pageBlock>
+</apex:page>

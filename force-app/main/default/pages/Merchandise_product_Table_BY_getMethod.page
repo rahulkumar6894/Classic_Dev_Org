@@ -1,0 +1,15 @@
+<apex:page Controller="StoreFrontController" tabStyle="Merchandise__c">
+<apex:pageBlock title="Our Product">
+<apex:pageBlockSection >
+<apex:pageBlockTable value="{!products}" var="item">
+<apex:column headerValue="Product">
+<apex:outputText value="{!item.Name}"/>
+</apex:column>
+
+</apex:pageBlockTable>
+
+</apex:pageBlockSection>
+
+</apex:pageBlock>
+ 
+</apex:page>

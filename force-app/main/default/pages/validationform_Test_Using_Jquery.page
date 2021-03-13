@@ -1,0 +1,139 @@
+<apex:page controller="validation" id="a">
+<head lang="en">
+      <meta charset="utf-8"/>
+      <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+</head>
+<style>
+        .tableContainer
+        {
+            height:290px; 
+            width: 100%;
+            overflow: auto;
+        }       
+</style>
+
+<apex:form id="b">
+   <apex:actionFunction id="display" action="{!showData}" name="CallClass" reRender="c"  oncomplete="return false;">
+    </apex:actionFunction>
+  <apex:pageBlock id="c">
+  <script>
+      alert('RK');
+        </script>    
+   <apex:outputText > <span style="color:blue;font-weight:bold"><p id="show"></p></span></apex:outputText> 
+    <apex:pageBlockSection columns="1" id="d">
+        
+        <apex:inputtext label="FirstName" value="{!firstname}"  id="e"/>
+            <span style="color:red;font-weight:bold"><p id="errorBox" ></p></span>
+        <apex:inputtext label="LastName" value="{!lastName}"  id="f" />
+            <span style="color:red;font-weight:bold"><p id="errorBox1"></p></span>
+        <apex:inputtext label="Email" value="{!email}"  id="g" />
+            <span style="color:red;font-weight:bold"><p id="errorBox2"></p></span>
+         <apex:inputtext label="Phone No" value="{!Phone}"  id="h" />
+            <span style="color:red;font-weight:bold"><p id="errorBox3"></p></span>
+   </apex:pageBlockSection>
+    <apex:pageBlockButtons >
+    <apex:commandButton value="ValidationSet" onclick="display();return false;" />  
+   
+       
+    </apex:pageBlockButtons>
+     
+    
+
+
+
+<apex:pageBlockButtons >
+<!--<apex:commandButton value="Edit1" id="edit1"  />-->
+ 
+<button id="edit"  >Edit</button>
+<button id="Delete">Delete</button>
+<button id="MultiDelete">MultiDelete</button>
+
+
+
+
+ <!--<apex:commandButton value="Edit" id="editbtn" style="display: none"/>
+<div id="editbtn" style="display: none">
+    <apex:commandButton value="Edit"/>
+    <apex:commandButton value="Delete"/>
+</div>-->
+</apex:pageBlockButtons>
+    <apex:outputPanel styleClass="" id="result">
+      <apex:pageBlockTable value="{!conlist}" var="item">
+      <apex:column >
+      <!--<div class="checks">
+         
+       <apex:facet name="p1[]"  >
+       <apex:inputCheckbox label="p1[]"/>
+       </apex:facet>
+       
+       </div> -->
+       <!-- <apex:inputCheckbox id="chkbox" onclick="editbtnMethod(this)"/> -->
+       
+         <input type="checkbox" class="checks" name="p1[]" value="p1_perro"/> 
+        
+        
+         </apex:column> 
+         
+         <apex:column value="{!item.FirstName}"> </apex:column>
+         <apex:column value="{!item.LastName}"/>
+         <apex:column value="{!item.Email}"/>
+         <apex:column value="{!item.Phone}"/>
+     </apex:pageBlockTable>
+     </apex:outputPanel>
+</apex:pageBlock>
+</apex:form>  
+<script>
+function display(){
+         debugger;
+        
+    var FirstName = document.getElementById('a:b:c:d:e').value;
+    var LastName  = document.getElementById('a:b:c:d:f').value; 
+        if(FirstName== '' || FirstName== null||FirstName.length>=255) {
+        text = "Enter First Name";
+        document.getElementById("errorBox").innerHTML = text; 
+        return false;}
+        
+        if(LastName  == '' || LastName  == null || LastName.length>=255) {
+        text = "Enter LastName  Name";
+        document.getElementById("errorBox1").innerHTML = text;
+        return false; }
+       
+   var x = document.getElementById('a:b:c:d:g').value; 
+       var atpos = x.indexOf("@");
+       var dotpos = x.lastIndexOf(".");
+       if (atpos<1 || dotpos<atpos+2 || dotpos+2>=x.length) {
+        text="Please Enter Valid Email";
+       document.getElementById("errorBox2").innerHTML = text;
+       return false;}
+  var phoneNo = document.getElementById('a:b:c:d:h').value; 
+      if(phoneNo.length>=12 ) {
+      text = "PhoneNumber Not valid";
+      document.getElementById("errorBox3").innerHTML = text;
+      text = "False";
+      document.getElementById("show").innerHTML = text ;
+      return false; }
+      else{
+      text = "True";
+      document.getElementById("show").innerHTML = text ;}
+       CallClass();
+  }
+    function editbtnMethod(chkbox) {
+        var editbtn = document.getElementById("editbtn");
+        editbtn.style.display = chkbox.checked ? "block" : "none";
+     }
+     
+ jQuery(function() {
+  var $checks = $('.checks').change(function() {
+    var flag = $checks.filter(':checked').length >1;
+    $("#edit").toggle(!flag);
+    $("#edit1").toggle(!flag);
+    $("#Delete").toggle(!flag);
+    $("#MultiDelete").toggle(flag);
+  });
+  $checks.first().change();
+})
+
+   
+</script>
+</apex:page>

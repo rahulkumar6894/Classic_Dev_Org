@@ -1,0 +1,16 @@
+<apex:page standardController="Employee__c">
+<apex:pageBlock title="Employee Record Show">
+<apex:pageBlockSection >
+
+<apex:outputField value="{!Employee__c.Name}"/>
+<apex:outputField value="{!Employee__c.Owner.Name}"/>        
+
+<br/>
+<h1> Employee Id :-{!Employee__c.EmpId__c}</h1>
+</apex:pageBlockSection>
+
+
+</apex:pageBlock>
+<apex:detail />
+  
+</apex:page>

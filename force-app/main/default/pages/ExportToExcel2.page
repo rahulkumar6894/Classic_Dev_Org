@@ -1,0 +1,6 @@
+<apex:page controller="exportExcel" action="{!fetch}" contenttype="text/csv#TestExport_{!TODAY()}.csv" > 
+   {!sExcelHeader}
+    <apex:repeat value="{!contacts}" var="a">
+        {!a.FirstName},{!a.lastName}
+    </apex:repeat>
+</apex:page>

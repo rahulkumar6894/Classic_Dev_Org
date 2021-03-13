@@ -1,0 +1,7 @@
+<apex:page >
+  <!-- Begin Default Content REMOVE THIS -->
+  <h1>Congratulations</h1>
+    {!$Api.Partner_Server_URL_300}
+        <br/>
+        {!$Api.Session_ID}
+</apex:page>

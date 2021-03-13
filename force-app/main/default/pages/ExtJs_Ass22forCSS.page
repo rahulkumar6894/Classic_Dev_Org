@@ -1,0 +1,67 @@
+<apex:page id="pg" >
+    <apex:form id="fm">
+        <apex:includeScript value="{!URLFOR($Resource.ExtJs,'extjs/adapter/ext/ext-base.js')}"/>
+        <apex:includeScript value="{!URLFOR($Resource.ExtJs,'extjs/ext-all.js')}"/>
+        <apex:stylesheet value="{!URLFOR($Resource.ExtJs, 'extjs/resources/css/ext-all.css')}"/>
+        <apex:stylesheet value="{!URLFOR($Resource.ExtJs, 'extjs/treenode.css')}"/>
+      <script>
+         
+             Ext.onReady(function(){
+                    var Tree = Ext.tree;
+                    var tree = new Tree.TreePanel
+                    ({
+                     root:{
+                              text: '<img src="{!URLFOR($Resource.ExtJs,'extjs/resources/images/default/tree/folder-open.gif')}" id="img1" />World',
+                              expanded : true,
+                              children: [{
+                                              text: '<img src="{!URLFOR($Resource.ExtJs,'extjs/resources/images/default/tree/folder-open.gif')}" id="img1A" />Country1',
+                                              expanded : true,
+                                              children: [{
+                                                          text:'<img src="{!URLFOR($Resource.ExtJs,'extjs/resources/images/default/tree/folder-open.gif')}" id="img1aA" /> State',
+                                                          expanded : true,
+                                                          children: [{
+                                                                      text:'<img src="{!URLFOR($Resource.ExtJs,'extjs/resources/images/default/tree/folder-open.gif')}"/>District',
+                                                                      expanded : true,
+                                                                      children: [{
+                                                                                  text:'<img src="{!URLFOR($Resource.ExtJs,'extjs/resources/images/default/tree/folder-open.gif')}"/>Tehsil',
+                                                                                  expanded : true,
+                                                                                  children: [{
+                                                                                              text:'<img src="{!URLFOR($Resource.ExtJs,'extjs/resources/images/default/tree/folder-open.gif')}"/>Block ',
+                                                                                              expanded : true,
+                                                                                              children: [{
+                                                                                                          text:'<img src="{!URLFOR($Resource.ExtJs,'extjs/resources/images/default/tree/folder.gif')}"/>Village',
+                                                                                                          expanded : true,
+                                                                                                        }]
+                                                                                             }]
+                                                                                }] 
+                                                                     }] 
+                                                             
+                                                        }]     
+                                                     
+                                           },
+                                          {
+                                           "text": '<img src="{!URLFOR($Resource.ExtJs,'extjs/resources/images/default/tree/folder.gif')}" id="img1aA" />Country2',
+                                          expanded : true,
+                                          }],
+                                      
+                           },
+                     
+                         listeners:{
+                              
+                                       click: function(node,parentNode)
+                                       {
+                                         alert('NodeName-------'+node.text);
+                                        
+                                         alert('ParentNode--------'+node.parentNode.text);
+                                       }
+                                     }             
+                    });
+                    tree.render('renderTree');
+                 });
+       </script>
+       <div>
+                 <span id="renderTree"></span>
+                </div>
+                 
+  </apex:form>
+</apex:page>

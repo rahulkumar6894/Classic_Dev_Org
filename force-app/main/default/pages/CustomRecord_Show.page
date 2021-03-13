@@ -1,0 +1,15 @@
+<apex:page standardController="Employee__c">
+  <Apex:outputLink value="https://developer.salesforce.com">clickMe!</Apex:outputLink>
+ <apex:pageBlock title="Page Block Tittle" >
+
+<apex:pageBlockSection title="PageBlockSectionTittle">
+  Employee Owner Name is-{!Employee__c.Owner.Name}
+  <br/>
+  Employee Id :-{!Employee__c.EmpId__c}
+</apex:pageBlockSection>
+<apex:form >
+    My Name is:- <apex:inputField value="{!Employee__c.Name}" />
+</apex:form>
+</apex:pageBlock>
+
+</apex:page>

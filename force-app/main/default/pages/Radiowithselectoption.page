@@ -1,0 +1,65 @@
+<apex:page controller="radiowithselectoption" >
+ 
+   <apex:form > 
+  <apex:outputPanel id="ggg">
+            <script>
+               function enableRadioButtons()
+               {
+                debugger;
+                      var ordertype = '{!orderType}';
+                      if(ordertype =="alphabetic (A-Z)")
+                      {
+                           document.getElementById("option1").checked = true;
+                      }
+                      if(ordertype =="Manual Order")
+                      {
+                           document.getElementById("option2").checked = true;
+                      }
+                      if(ordertype =="UnManual Order")
+                      {
+                           document.getElementById("option3").checked = true;
+                      }
+               }
+             </script>
+            </apex:outputPanel>
+             <script>
+               function getdetails ()
+               {
+                    var checkedValue = null; 
+                    var inputElements = document.getElementsByClassName('messageCheckbox');
+                    for(var i=0; inputElements[i]; ++i)
+                    {
+                          if(inputElements[i].checked){
+                               checkedValue = inputElements[i].value;
+                               break;
+                          }
+                    }
+                    
+                   callActionMethod(checkedValue);
+               }
+             </script>
+            <apex:actionFunction name="callActionMethod" action="{!updatefirmsetting}" reRender="none" >
+            <apex:param name="checkedValue" assignTo="{!editordertype}" value="" />
+            </apex:actionFunction>
+   <apex:pageBlock title="Select Account">
+        <apex:pageBlockSection collapsible="false" columns="1">
+            <apex:pageBlockSectionItem >
+              <apex:outputLabel value="Select an object:"></apex:outputLabel>
+              <apex:selectList value="{!accountid}" size="1" multiselect="false">
+                       <apex:selectOptions value="{!deallist}"></apex:selectOptions>
+                        <apex:actionSupport action="{!getaccount}" event="onchange" reRender="fieldsPanel,ggg" oncomplete="enableRadioButtons();"/>
+                    </apex:selectList>
+            </apex:pageBlockSectionItem>
+            
+        </apex:pageBlockSection>      
+        </apex:pageBlock>
+        <apex:outputPanel id="fieldsPanel">
+         <br/>
+                alphabetic(A-Z)   <input type="radio" class="messageCheckbox" name="ordertype"  value="alphabetic(A-Z)" id="option1"/> <br/>
+                Manual Order      <input type="radio" class="messageCheckbox" name="ordertype"     value="Manual Order"    id="option2"/>    <br/>
+                Unmanual Order    <input type="radio" class="messageCheckbox" name="ordertype"   value="Unmanual Order"  id="option3"/>     
+      </apex:outputPanel>
+         <apex:commandButton value="Mark" onClick="getdetails();return false;"/>
+
+  </apex:form>
+</apex:page>

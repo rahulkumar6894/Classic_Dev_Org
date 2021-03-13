@@ -1,0 +1,17 @@
+<apex:page standardController="Account">
+<apex:pageBlock title="Employee Record Show">
+<apex:pageBlockTable value="{!Account.Contacts}" var="item">
+<apex:column value="{!Account.name}"/>
+
+<apex:column value="{!item.MailingCity}"/>
+ <apex:column value="{!item.Phone}"/>
+<apex:facet name="footer">Navatar</apex:facet>
+
+  
+
+</apex:pageBlockTable>
+
+</apex:pageBlock>
+
+<apex:detail />
+</apex:page>
